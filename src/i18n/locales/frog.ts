@@ -40,7 +40,7 @@ export const frog: DeepPartial<TranslationDto> = {
         bitrateUnit: 'квабит/с',
         onAir: 'Квакает уже',
         dropped: 'Упущено мух (сеть)',
-        recent: 'За минуту',
+        recent: 'Упущено (мух за мин.)',
         congestion: 'Тина в сети',
         hints: {
             dropped: 'Мухи-кадры, которых OBS упустил, потому что сеть не успевала их донести ($t(obs.droppedFrames) в окне «$t(obs.stats)»)',
@@ -76,8 +76,10 @@ export const frog: DeepPartial<TranslationDto> = {
         recentLag: ' · +{{count}} мух за мин',
         reset: 'Взбаламутить графики',
         hints: {
-            encoding: 'Мухи-кадры, которых квакодировщик не успел проглотить ($t(obs.skippedFrames)). Общие для всех прудов.',
-            rendering: 'Кадры, до которых OBS не допрыгнул ($t(obs.missedFrames)).',
+            fps: 'Оранжевеет, когда болото прыгает медленнее 95% от заданного в OBS, и краснеет ниже 80%, как в окне «$t(obs.stats)»',
+            lagStart: 'Считаем с последнего прыжка в эфир, а если с подключения панели в эфир не прыгали, то с подключения.',
+            encoding: 'Мухи-кадры, которых квакодировщик не успел проглотить ($t(obs.skippedFrames)). Общие для всех прудов. $t(general.hints.lagStart)',
+            rendering: 'Кадры, до которых OBS не допрыгнул ($t(obs.missedFrames)). $t(general.hints.lagStart)',
             memory: 'Сколько оперативной тины занимает само болото OBS ($t(obs.memoryUsage) в окне «$t(obs.stats)»)',
             gpu: 'Загрузка квидеокарты, как на вкладке «Графический процессор» в диспетчере задач. Приносит скрипт streamoscope-bridge.lua',
             gpuEncoder: 'Загрузка железного квакодировщика: NVENC у NVIDIA, AMF у AMD, Quick Sync у Intel',

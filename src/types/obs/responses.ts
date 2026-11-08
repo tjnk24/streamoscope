@@ -18,6 +18,11 @@ export type ObsStatsDto = {
     outputTotalFrames: number;
 };
 
+export type ObsVideoSettingsDto = {
+    fpsNumerator: number;
+    fpsDenominator: number;
+};
+
 export type ObsProfileParameterDto = {
     parameterValue: string | null;
 };

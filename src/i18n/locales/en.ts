@@ -88,7 +88,7 @@ export const en = {
         source: 'Source',
         onAir: 'Live for',
         dropped: 'Dropped (network)',
-        recent: 'Last minute',
+        recent: 'Dropped (frames/min)',
         congestion: 'Network congestion',
         hints: {
             dropped: 'Frames OBS dropped because the network could not send them in time ($t(obs.droppedFrames) in the $t(obs.stats) window)',
@@ -124,8 +124,10 @@ export const en = {
         recentLag: ' · +{{count}} per min',
         reset: 'Reset graphs',
         hints: {
-            encoding: 'Frames the encoder failed to compress in time ($t(obs.skippedFrames)). Shared by all platforms.',
-            rendering: 'Frames OBS failed to render in time ($t(obs.missedFrames)).',
+            fps: 'Turns orange below 95% of the frame rate set in OBS and red below 80%, as in the $t(obs.stats) window',
+            lagStart: 'Counted from the latest stream start, or from when the dock connected if nothing has gone live since.',
+            encoding: 'Frames the encoder failed to compress in time ($t(obs.skippedFrames)). Shared by all platforms. $t(general.hints.lagStart)',
+            rendering: 'Frames OBS failed to render in time ($t(obs.missedFrames)). $t(general.hints.lagStart)',
             memory: 'How much RAM OBS itself uses ($t(obs.memoryUsage) in the $t(obs.stats) window)',
             gpu: 'GPU load, as on the GPU tab of Task Manager. Provided by the streamoscope-bridge.lua script',
             gpuEncoder: 'Hardware encoder load: NVENC on NVIDIA, AMF on AMD, Quick Sync on Intel',

@@ -90,7 +90,7 @@ export const ptBr: TranslationDto = {
         source: 'Origem',
         onAir: 'Ao vivo há',
         dropped: 'Perdidos (rede)',
-        recent: 'Último minuto',
+        recent: 'Perda (quadros/min)',
         congestion: 'Congestionamento da rede',
         hints: {
             dropped: 'Quadros que o OBS descartou porque a rede não conseguiu enviá-los a tempo ($t(obs.droppedFrames) na janela “$t(obs.stats)”)',
@@ -126,8 +126,10 @@ export const ptBr: TranslationDto = {
         recentLag: ' · +{{count}} por min',
         reset: 'Zerar gráficos',
         hints: {
-            encoding: 'Quadros que o codificador não conseguiu comprimir a tempo ($t(obs.skippedFrames)). Comuns a todas as plataformas.',
-            rendering: 'Quadros que o OBS não conseguiu renderizar a tempo ($t(obs.missedFrames)).',
+            fps: 'Fica laranja abaixo de 95% da taxa de quadros definida no OBS e vermelho abaixo de 80%, como na janela “$t(obs.stats)”',
+            lagStart: 'Contado desde o início da última live ou, se não houve live desde que o painel se conectou, desde a conexão.',
+            encoding: 'Quadros que o codificador não conseguiu comprimir a tempo ($t(obs.skippedFrames)). Comuns a todas as plataformas. $t(general.hints.lagStart)',
+            rendering: 'Quadros que o OBS não conseguiu renderizar a tempo ($t(obs.missedFrames)). $t(general.hints.lagStart)',
             memory: 'Quanta RAM o próprio OBS usa ($t(obs.memoryUsage) na janela “$t(obs.stats)”)',
             gpu: 'Uso da placa de vídeo, como na aba GPU do Gerenciador de Tarefas. Enviado pelo script streamoscope-bridge.lua',
             gpuEncoder: 'Uso do codificador por hardware: NVENC na NVIDIA, AMF na AMD, Quick Sync na Intel',

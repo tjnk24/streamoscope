@@ -90,7 +90,7 @@ export const de: TranslationDto = {
         source: 'Quelle',
         onAir: 'Live seit',
         dropped: 'Verloren (Netzwerk)',
-        recent: 'Letzte Minute',
+        recent: 'Verlust (Frames/Min.)',
         congestion: 'Netzwerkstau',
         hints: {
             dropped: 'Frames, die OBS verworfen hat, weil das Netzwerk sie nicht rechtzeitig senden konnte ($t(obs.droppedFrames) im Fenster „$t(obs.stats)“)',
@@ -126,8 +126,10 @@ export const de: TranslationDto = {
         recentLag: ' · +{{count}} pro Min.',
         reset: 'Diagramme zurücksetzen',
         hints: {
-            encoding: 'Frames, die der Encoder nicht rechtzeitig komprimieren konnte ($t(obs.skippedFrames)). Für alle Plattformen gemeinsam.',
-            rendering: 'Frames, die OBS nicht rechtzeitig rendern konnte ($t(obs.missedFrames)).',
+            fps: 'Wird orange unter 95 % der in OBS eingestellten Bildrate und rot unter 80 %, wie im Fenster „$t(obs.stats)“',
+            lagStart: 'Gezählt ab dem Start des letzten Streams oder, falls seit dem Verbinden des Docks kein Stream lief, ab dem Verbinden.',
+            encoding: 'Frames, die der Encoder nicht rechtzeitig komprimieren konnte ($t(obs.skippedFrames)). Für alle Plattformen gemeinsam. $t(general.hints.lagStart)',
+            rendering: 'Frames, die OBS nicht rechtzeitig rendern konnte ($t(obs.missedFrames)). $t(general.hints.lagStart)',
             memory: 'Wie viel Arbeitsspeicher OBS selbst belegt ($t(obs.memoryUsage) im Fenster „$t(obs.stats)“)',
             gpu: 'Auslastung der Grafikkarte wie im Reiter GPU des Task-Managers. Liefert das Skript streamoscope-bridge.lua',
             gpuEncoder: 'Auslastung des Hardware-Encoders: NVENC bei NVIDIA, AMF bei AMD, Quick Sync bei Intel',

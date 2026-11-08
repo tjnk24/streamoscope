@@ -1,6 +1,12 @@
+import type {Nullable} from 'infrastructure/common';
+
 import {ObsRequestTypeEnum} from '__types/obs/ObsRequestTypeEnum';
 import {RequestResultPairDto} from '__types/obs/requests';
-import {ObsOutputStatusDto, ObsStatsDto} from '__types/obs/responses';
+import {
+    ObsOutputStatusDto,
+    ObsStatsDto,
+    ObsVideoSettingsDto,
+} from '__types/obs/responses';
 import {OutputStateDto} from '__types/stats/tracking';
 import {
     GeneralViewDto,
@@ -8,39 +14,48 @@ import {
     StatsViewDto,
 } from '__types/stats/views';
 import {StreamTargetDto} from '__types/targets';
-import {
-    GRAPH_SPAN_SEC,
-    OFF_OUTPUT_VIEW,
-    RECENT_WINDOW_SEC,
-} from '__utils/consts';
+import {GRAPH_SPAN_SEC, OFF_OUTPUT_VIEW} from '__utils/consts';
 import {findResultData} from '__utils/requests/findResultData';
 import {isRequestOfType} from '__utils/requests/isRequestOfType';
 
 import {getHealthLevel} from '../getHealthLevel';
-import {RecentCounter} from '../RecentCounter';
+import {LagCounter} from '../LagCounter';
 
 import {createOutputState} from './createOutputState';
 import {isStatusRequestOf} from './isStatusRequestOf';
 
-const {GetStats} = ObsRequestTypeEnum;
+const {GetStats, GetVideoSettings} = ObsRequestTypeEnum;
 
 export class StatsTracker {
     private outputs = new Map<string, OutputStateDto>();
 
-    private readonly encoding = new RecentCounter(RECENT_WINDOW_SEC);
+    private readonly encoding = new LagCounter();
 
-    private readonly rendering = new RecentCounter(RECENT_WINDOW_SEC);
+    private readonly rendering = new LagCounter();
 
-    reset(): StatsViewDto {
+    private isLive = false;
+
+    private targetFps: Nullable<number> = null;
+
+    reset() {
         this.outputs.clear();
         this.encoding.reset();
         this.rendering.reset();
+        this.isLive = false;
+        this.targetFps = null;
+    }
+
+    resetGraphs(): StatsViewDto {
+        this.outputs.clear();
+        this.encoding.resetRecent();
+        this.rendering.resetRecent();
 
         return {outputs: {}, general: null, now: performance.now()};
     }
 
     ingest(targets: StreamTargetDto[], pairs: RequestResultPairDto[], now: number): StatsViewDto {
         const outputs: Record<string, OutputViewDto> = {};
+        const statuses: Nullable<ObsOutputStatusDto>[] = [];
 
         this.outputs.forEach((_output, key) => {
             !targets.some(target => target.key === key) && this.outputs.delete(key);
@@ -54,17 +69,31 @@ export class StatsTracker {
             const isStatusRequest = isStatusRequestOf(outputName);
 
             if (pairs.some(({request}) => isStatusRequest(request))) {
-                output.view = this.ingestOutput(output, findResultData<ObsOutputStatusDto>(pairs, isStatusRequest), now);
+                const status = findResultData<ObsOutputStatusDto>(pairs, isStatusRequest);
+
+                statuses.push(status);
+                output.view = this.ingestOutput(output, status, now);
             }
 
             outputs[key] = output.view;
         });
 
+        statuses.every(status => status !== null) && this.trackLive(statuses.some(status => status?.outputActive));
+
         return {
             outputs,
-            general: this.ingestGeneral(findResultData<ObsStatsDto>(pairs, isRequestOfType(GetStats)), now),
+            general: this.ingestGeneral(pairs, now),
             now,
         };
+    }
+
+    private trackLive(isLive: boolean) {
+        if (isLive && !this.isLive) {
+            this.encoding.restart();
+            this.rendering.restart();
+        }
+
+        this.isLive = isLive;
     }
 
     private resetOutput(output: OutputStateDto) {
@@ -115,10 +144,18 @@ export class StatsTracker {
         };
     }
 
-    private ingestGeneral(stats: ObsStatsDto | null, now: number): GeneralViewDto | null {
+    private ingestGeneral(pairs: RequestResultPairDto[], now: number): GeneralViewDto | null {
+        const videoSettings = findResultData<ObsVideoSettingsDto>(pairs, isRequestOfType(GetVideoSettings));
+
+        if (videoSettings && videoSettings.fpsDenominator > 0) {
+            this.targetFps = videoSettings.fpsNumerator / videoSettings.fpsDenominator;
+        }
+
+        const stats = findResultData<ObsStatsDto>(pairs, isRequestOfType(GetStats));
+
         if (!stats) {
-            this.encoding.reset();
-            this.rendering.reset();
+            this.encoding.resetRecent();
+            this.rendering.resetRecent();
 
             return null;
         }
@@ -127,19 +164,12 @@ export class StatsTracker {
 
         return {
             fps: stats.activeFps,
+            targetFps: this.targetFps,
             frameTime: stats.averageFrameRenderTime,
             cpu: stats.cpuUsage,
             memoryInMb: stats.memoryUsage,
-            encoding: {
-                skipped: outputSkippedFrames,
-                total: outputTotalFrames,
-                recentSkipped: this.encoding.add(now, outputSkippedFrames, outputTotalFrames).count,
-            },
-            rendering: {
-                skipped: renderSkippedFrames,
-                total: renderTotalFrames,
-                recentSkipped: this.rendering.add(now, renderSkippedFrames, renderTotalFrames).count,
-            },
+            encoding: this.encoding.add(now, outputSkippedFrames, outputTotalFrames),
+            rendering: this.rendering.add(now, renderSkippedFrames, renderTotalFrames),
         };
     }
 }

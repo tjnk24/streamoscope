@@ -9,6 +9,7 @@ import {formatFixed} from '../../../utils/formatFixed';
 import {formatGigabytes} from '../../../utils/formatGigabytes';
 import {formatMemory} from '../../../utils/formatMemory';
 import {GeneralStatKeyEnum} from '../types';
+import {getFpsLevel} from '../utils/getFpsLevel';
 
 const {
     Fps,
@@ -32,6 +33,8 @@ export const useItems = (): StatItemDto[] => {
         {
             key: Fps,
             label: t('general.fps'),
+            hint: t('general.hints.fps'),
+            level: view ? getFpsLevel(view.fps, view.targetFps) : undefined,
             value: view ? formatFixed(view.fps, 2) : '—',
         },
         {

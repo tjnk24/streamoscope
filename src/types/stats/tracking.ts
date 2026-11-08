@@ -15,6 +15,11 @@ export type RecentSampleDto = {
     total: number;
 };
 
+export type LagStartDto = {
+    skipped: number;
+    total: number;
+};
+
 export type OutputStateDto = {
     previous: Nullable<OutputBytesSampleDto>;
     graph: GraphPointDto[];

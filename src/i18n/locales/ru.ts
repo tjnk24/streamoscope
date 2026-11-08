@@ -90,7 +90,7 @@ export const ru: TranslationDto = {
         source: 'Источник',
         onAir: 'В эфире',
         dropped: 'Потеряно (сеть)',
-        recent: 'За минуту',
+        recent: 'Потеря (кадры за мин.)',
         congestion: 'Затор в сети',
         hints: {
             dropped: 'Кадры, которые OBS выбросил, потому что сеть не успевала их отправить ($t(obs.droppedFrames) в окне «$t(obs.stats)»)',
@@ -126,8 +126,10 @@ export const ru: TranslationDto = {
         recentLag: ' · +{{count}} за мин',
         reset: 'Сбросить графики',
         hints: {
-            encoding: 'Кадры, которые кодировщик не успел сжать ($t(obs.skippedFrames)). Общие для всех площадок.',
-            rendering: 'Кадры, которые OBS не успел отрисовать ($t(obs.missedFrames)).',
+            fps: 'Становится оранжевым ниже 95% от частоты кадров, заданной в OBS, и красным ниже 80%, как в окне «$t(obs.stats)»',
+            lagStart: 'Считается с начала последнего эфира, а если с подключения панели эфира не было, то с подключения.',
+            encoding: 'Кадры, которые кодировщик не успел сжать ($t(obs.skippedFrames)). Общие для всех площадок. $t(general.hints.lagStart)',
+            rendering: 'Кадры, которые OBS не успел отрисовать ($t(obs.missedFrames)). $t(general.hints.lagStart)',
             memory: 'Сколько оперативной памяти занимает сам OBS ($t(obs.memoryUsage) в окне «$t(obs.stats)»)',
             gpu: 'Загрузка видеокарты, как на вкладке «Графический процессор» в диспетчере задач. Передаёт скрипт streamoscope-bridge.lua',
             gpuEncoder: 'Загрузка аппаратного кодировщика: NVENC у NVIDIA, AMF у AMD, Quick Sync у Intel',

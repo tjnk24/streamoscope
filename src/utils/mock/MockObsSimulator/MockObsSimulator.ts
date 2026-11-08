@@ -36,6 +36,7 @@ const {
     GetProfileParameter,
     SetProfileParameter,
     GetVersion,
+    GetVideoSettings,
     GetSceneCollectionList,
 } = ObsRequestTypeEnum;
 
@@ -51,6 +52,8 @@ export class MockObsSimulator {
     private readonly extraOutputs = new Map(MOCK_EXTRA_TARGETS.map(({outputName}) => [outputName, createMockOutput(this.startedAt)]));
 
     private renderTotalFrames = 0;
+
+    private renderSkippedFrames = 0;
 
     private encoderSkippedFrames = 0;
 
@@ -72,6 +75,16 @@ export class MockObsSimulator {
     private isTwitchReconnecting = (runningSeconds: number) => runningSeconds % 60 >= 50 && runningSeconds % 60 < 55;
 
     private isTwitchDropping = (runningSeconds: number) => runningSeconds % 30 >= 10 && runningSeconds % 30 < 14;
+
+    private getFps = (runningSeconds: number) => {
+        const phase = runningSeconds % 90;
+
+        if (phase >= 70 && phase < 74) {
+            return 55;
+        }
+
+        return phase >= 74 && phase < 78 ? 45 : MOCK_FPS;
+    };
 
     private advance = (now: number, elapsedSeconds: number, runningSeconds: number) => {
         const mainKbps = this.isMainDipping(runningSeconds) ? 6500 : randomBetween(17700, 18300);
@@ -95,6 +108,7 @@ export class MockObsSimulator {
         });
 
         this.renderTotalFrames += Math.round(MOCK_FPS * elapsedSeconds);
+        this.renderSkippedFrames += Math.round((MOCK_FPS - this.getFps(runningSeconds)) * elapsedSeconds);
         this.encoderTotalFrames += Math.round(MOCK_FPS * elapsedSeconds);
 
         if (runningSeconds % 45 < 2) {
@@ -108,12 +122,12 @@ export class MockObsSimulator {
         switch (requestType) {
             case GetStats:
                 return successResult(requestType, {
-                    activeFps: MOCK_FPS,
+                    activeFps: this.getFps(runningSeconds),
                     averageFrameRenderTime: randomBetween(0.8, 1.1),
                     cpuUsage: randomBetween(3, 6),
                     memoryUsage: 480,
                     availableDiskSpace: 85000,
-                    renderSkippedFrames: 0,
+                    renderSkippedFrames: this.renderSkippedFrames,
                     renderTotalFrames: this.renderTotalFrames,
                     outputSkippedFrames: this.encoderSkippedFrames,
                     outputTotalFrames: this.encoderTotalFrames,
@@ -152,6 +166,9 @@ export class MockObsSimulator {
 
             case GetProfileParameter:
                 return successResult(requestType, {parameterValue: JSON.stringify(this.buildBridgeData())});
+
+            case GetVideoSettings:
+                return successResult(requestType, {fpsNumerator: MOCK_FPS, fpsDenominator: 1});
 
             case GetSceneCollectionList:
                 return successResult(requestType, {currentSceneCollectionName: MOCK_SCENE_COLLECTION, sceneCollections: [MOCK_SCENE_COLLECTION]});

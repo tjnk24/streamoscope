@@ -126,7 +126,7 @@ class ObsConnectionService {
     };
 
     resetStats = () => {
-        commonActions.stats.setView(this.tracker.reset());
+        commonActions.stats.setView(this.tracker.resetGraphs());
     };
 
     sendRequest = (request: ObsRequestDto) => {

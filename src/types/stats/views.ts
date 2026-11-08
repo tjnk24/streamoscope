@@ -1,3 +1,5 @@
+import type {Nullable} from 'infrastructure/common';
+
 export type GraphPointDto = {
     time: number;
     kbps: number;
@@ -18,6 +20,7 @@ export type LagViewDto = {
 
 export type GeneralViewDto = {
     fps: number;
+    targetFps: Nullable<number>;
     frameTime: number;
     cpu: number;
     memoryInMb: number;
