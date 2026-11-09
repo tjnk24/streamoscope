@@ -5,14 +5,23 @@ import {
     Switch,
     Typography,
 } from 'antd';
+import type {Nullable} from 'infrastructure/common';
 import {useTranslation} from 'react-i18next';
+import {useSelector} from 'react-redux';
 
 import EnhancedButton from '__components/EnhancedButton';
 import {updateService} from '__services/updateService';
 
+import {actions} from '../../actions';
+import {releaseNotesModalSelector} from '../../selectors';
+import {ReleaseNotesModeEnum} from '../../types';
+import ReleaseNotesModal from '../release-notes-modal';
+
 import {useUpdateSettingsView} from './hooks/useUpdateSettingsView';
 
 const UpdateSettings = () => {
+    const {isVisible: isReleaseNotesVisible} = useSelector(releaseNotesModalSelector);
+
     const {t} = useTranslation();
 
     const {
@@ -30,6 +39,10 @@ const UpdateSettings = () => {
         latestReleaseUrl,
         isAutoUpdateEnabled,
     } = useUpdateSettingsView();
+
+    const openReleaseNotes = (mode: ReleaseNotesModeEnum, url: Nullable<string>) => {
+        actions.releaseNotesModal.setData({isVisible: true, mode, url});
+    };
 
     return (
         <Flex
@@ -50,7 +63,7 @@ const UpdateSettings = () => {
                         buttonProps={{
                             type: 'link',
                             size: 'small',
-                            onClick: () => updateService.openReleasePage(currentReleaseUrl),
+                            onClick: () => openReleaseNotes(ReleaseNotesModeEnum.Current, currentReleaseUrl),
                         }}
                         withSpinner={false}
                     >
@@ -116,7 +129,7 @@ const UpdateSettings = () => {
                                 buttonProps={{
                                     type: 'link',
                                     size: 'small',
-                                    onClick: () => updateService.openReleasePage(latestReleaseUrl),
+                                    onClick: () => openReleaseNotes(ReleaseNotesModeEnum.Newer, latestReleaseUrl),
                                 }}
                                 withSpinner={false}
                             >
@@ -175,6 +188,8 @@ const UpdateSettings = () => {
                     onChange={updateService.setAutoUpdateEnabled}
                 />
             </Flex>
+
+            {isReleaseNotesVisible && <ReleaseNotesModal/>}
         </Flex>
     );
 };

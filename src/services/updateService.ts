@@ -14,6 +14,7 @@ import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
 import {
     HEALTH_REPORT_DELAY_MS,
     HTTP_NOT_FOUND,
+    GITHUB_JSON_HEADERS,
     LATEST_RELEASE_URL,
     OPEN_URL_COMMAND_PARAMETER,
     OPEN_URL_MIN_BRIDGE_VERSION,
@@ -189,7 +190,7 @@ class UpdateService {
 
     private fetchLatest = async (): Promise<UpdateCheckStatusEnum> => {
         try {
-            const response = await fetch(LATEST_RELEASE_URL, {headers: {Accept: 'application/vnd.github+json'}});
+            const response = await fetch(LATEST_RELEASE_URL, {headers: GITHUB_JSON_HEADERS});
 
             if (response.status === HTTP_NOT_FOUND) {
                 commonActions.update.setLatest(null);

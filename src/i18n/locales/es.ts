@@ -210,6 +210,15 @@ export const es: TranslationDto = {
             majorUpdate: 'Actualización grande: lee qué ha cambiado antes de instalarla.',
         },
     },
+    releaseNotes: {
+        titleCurrent: 'Novedades de la {{version}}',
+        titleNewer: 'Novedades de las nuevas versiones',
+        version: 'Versión {{version}}',
+        failed: 'No se pudieron cargar las notas de la versión desde GitHub.',
+        empty: 'Todavía no hay notas para esta versión.',
+        openOnGitHub: 'Abrir en GitHub',
+        close: 'Entendido',
+    },
     bridgeNotice: {
         title: 'El script puente no está cargado en la colección de escenas «{{collection}}»',
         description: 'Sin él, el panel no muestra las plataformas de las salidas de plugins, la GPU ni la memoria del sistema, y no puede actualizarse solo. Cárgalo en $t(obs.tools) → $t(obs.scripts) → «+» ($t(obs.addScripts)) y elige {{script}}.',

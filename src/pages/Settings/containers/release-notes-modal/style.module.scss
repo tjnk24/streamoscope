@@ -1,0 +1,8 @@
+.body {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.release + .release {
+    margin-top: var(--ant-margin-md);
+}

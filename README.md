@@ -118,11 +118,11 @@ The bridge tells the dock where plugin outputs are streaming, reads Windows hard
 
 ## ⚙️ Settings, privacy and troubleshooting
 
-Use the dock's **gear icon** to change language, show or hide OBS statistics, try mock mode, check for updates, turn automatic updates off, turn the journal off or copy diagnostics.
+Use the dock's **gear icon** to change language, show or hide OBS statistics, try mock mode, check for updates and read **What's new** without leaving OBS, turn automatic updates off, turn the journal off or copy diagnostics.
 
 - To open the dock in a regular browser, copy **Dock address** from the settings and paste it there. Enter the WebSocket password again in the browser; the journal is kept only by the dock inside OBS.
 - The OBS WebSocket connection normally uses `127.0.0.1`.
-- Automatic updates, when enabled, contact `api.github.com` and download from GitHub on startup and roughly once per day; manual checks are also available.
+- Automatic updates, when enabled, contact `api.github.com` and download from GitHub on startup and roughly once per day; manual checks are also available. **What's new** loads the release notes from `api.github.com` when you open it.
 - The WebSocket password stays in the dock's local browser storage. Stream keys are not read.
 - Diagnostic exports exclude passwords, stream keys and server addresses.
 - StreamoScope keeps a journal of what the bridge and the dock inside OBS do: connections, stream starts and stops, status changes, updates, errors, the buttons you press and, while you stream or record, bitrate and OBS statistics every 10 seconds. It stays in `%LOCALAPPDATA%\streamoscope\logs`, takes up to 10 MB, is never sent anywhere and contains no passwords, stream keys, server addresses, scene names or Windows user names. Turn it off in **Settings → Diagnostics**; uninstalling removes it.

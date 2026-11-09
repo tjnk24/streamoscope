@@ -210,6 +210,15 @@ export const ptBr: TranslationDto = {
             majorUpdate: 'Atualização grande: leia o que mudou antes de instalar.',
         },
     },
+    releaseNotes: {
+        titleCurrent: 'Novidades da {{version}}',
+        titleNewer: 'Novidades das novas versões',
+        version: 'Versão {{version}}',
+        failed: 'Não foi possível carregar as notas da versão do GitHub.',
+        empty: 'Ainda não há notas para esta versão.',
+        openOnGitHub: 'Abrir no GitHub',
+        close: 'Entendi',
+    },
     bridgeNotice: {
         title: 'O script-ponte não está carregado na coleção de cenas “{{collection}}”',
         description: 'Sem ele, o painel não mostra as plataformas das saídas de plugins, a GPU nem a memória do sistema, e não consegue se atualizar sozinho. Carregue-o em $t(obs.tools) → $t(obs.scripts) → “+” ($t(obs.addScripts)) e escolha {{script}}.',

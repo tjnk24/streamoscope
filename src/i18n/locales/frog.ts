@@ -90,6 +90,11 @@ export const frog: DeepPartial<TranslationDto> = {
         whatToDo: 'Что квакать?',
         close: 'Квак, понятно',
     },
+    releaseNotes: {
+        titleCurrent: 'Что нового в пруду {{version}}',
+        titleNewer: 'Что нового в свежих прудах',
+        close: 'Квак, понятно',
+    },
     errorBoundary: {
         title: 'Болото забурлило',
         description: 'В панели что-то квакнуло не так. Перезагрузите её, а если снова забурлит, скопируйте отчёт и приложите его к issue на GitHub.',

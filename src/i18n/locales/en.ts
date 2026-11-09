@@ -208,6 +208,15 @@ export const en = {
             majorUpdate: 'A big update: read what changed before installing.',
         },
     },
+    releaseNotes: {
+        titleCurrent: 'What\'s new in {{version}}',
+        titleNewer: 'What\'s new in the new versions',
+        version: 'Version {{version}}',
+        failed: 'Couldn\'t load the release notes from GitHub.',
+        empty: 'There are no release notes for this version yet.',
+        openOnGitHub: 'Open on GitHub',
+        close: 'Got it',
+    },
     bridgeNotice: {
         title: 'The bridge script is not loaded in the “{{collection}}” scene collection',
         description: 'Without it the dock shows no platforms of plugin outputs, no GPU and no system memory, and cannot update itself. Load it in $t(obs.tools) → $t(obs.scripts) → “+” ($t(obs.addScripts)) and pick {{script}}.',

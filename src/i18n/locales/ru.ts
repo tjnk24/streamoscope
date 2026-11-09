@@ -210,6 +210,15 @@ export const ru: TranslationDto = {
             majorUpdate: 'Крупное обновление: перед установкой прочитайте, что изменилось.',
         },
     },
+    releaseNotes: {
+        titleCurrent: 'Что нового в {{version}}',
+        titleNewer: 'Что нового в новых версиях',
+        version: 'Версия {{version}}',
+        failed: 'Не удалось загрузить заметки к выпуску с GitHub.',
+        empty: 'Заметок к этой версии пока нет.',
+        openOnGitHub: 'Открыть на GitHub',
+        close: 'Понятно',
+    },
     bridgeNotice: {
         title: 'Скрипт-мост не подключён в коллекции сцен «{{collection}}»',
         description: 'Без него панель не покажет площадки выходов плагинов, видеокарту и память системы и не сможет обновляться сама. Подключите его: $t(obs.tools) → $t(obs.scripts) → «+» ($t(obs.addScripts)), файл {{script}}.',

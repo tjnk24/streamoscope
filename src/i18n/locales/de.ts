@@ -210,6 +210,15 @@ export const de: TranslationDto = {
             majorUpdate: 'Großes Update: Lies vor der Installation, was sich geändert hat.',
         },
     },
+    releaseNotes: {
+        titleCurrent: 'Neu in {{version}}',
+        titleNewer: 'Neu in den neuen Versionen',
+        version: 'Version {{version}}',
+        failed: 'Die Versionshinweise konnten nicht von GitHub geladen werden.',
+        empty: 'Für diese Version gibt es noch keine Versionshinweise.',
+        openOnGitHub: 'Auf GitHub öffnen',
+        close: 'Verstanden',
+    },
     bridgeNotice: {
         title: 'Das Brückenskript ist in der Szenensammlung „{{collection}}“ nicht geladen',
         description: 'Ohne es zeigt das Dock keine Plattformen von Plugin-Ausgaben, keine GPU und keinen Systemspeicher an und kann sich nicht selbst aktualisieren. Lade es unter $t(obs.tools) → $t(obs.scripts) → „+“ ($t(obs.addScripts)) und wähle {{script}}.',
