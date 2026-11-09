@@ -30,6 +30,10 @@ export const BYTES_IN_GIGABYTE = 1024 ** 3;
 
 export const BAD_DROP_SHARE = 0.01;
 
+export const ADVICE_DELAY_MS = 3000;
+export const ADVICE_CONGESTION = 0.5;
+export const ADVICE_LAG_SHARE = 0.005;
+
 export const DEV_OBS_CONNECTION_URL = '/dev/obs-connection';
 export const DEV_JOURNAL_URL = '/dev/journal';
 export const DEV_JOURNAL_FOLDER_URL = '/dev/journal/open-folder';
@@ -185,6 +189,7 @@ export const OFF_OUTPUT_VIEW: OutputViewDto = {
     recentTotal: 0,
     congestion: 0,
     graph: [],
+    advices: [],
 };
 
 export const FIRST_SETTINGS_VERSION = 1;

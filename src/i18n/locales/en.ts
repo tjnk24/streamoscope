@@ -134,6 +134,46 @@ export const en = {
             gpuSharedMemory: 'Integrated graphics have no memory of their own and take part of the RAM',
         },
     },
+    advice: {
+        whatToDo: 'What to do?',
+        close: 'Got it',
+        reconnecting: {
+            title: 'OBS is reconnecting',
+            text: 'The connection to the platform dropped, OBS is trying again.',
+        },
+        droppedFrames: {
+            title: 'Frames are being dropped',
+            text: 'The network can\'t send frames in time, so OBS drops them.',
+        },
+        congestion: {
+            title: 'The network is congested',
+            text: 'The send buffer is filling up: the network barely keeps up, and frames may start to drop.',
+        },
+        rendering: {
+            title: 'The GPU is overloaded',
+            text: 'OBS can\'t render frames in time, so FPS drops.',
+        },
+        encoding: {
+            title: 'The encoder can\'t keep up',
+            text: 'The encoder can\'t compress frames in time and skips some of them.',
+        },
+        steps: {
+            lowerBitrate: 'Lower the bitrate in $t(obs.settings) → $t(obs.output).',
+            dynamicBitrate: 'Turn on “$t(obs.dynamicBitrate)” in $t(obs.settings) → $t(obs.advanced) → $t(obs.network).',
+            cable: 'Connect the computer with a cable instead of Wi-Fi and pause other uploads.',
+            closerServer: 'Pick a closer server of the platform.',
+            checkInternet: 'Check that the internet connection works.',
+            otherServer: 'If the connection keeps dropping, pick another server of the platform.',
+            checkPlatform: 'Check on the platform\'s site that the stream hasn\'t ended there.',
+            capGameFps: 'Cap the game\'s FPS, for example to your monitor\'s refresh rate.',
+            runAsAdministrator: 'Run OBS as administrator: Windows then gives it the GPU first.',
+            closeHeavyApps: 'Close other apps that load the GPU.',
+            lowerCanvas: 'Lower the base resolution or FPS in $t(obs.settings) → $t(obs.video).',
+            fasterPreset: 'Pick a faster encoder preset in $t(obs.settings) → $t(obs.output).',
+            hardwareEncoder: 'If the CPU encodes (x264), switch to a hardware encoder: NVENC, AMF or Quick Sync.',
+            lowerOutput: 'Lower the output resolution or FPS.',
+        },
+    },
     update: {
         install: 'Update',
         whatsNew: 'What\'s new',
@@ -188,6 +228,11 @@ export const en = {
         memoryUsage: 'Memory Usage',
         enableWebSocketServer: 'Enable WebSocket server',
         addScripts: 'Add Scripts',
+        output: 'Output',
+        video: 'Video',
+        advanced: 'Advanced',
+        network: 'Network',
+        dynamicBitrate: 'Dynamically change bitrate to manage congestion',
     },
     units: {
         milliseconds: '{{value}} ms',

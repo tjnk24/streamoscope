@@ -28,13 +28,15 @@ export class LagCounter {
         const {start} = this;
         const isStartValid = start !== null && skipped >= start.skipped && total >= start.total;
         const currentStart = isStartValid ? start : {skipped, total};
+        const recent = this.recent.add(time, skipped, total);
 
         this.start = currentStart;
 
         return {
             skipped: skipped - currentStart.skipped,
             total: total - currentStart.total,
-            recentSkipped: this.recent.add(time, skipped, total).count,
+            recentSkipped: recent.count,
+            recentTotal: recent.total,
         };
     }
 }

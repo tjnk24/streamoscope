@@ -1,3 +1,5 @@
+import {combineSlices} from '@reduxjs/toolkit';
+
 import connectionSlice, {ConnectionReducer} from './connectionReducer';
 import settingsSlice, {SettingsReducer} from './settingsReducer';
 import statsSlice, {StatsReducer} from './statsReducer';
@@ -10,12 +12,14 @@ export type BaseStore = {
     update: UpdateReducer;
 };
 
-export const reducers = {
+const reducers = {
     connection: connectionSlice.reducer,
     stats: statsSlice.reducer,
     settings: settingsSlice.reducer,
     update: updateSlice.reducer,
 };
+
+export const rootReducer = combineSlices(reducers);
 
 export const actionCreators = {
     connection: connectionSlice.actions,

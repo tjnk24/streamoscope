@@ -2,12 +2,14 @@ import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
 import {statsSelector} from '__selectors/statsSelectors';
+import {AdviceEnum} from '__types/stats/views';
 
 import LagValue from '../../../components/lag-value';
 import {StatItemDto} from '../../../components/stat-list';
 import {formatFixed} from '../../../utils/formatFixed';
 import {formatGigabytes} from '../../../utils/formatGigabytes';
 import {formatMemory} from '../../../utils/formatMemory';
+import AdviceIcon from '../../advice-icon';
 import {GeneralStatKeyEnum} from '../types';
 import {getFpsLevel} from '../utils/getFpsLevel';
 
@@ -23,6 +25,8 @@ const {
     GpuMemory,
     SystemMemory,
 } = GeneralStatKeyEnum;
+
+const {Rendering: RenderingAdvice, Encoding: EncodingAdvice} = AdviceEnum;
 
 export const useItems = (): StatItemDto[] => {
     const {view: {general: view}, hardware: {gpu, systemMemory}} = useSelector(statsSelector);
@@ -46,13 +50,29 @@ export const useItems = (): StatItemDto[] => {
             key: Encoding,
             label: t('general.encoding'),
             hint: t('general.hints.encoding'),
-            value: view ? <LagValue lag={view.encoding}/> : '—',
+            value: view
+                ? (
+                    <>
+                        {view.advices.includes(EncodingAdvice) && <AdviceIcon advice={EncodingAdvice}/>}
+
+                        <LagValue lag={view.encoding}/>
+                    </>
+                )
+                : '—',
         },
         {
             key: Rendering,
             label: t('general.rendering'),
             hint: t('general.hints.rendering'),
-            value: view ? <LagValue lag={view.rendering}/> : '—',
+            value: view
+                ? (
+                    <>
+                        {view.advices.includes(RenderingAdvice) && <AdviceIcon advice={RenderingAdvice}/>}
+
+                        <LagValue lag={view.rendering}/>
+                    </>
+                )
+                : '—',
         },
         {
             key: Cpu,

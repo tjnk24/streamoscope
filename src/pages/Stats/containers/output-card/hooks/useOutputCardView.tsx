@@ -3,7 +3,7 @@ import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
 import {statsViewSelector} from '__selectors/statsSelectors';
-import {HealthLevelEnum} from '__types/stats/views';
+import {AdviceEnum, HealthLevelEnum} from '__types/stats/views';
 import {StreamTargetDto} from '__types/targets';
 import {OFF_OUTPUT_VIEW, RECENT_WINDOW_SEC} from '__utils/consts';
 
@@ -11,12 +11,15 @@ import CongestionProgress from '../../../components/congestion-progress';
 import {formatNumber} from '../../../utils/formatNumber';
 import {formatPercent} from '../../../utils/formatPercent';
 import {formatTimecode} from '../../../utils/formatTimecode';
+import AdviceIcon from '../../advice-icon';
 import {HEALTH_TAGS, PLATFORM_MARKS} from '../consts';
 import style from '../style.module.scss';
 import {OutputCardViewDto, OutputStatKeyEnum} from '../types';
 import {getTargetSource} from '../utils/getTargetSource';
 
 const {Off, Warn} = HealthLevelEnum;
+
+const {Reconnecting, DroppedFrames, Congestion: CongestionAdvice} = AdviceEnum;
 
 const {
     Source,
@@ -45,6 +48,7 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
         recentTotal,
         congestion,
         graph,
+        advices,
     } = outputs[target.key] || OFF_OUTPUT_VIEW;
 
     const valueLevel = isActive ? undefined : Off;
@@ -59,6 +63,7 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
         title,
         color,
         notes,
+        hasReconnectAdvice: advices.includes(Reconnecting),
         platformMark: PLATFORM_MARKS[title] ?? null,
         healthTag: HEALTH_TAGS[isReconnecting ? Warn : level],
         statusKey: isReconnecting ? 'stats.statuses.reconnecting' : `stats.statuses.${level}`,
@@ -100,14 +105,30 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
                 label: t('stats.recent'),
                 hint: t('stats.hints.recent', {seconds: RECENT_WINDOW_SEC}),
                 level: isActive ? level : Off,
-                value: isActive ? recentValue : '—',
+                value: isActive
+                    ? (
+                        <>
+                            {advices.includes(DroppedFrames) && <AdviceIcon advice={DroppedFrames}/>}
+
+                            {recentValue}
+                        </>
+                    )
+                    : '—',
             },
             {
                 key: Congestion,
                 label: t('stats.congestion'),
                 hint: t('stats.hints.congestion'),
                 level: valueLevel,
-                value: isActive ? <CongestionProgress value={congestion}/> : '—',
+                value: isActive
+                    ? (
+                        <span className={style.congestionValue}>
+                            {advices.includes(CongestionAdvice) && <AdviceIcon advice={CongestionAdvice}/>}
+
+                            <CongestionProgress value={congestion}/>
+                        </span>
+                    )
+                    : '—',
             },
         ],
     };

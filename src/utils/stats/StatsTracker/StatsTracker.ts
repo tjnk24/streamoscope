@@ -18,10 +18,13 @@ import {GRAPH_SPAN_SEC, OFF_OUTPUT_VIEW} from '__utils/consts';
 import {findResultData} from '__utils/requests/findResultData';
 import {isRequestOfType} from '__utils/requests/isRequestOfType';
 
+import {AdviceTracker} from '../AdviceTracker';
 import {getHealthLevel} from '../getHealthLevel';
 import {LagCounter} from '../LagCounter';
 
 import {createOutputState} from './createOutputState';
+import {getGeneralAdvices} from './getGeneralAdvices';
+import {getOutputAdvices} from './getOutputAdvices';
 import {isStatusRequestOf} from './isStatusRequestOf';
 
 const {GetStats, GetVideoSettings} = ObsRequestTypeEnum;
@@ -33,6 +36,8 @@ export class StatsTracker {
 
     private readonly rendering = new LagCounter();
 
+    private readonly generalAdvice = new AdviceTracker();
+
     private isLive = false;
 
     private targetFps: Nullable<number> = null;
@@ -41,6 +46,7 @@ export class StatsTracker {
         this.outputs.clear();
         this.encoding.reset();
         this.rendering.reset();
+        this.generalAdvice.reset();
         this.isLive = false;
         this.targetFps = null;
     }
@@ -49,6 +55,7 @@ export class StatsTracker {
         this.outputs.clear();
         this.encoding.resetRecent();
         this.rendering.resetRecent();
+        this.generalAdvice.reset();
 
         return {outputs: {}, general: null, now: performance.now()};
     }
@@ -100,6 +107,7 @@ export class StatsTracker {
         output.previous = null;
         output.graph = [];
         output.recent.reset();
+        output.advice.reset();
     }
 
     private ingestOutput(output: OutputStateDto, status: ObsOutputStatusDto | null, now: number): OutputViewDto {
@@ -128,11 +136,12 @@ export class StatsTracker {
         output.graph = graph.filter(({time}) => time >= now - (GRAPH_SPAN_SEC * 1000));
 
         const recent = output.recent.add(now, outputSkippedFrames, outputTotalFrames);
+        const level = getHealthLevel(recent.count, recent.total);
 
         return {
             isActive: true,
             isReconnecting: status.outputReconnecting,
-            level: getHealthLevel(recent.count, recent.total),
+            level,
             kbps,
             timecode: status.outputTimecode,
             dropped: outputSkippedFrames,
@@ -141,6 +150,7 @@ export class StatsTracker {
             recentTotal: recent.total,
             congestion: status.outputCongestion,
             graph: output.graph,
+            advices: output.advice.update(now, getOutputAdvices(status.outputReconnecting, level, status.outputCongestion)),
         };
     }
 
@@ -162,14 +172,18 @@ export class StatsTracker {
 
         const {outputSkippedFrames, outputTotalFrames, renderSkippedFrames, renderTotalFrames} = stats;
 
+        const encoding = this.encoding.add(now, outputSkippedFrames, outputTotalFrames);
+        const rendering = this.rendering.add(now, renderSkippedFrames, renderTotalFrames);
+
         return {
             fps: stats.activeFps,
             targetFps: this.targetFps,
             frameTime: stats.averageFrameRenderTime,
             cpu: stats.cpuUsage,
             memoryInMb: stats.memoryUsage,
-            encoding: this.encoding.add(now, outputSkippedFrames, outputTotalFrames),
-            rendering: this.rendering.add(now, renderSkippedFrames, renderTotalFrames),
+            encoding,
+            rendering,
+            advices: this.generalAdvice.update(now, getGeneralAdvices(encoding, rendering)),
         };
     }
 }

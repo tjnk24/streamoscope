@@ -136,6 +136,46 @@ export const ru: TranslationDto = {
             gpuSharedMemory: 'У встроенной графики нет своей памяти, она берёт часть оперативной',
         },
     },
+    advice: {
+        whatToDo: 'Что делать?',
+        close: 'Понятно',
+        reconnecting: {
+            title: 'OBS переподключается',
+            text: 'Связь с площадкой оборвалась, OBS пробует подключиться снова.',
+        },
+        droppedFrames: {
+            title: 'Теряются кадры',
+            text: 'Сеть не успевает отправлять кадры, и OBS их выбрасывает.',
+        },
+        congestion: {
+            title: 'Затор в сети',
+            text: 'Буфер отправки забивается: сеть едва успевает, и скоро могут начаться потери кадров.',
+        },
+        rendering: {
+            title: 'Видеокарта перегружена',
+            text: 'OBS не успевает отрисовывать кадры, и FPS проседает.',
+        },
+        encoding: {
+            title: 'Кодировщик не успевает',
+            text: 'Кодировщик не успевает сжимать кадры и пропускает часть из них.',
+        },
+        steps: {
+            lowerBitrate: 'Снизьте битрейт в $t(obs.settings) → $t(obs.output).',
+            dynamicBitrate: 'Включите «$t(obs.dynamicBitrate)» в $t(obs.settings) → $t(obs.advanced) → $t(obs.network).',
+            cable: 'Подключите компьютер кабелем вместо Wi-Fi и поставьте на паузу другие загрузки.',
+            closerServer: 'Выберите сервер площадки поближе.',
+            checkInternet: 'Проверьте, работает ли интернет.',
+            otherServer: 'Если связь обрывается снова и снова, выберите другой сервер площадки.',
+            checkPlatform: 'Проверьте на сайте площадки, не завершилась ли там трансляция.',
+            capGameFps: 'Ограничьте FPS в игре, например до частоты монитора.',
+            runAsAdministrator: 'Запустите OBS от имени администратора: так Windows отдаёт ему видеокарту в первую очередь.',
+            closeHeavyApps: 'Закройте другие программы, которые нагружают видеокарту.',
+            lowerCanvas: 'Снизьте базовое разрешение или частоту кадров в $t(obs.settings) → $t(obs.video).',
+            fasterPreset: 'Выберите пресет кодировщика побыстрее в $t(obs.settings) → $t(obs.output).',
+            hardwareEncoder: 'Если кодирует процессор (x264), переключитесь на аппаратный кодировщик: NVENC, AMF или Quick Sync.',
+            lowerOutput: 'Снизьте разрешение или частоту кадров вывода.',
+        },
+    },
     update: {
         install: 'Обновить',
         whatsNew: 'Что нового',
@@ -190,6 +230,11 @@ export const ru: TranslationDto = {
         memoryUsage: 'Использование памяти',
         enableWebSocketServer: 'Включить сервер WebSocket',
         addScripts: 'Добавить скрипты',
+        output: 'Вывод',
+        video: 'Видео',
+        advanced: 'Расширенные',
+        network: 'Сеть',
+        dynamicBitrate: 'Регулировать битрейт в зависимости от перегруженности сети',
     },
     units: {
         milliseconds: '{{value}} мс',

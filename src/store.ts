@@ -1,6 +1,6 @@
 import {configureStore, createListenerMiddleware} from '@reduxjs/toolkit';
 
-import {BaseStore, reducers} from '__reducers';
+import {BaseStore, rootReducer} from '__reducers';
 import {SETTINGS_SLICE_NAME} from '__reducers/consts';
 import {storageService} from '__services/storageService';
 
@@ -12,7 +12,7 @@ settingsListener.startListening({
 });
 
 const store = configureStore({
-    reducer: reducers,
+    reducer: rootReducer,
     middleware: getDefaultMiddleware => getDefaultMiddleware().prepend(settingsListener.middleware),
 });
 

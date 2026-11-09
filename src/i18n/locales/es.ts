@@ -136,6 +136,46 @@ export const es: TranslationDto = {
             gpuSharedMemory: 'Los gráficos integrados no tienen memoria propia y usan parte de la RAM',
         },
     },
+    advice: {
+        whatToDo: '¿Qué hacer?',
+        close: 'Entendido',
+        reconnecting: {
+            title: 'OBS se está reconectando',
+            text: 'Se cortó la conexión con la plataforma y OBS lo está intentando de nuevo.',
+        },
+        droppedFrames: {
+            title: 'Se pierden fotogramas',
+            text: 'La red no consigue enviar los fotogramas a tiempo y OBS los descarta.',
+        },
+        congestion: {
+            title: 'La red está congestionada',
+            text: 'El búfer de envío se está llenando: la red apenas da abasto y pronto pueden perderse fotogramas.',
+        },
+        rendering: {
+            title: 'La GPU está sobrecargada',
+            text: 'OBS no consigue renderizar los fotogramas a tiempo y bajan los FPS.',
+        },
+        encoding: {
+            title: 'El codificador no da abasto',
+            text: 'El codificador no consigue comprimir los fotogramas a tiempo y omite algunos.',
+        },
+        steps: {
+            lowerBitrate: 'Baja la tasa de bits en $t(obs.settings) → $t(obs.output).',
+            dynamicBitrate: 'Activa «$t(obs.dynamicBitrate)» en $t(obs.settings) → $t(obs.advanced) → $t(obs.network).',
+            cable: 'Conecta el ordenador por cable en lugar de wifi y pausa otras subidas.',
+            closerServer: 'Elige un servidor de la plataforma más cercano.',
+            checkInternet: 'Comprueba que la conexión a internet funciona.',
+            otherServer: 'Si la conexión se corta una y otra vez, elige otro servidor de la plataforma.',
+            checkPlatform: 'Comprueba en la web de la plataforma que el directo no ha terminado allí.',
+            capGameFps: 'Limita los FPS del juego, por ejemplo a la frecuencia del monitor.',
+            runAsAdministrator: 'Ejecuta OBS como administrador: así Windows le da prioridad en la GPU.',
+            closeHeavyApps: 'Cierra otros programas que cargan la GPU.',
+            lowerCanvas: 'Baja la resolución base o los FPS en $t(obs.settings) → $t(obs.video).',
+            fasterPreset: 'Elige un preset de codificación más rápido en $t(obs.settings) → $t(obs.output).',
+            hardwareEncoder: 'Si codifica el procesador (x264), cambia a un codificador por hardware: NVENC, AMF o Quick Sync.',
+            lowerOutput: 'Baja la resolución o los FPS de salida.',
+        },
+    },
     update: {
         install: 'Actualizar',
         whatsNew: 'Novedades',
@@ -190,6 +230,11 @@ export const es: TranslationDto = {
         memoryUsage: 'Uso de memoria',
         enableWebSocketServer: 'Habilitar servidor WebSocket',
         addScripts: 'Añadir Scripts',
+        output: 'Salida',
+        video: 'Vídeo',
+        advanced: 'Avanzado',
+        network: 'Red',
+        dynamicBitrate: 'Cambia dinámicamente la tasa de bits para gestionar la congestión',
     },
     units: {
         milliseconds: '{{value}} ms',

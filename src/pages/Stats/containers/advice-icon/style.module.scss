@@ -1,0 +1,15 @@
+.icon {
+    margin-inline-end: var(--ant-margin-xs);
+    color: var(--ant-color-error);
+}
+
+.tooltip .whatToDo {
+    color: var(--ant-yellow-7);
+    font-weight: var(--ant-font-weight-strong);
+    text-decoration: underline;
+    white-space: nowrap;
+}
+
+.tooltip .whatToDo:hover {
+    color: var(--ant-yellow);
+}

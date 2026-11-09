@@ -49,7 +49,7 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 | --- | --- |
 | Current bitrate and two-minute graph | FPS, highlighted when it drops, and frame time |
 | Dropped network frames: total and recent | Encoding and rendering lag since the stream started |
-| Live / unstable / reconnecting status | CPU usage and OBS memory |
+| Live / unstable / reconnecting status, with a hint on what to try | CPU usage and OBS memory |
 | Uptime and network congestion | GPU usage, encoder load, VRAM and system RAM¹ |
 | Detected platform and output source, when available | Diagnostics, mock mode and update checks |
 
@@ -135,6 +135,18 @@ Use the dock's **gear icon** to change language, show or hide OBS statistics, tr
 | Some platform names are generic | Check the Lua bridge is loaded in the active scene collection |
 | GPU stats are missing | Check the Lua bridge on Windows |
 | Installer didn't configure OBS | See `%LOCALAPPDATA%\streamoscope\configure-obs.log`; rerun with OBS closed |
+
+### 🩺 Stream problems
+
+When a stream runs into trouble, a red icon lights up next to the row with the problem. Hover over it to see what's wrong; **What to do?** opens the steps below. The icon appears once the problem has lasted three seconds and goes out three seconds after it's over.
+
+| Problem | Where the icon shows | Try this |
+| --- | --- | --- |
+| Frames are being dropped | **Dropped (frames/min)**: at least 1% of frames lost in the last minute | Lower the bitrate in **Settings → Output**; turn on dynamic bitrate in **Settings → Advanced → Network**; use a cable instead of Wi-Fi and pause other uploads; pick a closer server |
+| The network is congested | **Network congestion**: the send buffer is at least half full | Same as for dropped frames: the network barely keeps up, and drops are next |
+| OBS is reconnecting | Next to the status of the card | Check the internet connection; if it keeps dropping, pick another server; check on the platform's site that the stream hasn't ended there |
+| The GPU is overloaded | **Rendering lagged**: at least 0.5% of frames in the last minute | Cap the game's FPS; run OBS as administrator; close other GPU-heavy apps; lower the base resolution or FPS in **Settings → Video** |
+| The encoder can't keep up | **Encoder lagged**: at least 0.5% of frames in the last minute | Pick a faster preset in **Settings → Output**; switch from x264 to a hardware encoder (NVENC, AMF, Quick Sync); lower the output resolution or FPS |
 
 🆘 Still stuck? [Open an issue](https://github.com/tjnk24/streamoscope/issues), preferably with **Settings → Diagnostics → Copy diagnostics** and the file `streamoscope.log` from **Open journal folder**. If the dock won't open, the file is in `%LOCALAPPDATA%\streamoscope\logs`. Please don't attach passwords or stream keys.
 

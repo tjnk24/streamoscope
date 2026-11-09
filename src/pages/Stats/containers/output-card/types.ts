@@ -32,6 +32,7 @@ export type OutputCardViewDto = {
     title: string;
     color: string;
     notes: NoteDto[];
+    hasReconnectAdvice: boolean;
     platformMark: Nullable<PlatformMarkDto>;
     healthTag: HealthTagDto;
     statusKey: ParseKeys;

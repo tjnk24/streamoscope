@@ -136,6 +136,46 @@ export const de: TranslationDto = {
             gpuSharedMemory: 'Integrierte Grafik hat keinen eigenen Speicher und nutzt einen Teil des Arbeitsspeichers',
         },
     },
+    advice: {
+        whatToDo: 'Was tun?',
+        close: 'Verstanden',
+        reconnecting: {
+            title: 'OBS verbindet sich neu',
+            text: 'Die Verbindung zur Plattform ist abgebrochen, OBS versucht es erneut.',
+        },
+        droppedFrames: {
+            title: 'Frames gehen verloren',
+            text: 'Das Netzwerk kommt mit dem Senden nicht nach, und OBS verwirft Frames.',
+        },
+        congestion: {
+            title: 'Das Netzwerk ist überlastet',
+            text: 'Der Sendepuffer läuft voll: Das Netzwerk kommt kaum hinterher, bald können Frames verloren gehen.',
+        },
+        rendering: {
+            title: 'Die Grafikkarte ist überlastet',
+            text: 'OBS kommt mit dem Rendern nicht nach, die FPS sinken.',
+        },
+        encoding: {
+            title: 'Der Encoder kommt nicht hinterher',
+            text: 'Der Encoder schafft es nicht, die Frames rechtzeitig zu komprimieren, und überspringt einige.',
+        },
+        steps: {
+            lowerBitrate: 'Senke die Bitrate unter $t(obs.settings) → $t(obs.output).',
+            dynamicBitrate: 'Aktiviere „$t(obs.dynamicBitrate)“ unter $t(obs.settings) → $t(obs.advanced) → $t(obs.network).',
+            cable: 'Verbinde den Computer per Kabel statt WLAN und pausiere andere Uploads.',
+            closerServer: 'Wähle einen näheren Server der Plattform.',
+            checkInternet: 'Prüfe, ob die Internetverbindung funktioniert.',
+            otherServer: 'Bricht die Verbindung immer wieder ab, wähle einen anderen Server der Plattform.',
+            checkPlatform: 'Prüfe auf der Website der Plattform, ob der Stream dort nicht beendet wurde.',
+            capGameFps: 'Begrenze die FPS im Spiel, zum Beispiel auf die Bildwiederholrate des Monitors.',
+            runAsAdministrator: 'Starte OBS als Administrator: Dann gibt Windows ihm bei der Grafikkarte Vorrang.',
+            closeHeavyApps: 'Schließe andere Programme, die die Grafikkarte belasten.',
+            lowerCanvas: 'Senke die Basisauflösung oder die FPS unter $t(obs.settings) → $t(obs.video).',
+            fasterPreset: 'Wähle ein schnelleres Encoder-Preset unter $t(obs.settings) → $t(obs.output).',
+            hardwareEncoder: 'Kodiert der Prozessor (x264), wechsle zu einem Hardware-Encoder: NVENC, AMF oder Quick Sync.',
+            lowerOutput: 'Senke die Ausgabeauflösung oder die FPS.',
+        },
+    },
     update: {
         install: 'Aktualisieren',
         whatsNew: 'Was ist neu',
@@ -190,6 +230,11 @@ export const de: TranslationDto = {
         memoryUsage: 'RAM-Nutzung',
         enableWebSocketServer: 'WebSocket-Server aktivieren',
         addScripts: 'Skripte hinzufügen',
+        output: 'Ausgabe',
+        video: 'Video',
+        advanced: 'Erweitert',
+        network: 'Netzwerk',
+        dynamicBitrate: 'Bitrate dynamisch verändern, um Überlastung zu kontrollieren',
     },
     units: {
         milliseconds: '{{value}} ms',

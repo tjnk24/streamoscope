@@ -7,6 +7,8 @@ import {settingsIsShowGeneralCardSelector} from '__selectors/settingsSelectors';
 import {statsTargetsSelector} from '__selectors/statsSelectors';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
 
+import {adviceModalSelector} from '../../selectors';
+import AdviceModal from '../advice-modal';
 import GeneralCard from '../general-card';
 import OutputCard from '../output-card';
 
@@ -18,6 +20,7 @@ const Page = () => {
     const status = useSelector(connectionStatusSelector);
     const targets = useSelector(statsTargetsSelector);
     const isShowGeneralCard = useSelector(settingsIsShowGeneralCardSelector);
+    const {isVisible: isAdviceModalVisible} = useSelector(adviceModalSelector);
 
     const {isClosed, title, description} = useConnectionAlertView();
 
@@ -49,6 +52,8 @@ const Page = () => {
             </div>
 
             {isShowGeneralCard && <GeneralCard/>}
+
+            {isAdviceModalVisible && <AdviceModal/>}
         </Flex>
     );
 };

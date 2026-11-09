@@ -11,9 +11,12 @@ import {
 import cn from 'classnames';
 import {useTranslation} from 'react-i18next';
 
+import {AdviceEnum} from '__types/stats/views';
+
 import BitrateGraph from '../../components/bitrate-graph';
 import StatList from '../../components/stat-list';
 import {formatNumber} from '../../utils/formatNumber';
+import AdviceIcon from '../advice-icon';
 
 import {useOutputCardView} from './hooks/useOutputCardView';
 import {Props} from './types';
@@ -27,6 +30,7 @@ const OutputCard = ({target}: Props) => {
         title,
         color,
         notes,
+        hasReconnectAdvice,
         platformMark,
         healthTag,
         statusKey,
@@ -66,12 +70,16 @@ const OutputCard = ({target}: Props) => {
                 </Flex>
             )}
             extra={(
-                <Tag
-                    color={healthTag.color}
-                    variant={healthTag.variant}
-                >
-                    {t(statusKey)}
-                </Tag>
+                <Flex align="center">
+                    {hasReconnectAdvice && <AdviceIcon advice={AdviceEnum.Reconnecting}/>}
+
+                    <Tag
+                        color={healthTag.color}
+                        variant={healthTag.variant}
+                    >
+                        {t(statusKey)}
+                    </Tag>
+                </Flex>
             )}
         >
             <Flex

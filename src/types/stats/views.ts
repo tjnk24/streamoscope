@@ -12,10 +12,19 @@ export enum HealthLevelEnum {
     Off = 'off',
 }
 
+export enum AdviceEnum {
+    Reconnecting = 'reconnecting',
+    DroppedFrames = 'droppedFrames',
+    Congestion = 'congestion',
+    Rendering = 'rendering',
+    Encoding = 'encoding',
+}
+
 export type LagViewDto = {
     skipped: number;
     total: number;
     recentSkipped: number;
+    recentTotal: number;
 };
 
 export type GeneralViewDto = {
@@ -26,6 +35,7 @@ export type GeneralViewDto = {
     memoryInMb: number;
     encoding: LagViewDto;
     rendering: LagViewDto;
+    advices: AdviceEnum[];
 };
 
 export type OutputViewDto = {
@@ -40,6 +50,7 @@ export type OutputViewDto = {
     recentTotal: number;
     congestion: number;
     graph: GraphPointDto[];
+    advices: AdviceEnum[];
 };
 
 export type StatsViewDto = {
