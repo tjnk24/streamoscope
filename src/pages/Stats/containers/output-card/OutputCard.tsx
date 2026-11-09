@@ -6,11 +6,11 @@ import {
     Statistic,
     Tag,
     Tooltip,
-    Typography,
 } from 'antd';
 import cn from 'classnames';
 import {useTranslation} from 'react-i18next';
 
+import EnhancedText from '__components/EnhancedText';
 import {AdviceEnum} from '__types/stats/views';
 
 import BitrateGraph from '../../components/bitrate-graph';
@@ -58,9 +58,9 @@ const OutputCard = ({target}: Props) => {
                 >
                     <Badge color={color}/>
 
-                    <Typography.Text ellipsis={{tooltip: title}}>
+                    <EnhancedText>
                         {title}
-                    </Typography.Text>
+                    </EnhancedText>
 
                     {platformMark && (
                         <Tooltip title={t(platformMark.hintKey)}>

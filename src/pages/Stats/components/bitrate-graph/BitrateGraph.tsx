@@ -12,6 +12,7 @@ import {
 } from 'react';
 import {useTranslation} from 'react-i18next';
 
+import EnhancedText from '__components/EnhancedText';
 import {GRAPH_SPAN_SEC} from '__utils/consts';
 
 import {Props} from './types';
@@ -85,12 +86,9 @@ const BitrateGraph = ({points, now, color, isActive}: Props) => {
                         <LineChartOutlined/>
                     </Typography.Text>
 
-                    <Typography.Text
-                        type="secondary"
-                        ellipsis
-                    >
+                    <EnhancedText type="secondary">
                         {isActive ? t('stats.graphCollecting') : t('stats.graphWaiting')}
-                    </Typography.Text>
+                    </EnhancedText>
                 </Flex>
             )}
         </div>

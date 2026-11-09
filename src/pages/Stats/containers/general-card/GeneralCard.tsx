@@ -3,6 +3,7 @@ import {Card, Flex} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import EnhancedButton from '__components/EnhancedButton';
+import EnhancedText from '__components/EnhancedText';
 import {journalService} from '__services/journal/journalService';
 import {obsConnectionService} from '__services/obsConnectionService';
 import {JournalLevelEnum} from '__types/journal';
@@ -28,7 +29,11 @@ const GeneralCard = () => {
     return (
         <Card
             size="small"
-            title={t('general.title')}
+            title={(
+                <EnhancedText>
+                    {t('general.title')}
+                </EnhancedText>
+            )}
         >
             <StatList
                 items={items}

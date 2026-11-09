@@ -12,6 +12,7 @@ import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
 import EnhancedButton from '__components/EnhancedButton';
+import EnhancedText from '__components/EnhancedText';
 import PortField from '__components/PortField';
 import {connectionStatusSelector} from '__selectors/connectionSelectors';
 import {settingsPortSelector} from '__selectors/settingsSelectors';
@@ -57,7 +58,11 @@ const Page = () => {
             <Card
                 className={style.card}
                 size="small"
-                title={t('login.title')}
+                title={(
+                    <EnhancedText>
+                        {t('login.title')}
+                    </EnhancedText>
+                )}
             >
                 {messageKey && (
                     <Alert

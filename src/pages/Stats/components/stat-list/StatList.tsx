@@ -6,6 +6,8 @@ import {
     Typography,
 } from 'antd';
 
+import EnhancedText from '__components/EnhancedText';
+
 import {LEVEL_TEXT_TYPES} from './consts';
 import {Props} from './types';
 
@@ -35,12 +37,9 @@ const StatList = ({items, column = 1}: Props) => (
                     align="center"
                     gap={4}
                 >
-                    <Typography.Text
-                        className={style.labelText}
-                        ellipsis={{tooltip: label}}
-                    >
+                    <EnhancedText className={style.labelText}>
                         {label}
-                    </Typography.Text>
+                    </EnhancedText>
 
                     {hint && (
                         <Tooltip title={hint}>

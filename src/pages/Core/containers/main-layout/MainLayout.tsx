@@ -4,13 +4,13 @@ import {
     Badge,
     Flex,
     Spin,
-    Typography,
 } from 'antd';
 import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 import {Outlet, useMatch} from 'react-router';
 
 import EnhancedButton from '__components/EnhancedButton';
+import EnhancedText from '__components/EnhancedText';
 import {ROUTES} from '__routes';
 import {connectionIsSwitchingCollectionSelector, connectionStatusSelector} from '__selectors/connectionSelectors';
 import {settingsIsMockEnabledSelector} from '__selectors/settingsSelectors';
@@ -67,12 +67,9 @@ const MainLayout = () => {
                         >
                             <Spin size="small"/>
 
-                            <Typography.Text
-                                type="secondary"
-                                ellipsis
-                            >
+                            <EnhancedText type="secondary">
                                 {t(stageKey)}
-                            </Typography.Text>
+                            </EnhancedText>
                         </Flex>
                     )}
                 </Flex>
