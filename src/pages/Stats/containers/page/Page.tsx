@@ -7,7 +7,7 @@ import {settingsIsShowGeneralCardSelector} from '__selectors/settingsSelectors';
 import {statsTargetsSelector} from '__selectors/statsSelectors';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
 
-import {adviceModalSelector} from '../../selectors';
+import {adviceModalSelector} from '../../selectors/adviceModalSelectors';
 import AdviceModal from '../advice-modal';
 import GeneralCard from '../general-card';
 import OutputCard from '../output-card';

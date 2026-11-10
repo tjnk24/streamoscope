@@ -1,5 +1,7 @@
-import {rootReducer} from '__reducers';
+import {injectSlices} from '__utils/redux/injectSlices';
 
 import adviceModalSlice from './adviceModalReducer';
 
-export const injectedAdviceModalSlice = adviceModalSlice.injectInto(rootReducer);
+export const injectedSlices = injectSlices({
+    adviceModal: adviceModalSlice,
+});

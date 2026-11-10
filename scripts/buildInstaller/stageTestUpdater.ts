@@ -16,7 +16,7 @@ export const stageTestUpdater = (server: string, publicKey: string, entryPath = 
 
     const patched = source
         .replace(RELEASE_BASE_URL_PATTERN, (_match, start: string, end: string) => `${start}${server}/download${end}`)
-        .replace(LATEST_RELEASE_URL_PATTERN, (_match, start: string, end: string) => `${start}${server}/latest${end}`)
+        .replace(LATEST_RELEASE_URL_PATTERN, (_match, start: string, end: string) => `${start}${server}/releases/latest${end}`)
         .replace(PUBLIC_KEY_PATTERN, (_match, start: string, end: string) => `${start}${publicKey}${end}`);
 
     fs.writeFileSync(entryPath, patched);

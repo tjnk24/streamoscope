@@ -1,10 +1,5 @@
-import {bindActionCreators} from '@reduxjs/toolkit';
+import {bindSliceActions} from '__utils/redux/bindSliceActions';
 
-import store from '__store';
+import {injectedSlices} from './reducers';
 
-import {injectedReleaseNotesModalSlice, injectedReleaseNotesSlice} from './reducers';
-
-export const actions = {
-    releaseNotesModal: bindActionCreators(injectedReleaseNotesModalSlice.actions, store.dispatch),
-    releaseNotes: bindActionCreators(injectedReleaseNotesSlice.actions, store.dispatch),
-};
+export const actions = bindSliceActions(injectedSlices);

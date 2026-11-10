@@ -1,3 +1,4 @@
+import type {components, operations} from '@octokit/openapi-types';
 import type {Nullable} from 'infrastructure/common';
 
 import {CompatibilityDto} from './compatibility';
@@ -8,14 +9,12 @@ export type VersionDto = {
     patch: number;
 };
 
-export type GithubReleaseDto = {
-    tag_name: string;
-    html_url: string;
-    body: Nullable<string>;
-    published_at: Nullable<string>;
-    draft: boolean;
-    prerelease: boolean;
-};
+export type GithubReleaseDto = Pick<
+    components['schemas']['release'],
+    'tag_name' | 'html_url' | 'body' | 'published_at' | 'draft' | 'prerelease'
+>;
+
+export type GithubReleasesQueryDto = NonNullable<operations['repos/list-releases']['parameters']['query']>;
 
 export type ReleaseDto = {
     version: string;

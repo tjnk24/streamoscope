@@ -1,6 +1,6 @@
 import type {Nullable} from 'infrastructure/common';
 
-import {ROUTES} from '__routes';
+import {ROUTES} from '__routes/app';
 import {NavigateDto} from '__types/app/routing';
 
 class RouterManager {

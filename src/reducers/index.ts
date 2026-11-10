@@ -1,7 +1,5 @@
 import {combineSlices} from '@reduxjs/toolkit';
 
-import {LazyLoadedSlicesDto} from '__types/app/LazyLoadedSlicesDto';
-
 import connectionSlice, {ConnectionReducer} from './connectionReducer';
 import settingsSlice, {SettingsReducer} from './settingsReducer';
 import statsSlice, {StatsReducer} from './statsReducer';
@@ -21,7 +19,7 @@ const reducers = {
     update: updateSlice.reducer,
 };
 
-export const rootReducer = combineSlices(reducers).withLazyLoadedSlices<LazyLoadedSlicesDto>();
+export const rootReducer = combineSlices(reducers);
 
 export const actionCreators = {
     connection: connectionSlice.actions,

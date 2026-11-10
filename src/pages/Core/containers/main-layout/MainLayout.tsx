@@ -11,7 +11,7 @@ import {Outlet, useMatch} from 'react-router';
 
 import EnhancedButton from '__components/EnhancedButton';
 import EnhancedText from '__components/EnhancedText';
-import {ROUTES} from '__routes';
+import {ROUTES} from '__routes/app';
 import {connectionIsSwitchingCollectionSelector, connectionStatusSelector} from '__selectors/connectionSelectors';
 import {settingsIsMockEnabledSelector} from '__selectors/settingsSelectors';
 import {obsConnectionService} from '__services/obsConnectionService';

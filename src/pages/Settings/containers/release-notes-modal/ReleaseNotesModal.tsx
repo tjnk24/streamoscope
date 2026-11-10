@@ -12,19 +12,31 @@ import EnhancedButton from '__components/EnhancedButton';
 import {updateService} from '__services/updateService';
 
 import {actions} from '../../actions';
-import {releaseNotesModalSelector, releaseNotesSelector} from '../../selectors';
+import {releaseNotesModalSelector} from '../../selectors/releaseNotesModalSelectors';
+import {
+    parsedReleaseNotesSelector,
+    releaseNotesIsFailedSelector,
+    releaseNotesIsPendingSelector,
+    releaseNotesIsSuccessSelector,
+} from '../../selectors/releaseNotesSelectors';
 import {ReleaseNotesModeEnum} from '../../types';
 
 import {MARKDOWN_OPTIONS} from './consts';
+import {filterReleaseNotes} from './utils/filterReleaseNotes';
 import {getNotesForLanguage} from './utils/getNotesForLanguage';
 
 import style from './style.module.scss';
 
 const ReleaseNotesModal = () => {
     const {mode, url} = useSelector(releaseNotesModalSelector);
-    const {isPending, isFailed, releases} = useSelector(releaseNotesSelector);
+    const isPending = useSelector(releaseNotesIsPendingSelector);
+    const isSuccess = useSelector(releaseNotesIsSuccessSelector);
+    const isFailed = useSelector(releaseNotesIsFailedSelector);
+    const parsedReleases = useSelector(parsedReleaseNotesSelector);
 
     const {t, i18n} = useTranslation();
+
+    const releases = filterReleaseNotes(parsedReleases, mode, process.env.APP_VERSION);
 
     const title = mode === ReleaseNotesModeEnum.Current
         ? t('releaseNotes.titleCurrent', {version: process.env.APP_VERSION})
@@ -75,7 +87,7 @@ const ReleaseNotesModal = () => {
                     />
                 )}
 
-                {!isFailed && releases.length === 0 && (
+                {isSuccess && releases.length === 0 && (
                     <Typography.Text type="secondary">
                         {t('releaseNotes.empty')}
                     </Typography.Text>

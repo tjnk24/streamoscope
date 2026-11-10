@@ -6,7 +6,7 @@ import EnhancedButton from '__components/EnhancedButton';
 
 import {actions} from '../../actions';
 import {ADVICE_TEXTS} from '../../consts';
-import {adviceModalSelector} from '../../selectors';
+import {adviceModalSelector} from '../../selectors/adviceModalSelectors';
 
 const AdviceModal = () => {
     const {advice} = useSelector(adviceModalSelector);

@@ -10,10 +10,12 @@ import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
 import EnhancedButton from '__components/EnhancedButton';
+import {journalService} from '__services/journal/journalService';
 import {updateService} from '__services/updateService';
+import {JournalLevelEnum} from '__types/journal';
 
 import {actions} from '../../actions';
-import {releaseNotesModalSelector} from '../../selectors';
+import {releaseNotesModalSelector} from '../../selectors/releaseNotesModalSelectors';
 import {ReleaseNotesModeEnum} from '../../types';
 import ReleaseNotesModal from '../release-notes-modal';
 
@@ -41,6 +43,8 @@ const UpdateSettings = () => {
     } = useUpdateSettingsView();
 
     const openReleaseNotes = (mode: ReleaseNotesModeEnum, url: Nullable<string>) => {
+        journalService.log(JournalLevelEnum.Info, 'user', `opened the release notes ${mode}`);
+
         actions.releaseNotesModal.setData({isVisible: true, mode, url});
     };
 

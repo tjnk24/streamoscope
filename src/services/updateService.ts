@@ -1,6 +1,8 @@
 import type {Nullable} from 'infrastructure/common';
+import {isHTTPError} from 'ky';
 
 import {commonActions} from '__actions';
+import {releasesApi} from '__api/github/ReleasesApi';
 import {connectionSelector} from '__selectors/connectionSelectors';
 import {settingsSelector} from '__selectors/settingsSelectors';
 import {updateSelector} from '__selectors/updateSelectors';
@@ -9,13 +11,10 @@ import {JournalLevelEnum} from '__types/journal';
 import {ObsRequestTypeEnum} from '__types/obs/ObsRequestTypeEnum';
 import {CompatibilityResultDto} from '__types/update/compatibility';
 import {UpdateInstallBlockerEnum} from '__types/update/install';
-import {GithubReleaseDto} from '__types/update/release';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
 import {
     HEALTH_REPORT_DELAY_MS,
     HTTP_NOT_FOUND,
-    GITHUB_JSON_HEADERS,
-    LATEST_RELEASE_URL,
     OPEN_URL_COMMAND_PARAMETER,
     OPEN_URL_MIN_BRIDGE_VERSION,
     UPDATE_CHECK_PERIOD_MS,
@@ -190,26 +189,20 @@ class UpdateService {
 
     private fetchLatest = async (): Promise<UpdateCheckStatusEnum> => {
         try {
-            const response = await fetch(LATEST_RELEASE_URL, {headers: GITHUB_JSON_HEADERS});
-
-            if (response.status === HTTP_NOT_FOUND) {
-                commonActions.update.setLatest(null);
-
-                return UpToDate;
-            }
-
-            if (!response.ok) {
-                return Failed;
-            }
-
-            const release = parseRelease(await response.json() as GithubReleaseDto);
+            const release = parseRelease(await releasesApi.getLatest());
 
             commonActions.update.setLatest(release);
 
             return release && (compareVersions(release.version, process.env.APP_VERSION) ?? 0) > 0
                 ? Available
                 : UpToDate;
-        } catch {
+        } catch (error) {
+            if (isHTTPError(error) && error.response.status === HTTP_NOT_FOUND) {
+                commonActions.update.setLatest(null);
+
+                return UpToDate;
+            }
+
             return Failed;
         }
     };

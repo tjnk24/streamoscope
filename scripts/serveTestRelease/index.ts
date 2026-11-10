@@ -8,7 +8,9 @@ import {
     COMPATIBILITY_FILE_NAME,
     CORS_HEADERS,
     DOWNLOAD_PATH_PATTERN,
+    LATEST_RELEASE_PATH,
     PACKAGE_SIGNATURE_SUFFIX,
+    RELEASES_PATH,
     TEST_RELEASE_HOST,
     TEST_RELEASE_PORT,
     USAGE,
@@ -34,8 +36,10 @@ const server = http.createServer((request, response) => {
         return;
     }
 
-    if (pathname === '/latest') {
-        response.writeHead(200, {...CORS_HEADERS, 'Content-Type': 'application/json'}).end(JSON.stringify(buildLatestRelease(releaseDirectory, origin)));
+    if (pathname === LATEST_RELEASE_PATH || pathname === RELEASES_PATH) {
+        const release = buildLatestRelease(releaseDirectory, origin);
+
+        response.writeHead(200, {...CORS_HEADERS, 'Content-Type': 'application/json'}).end(JSON.stringify(pathname === RELEASES_PATH ? [release] : release));
 
         return;
     }
