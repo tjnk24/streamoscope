@@ -1,13 +1,11 @@
 import type {Nullable} from 'infrastructure/common';
 
+import {devApi} from '__api/dev/DevApi';
 import {DevObsConnectionDto} from '__types/connection/DevObsConnectionDto';
-import {DEV_OBS_CONNECTION_URL} from '__utils/consts';
 
 export const fetchDevObsConnection = async (): Promise<Nullable<DevObsConnectionDto>> => {
     try {
-        const response = await fetch(DEV_OBS_CONNECTION_URL);
-
-        return response.ok ? await response.json() as DevObsConnectionDto : null;
+        return await devApi.getObsConnection();
     } catch {
         return null;
     }

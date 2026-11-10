@@ -19,6 +19,7 @@ import {ObsRequestTypeEnum} from '__types/obs/ObsRequestTypeEnum';
 import {
     ObsRequestDto,
     ObsRequestResultDto,
+    ProfileParameterKeyDto,
     RequestResultPairDto,
 } from '__types/obs/requests';
 import {getAuthString} from '__utils/auth/getAuthString';
@@ -57,6 +58,8 @@ const {
 
 const {CurrentSceneCollectionChanging, CurrentSceneCollectionChanged} = ObsEventTypeEnum;
 
+const {SetProfileParameter, GetProfileParameter, GetStats} = ObsRequestTypeEnum;
+
 const {Connecting, Closed, NeedPassword, WrongPassword} = ConnectionStatusEnum;
 
 const {Rejected, NoConnection, Accepted} = PasswordChangeResultEnum;
@@ -90,7 +93,12 @@ class ObsConnectionService {
 
     start = async () => {
         if (process.env.IS_DEV_SERVER) {
-            await this.applyDevConnection();
+            const connection = await fetchDevObsConnection();
+
+            if (connection) {
+                commonActions.settings.setPort(connection.port);
+                this.password = connection.password;
+            }
         }
 
         this.connect();
@@ -129,18 +137,21 @@ class ObsConnectionService {
         commonActions.stats.setView(this.tracker.resetGraphs());
     };
 
+    setProfileParameter = (parameter: ProfileParameterKeyDto, parameterValue: string) => {
+        const request: ObsRequestDto = {
+            requestType: SetProfileParameter,
+            requestData: {
+                ...parameter,
+                parameterValue,
+            },
+        };
+
+        this.sendRequest(request);
+    };
+
     sendRequest = (request: ObsRequestDto) => {
         this.pendingRequests.push(request);
         this.poll();
-    };
-
-    private applyDevConnection = async () => {
-        const connection = await fetchDevObsConnection();
-
-        if (connection) {
-            commonActions.settings.setPort(connection.port);
-            this.password = connection.password;
-        }
     };
 
     private reconnect = () => {
@@ -332,14 +343,16 @@ class ObsConnectionService {
 
         this.inFlight = {id, since: now, requests};
 
-        this.socket.send(JSON.stringify({
+        const message: ObsMessageDto = {
             op: RequestBatch,
             d: {
                 requestId: id,
                 haltOnFailure: false,
                 requests,
             },
-        }));
+        };
+
+        this.socket.send(JSON.stringify(message));
     };
 
     private onBatchResults = (requests: ObsRequestDto[], results: ObsRequestResultDto[]) => {
@@ -353,7 +366,7 @@ class ObsConnectionService {
         this.updateSceneCollection(getSceneCollection(pairs));
         this.finishCollectionSwitch(pairs);
 
-        if (pairs.some(({request, result}) => isRequestOfType(ObsRequestTypeEnum.GetProfileParameter)(request) && result?.requestStatus.result)) {
+        if (pairs.some(({request, result}) => isRequestOfType(GetProfileParameter)(request) && result?.requestStatus.result)) {
             const {sceneCollection} = connectionSelector(getStore());
 
             commonActions.stats.setHardware(getHardware(pairs, sceneCollection));
@@ -410,7 +423,7 @@ class ObsConnectionService {
             return;
         }
 
-        const isAnswered = pairs.some(({request, result}) => isRequestOfType(ObsRequestTypeEnum.GetStats)(request) && result?.requestStatus.result);
+        const isAnswered = pairs.some(({request, result}) => isRequestOfType(GetStats)(request) && result?.requestStatus.result);
         const isTimedOut = Date.now() - collectionSwitchStartedAt > COLLECTION_SWITCH_TIMEOUT_MS;
 
         if ((this.isCollectionSwitchFinished && isAnswered) || isTimedOut) {

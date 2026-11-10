@@ -3,7 +3,6 @@ import {updateSelector} from '__selectors/updateSelectors';
 import {getStore} from '__store';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
 import {JournalTransportDto} from '__types/journal';
-import {ObsRequestTypeEnum} from '__types/obs/ObsRequestTypeEnum';
 import {
     JOURNAL_COMMAND_PARAMETER,
     JOURNAL_LINE_SEPARATOR,
@@ -12,8 +11,6 @@ import {
 } from '__utils/consts';
 
 import {obsConnectionService} from '../obsConnectionService';
-
-const {SetProfileParameter} = ObsRequestTypeEnum;
 
 class BridgeJournalTransport implements JournalTransportDto {
     isReady = () => {
@@ -26,10 +23,7 @@ class BridgeJournalTransport implements JournalTransportDto {
     };
 
     send = (lines: string[]) => {
-        obsConnectionService.sendRequest({
-            requestType: SetProfileParameter,
-            requestData: {...JOURNAL_LINES_PARAMETER, parameterValue: lines.join(JOURNAL_LINE_SEPARATOR)},
-        });
+        obsConnectionService.setProfileParameter(JOURNAL_LINES_PARAMETER, lines.join(JOURNAL_LINE_SEPARATOR));
     };
 
     setEnabled = (isEnabled: boolean) => {
@@ -41,10 +35,7 @@ class BridgeJournalTransport implements JournalTransportDto {
     };
 
     private sendCommand = (command: string) => {
-        obsConnectionService.sendRequest({
-            requestType: SetProfileParameter,
-            requestData: {...JOURNAL_COMMAND_PARAMETER, parameterValue: command},
-        });
+        obsConnectionService.setProfileParameter(JOURNAL_COMMAND_PARAMETER, command);
     };
 }
 

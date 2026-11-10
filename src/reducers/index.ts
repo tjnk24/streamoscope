@@ -21,9 +21,9 @@ const reducers = {
 
 export const rootReducer = combineSlices(reducers);
 
-export const actionCreators = {
-    connection: connectionSlice.actions,
-    stats: statsSlice.actions,
-    settings: settingsSlice.actions,
-    update: updateSlice.actions,
+export const commonSlices = {
+    connection: connectionSlice,
+    stats: statsSlice,
+    settings: settingsSlice,
+    update: updateSlice,
 };

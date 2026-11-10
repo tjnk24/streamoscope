@@ -8,9 +8,8 @@ import {settingsSelector} from '__selectors/settingsSelectors';
 import {updateSelector} from '__selectors/updateSelectors';
 import store, {getStore} from '__store';
 import {JournalLevelEnum} from '__types/journal';
-import {ObsRequestTypeEnum} from '__types/obs/ObsRequestTypeEnum';
-import {CompatibilityResultDto} from '__types/update/compatibility';
-import {UpdateInstallBlockerEnum} from '__types/update/install';
+import {CompatibilityResultDto, UpdateEnvironmentDto} from '__types/update/compatibility';
+import {UpdateInstallBlockerEnum, UpdateInstallContextDto} from '__types/update/install';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
 import {
     HEALTH_REPORT_DELAY_MS,
@@ -32,8 +31,6 @@ import {journalService} from './journal/journalService';
 import {obsConnectionService} from './obsConnectionService';
 
 const {Checking, UpToDate, Available, Failed} = UpdateCheckStatusEnum;
-
-const {SetProfileParameter} = ObsRequestTypeEnum;
 
 class UpdateService {
     private timer: Nullable<number> = null;
@@ -91,25 +88,29 @@ class UpdateService {
 
         const {obsVersion} = connectionSelector(state);
 
-        return checkCompatibility(compatibility, {
+        const environment: UpdateEnvironmentDto = {
             currentVersion: process.env.APP_VERSION,
             obsVersion: obsVersion?.obsVersion ?? null,
             rpcVersion: obsVersion?.rpcVersion ?? null,
             availableRequests: obsVersion?.availableRequests ?? null,
             chromiumVersion: getChromiumVersion(navigator.userAgent),
-        });
+        };
+
+        return checkCompatibility(compatibility, environment);
     };
 
     getInstallBlocker = (): Nullable<UpdateInstallBlockerEnum> => {
         const {latest, bridge} = updateSelector(getStore());
 
-        return getInstallBlocker({
+        const context: UpdateInstallContextDto = {
             release: latest,
             currentVersion: process.env.APP_VERSION,
             bridge,
             compatibility: this.getCompatibility(),
             now: Date.now(),
-        });
+        };
+
+        return getInstallBlocker(context);
     };
 
     install = () => {
@@ -121,10 +122,7 @@ class UpdateService {
 
         journalService.log(JournalLevelEnum.Info, 'user', `clicked update version=${release.version}`);
 
-        obsConnectionService.sendRequest({
-            requestType: SetProfileParameter,
-            requestData: {...UPDATE_COMMAND_PARAMETER, parameterValue: `install:${release.version}`},
-        });
+        obsConnectionService.setProfileParameter(UPDATE_COMMAND_PARAMETER, `install:${release.version}`);
 
         commonActions.update.setRequest({version: release.version, requestedAt: Date.now()});
     };
@@ -139,10 +137,7 @@ class UpdateService {
             return;
         }
 
-        obsConnectionService.sendRequest({
-            requestType: SetProfileParameter,
-            requestData: {...OPEN_URL_COMMAND_PARAMETER, parameterValue: url},
-        });
+        obsConnectionService.setProfileParameter(OPEN_URL_COMMAND_PARAMETER, url);
     };
 
     setAutoUpdateEnabled = (isEnabled: boolean) => {
@@ -172,19 +167,15 @@ class UpdateService {
     };
 
     private sendHealthReport = () => {
-        obsConnectionService.sendRequest({
-            requestType: SetProfileParameter,
-            requestData: {...UPDATE_COMMAND_PARAMETER, parameterValue: `healthy:${process.env.APP_VERSION}`},
-        });
+        obsConnectionService.setProfileParameter(UPDATE_COMMAND_PARAMETER, `healthy:${process.env.APP_VERSION}`);
     };
 
     private sendAutoUpdate = () => {
         const {isAutoUpdateEnabled} = settingsSelector(getStore());
 
-        obsConnectionService.sendRequest({
-            requestType: SetProfileParameter,
-            requestData: {...UPDATE_COMMAND_PARAMETER, parameterValue: `auto:${isAutoUpdateEnabled ? 'on' : 'off'}`},
-        });
+        const autoUpdateState = isAutoUpdateEnabled ? 'on' : 'off';
+
+        obsConnectionService.setProfileParameter(UPDATE_COMMAND_PARAMETER, `auto:${autoUpdateState}`);
     };
 
     private fetchLatest = async (): Promise<UpdateCheckStatusEnum> => {

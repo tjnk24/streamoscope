@@ -133,16 +133,13 @@ export class MockObsSimulator {
                     outputTotalFrames: this.encoderTotalFrames,
                 });
 
-            case GetStreamStatus:
-                return successResult(
-                    requestType,
-                    buildMockOutputStatus(
-                        this.mainOutput,
-                        now,
-                        this.isMainDipping(runningSeconds) ? 0.6 : 0.02,
-                        false,
-                    ),
-                );
+            case GetStreamStatus: {
+                const congestion = this.isMainDipping(runningSeconds) ? 0.6 : 0.02;
+
+                const streamStatus = buildMockOutputStatus(this.mainOutput, now, congestion, false);
+
+                return successResult(requestType, streamStatus);
+            }
 
             case GetOutputStatus:
                 return this.answerOutputStatus(requestType, String(request.requestData?.outputName), now, runningSeconds);
@@ -153,16 +150,17 @@ export class MockObsSimulator {
                     streamServiceSettings: {service: 'YouTube - RTMPS', server: 'rtmps://a.rtmps.youtube.com:443/live2'},
                 });
 
-            case GetOutputList:
-                return successResult(requestType, {
-                    outputs: [
-                        buildMockOutputListItem(MOCK_MAIN_OUTPUT_NAME, true),
-                        ...(this.twitchOutput
-                            ? [buildMockOutputListItem(MOCK_TWITCH_OUTPUT_NAME, !this.isTwitchReconnecting(runningSeconds))]
-                            : []),
-                        ...MOCK_EXTRA_TARGETS.map(({outputName}) => buildMockOutputListItem(outputName, true)),
-                    ],
-                });
+            case GetOutputList: {
+                const twitchOutputs = this.twitchOutput
+                    ? [buildMockOutputListItem(MOCK_TWITCH_OUTPUT_NAME, !this.isTwitchReconnecting(runningSeconds))]
+                    : [];
+
+                const extraOutputs = MOCK_EXTRA_TARGETS.map(({outputName}) => buildMockOutputListItem(outputName, true));
+
+                const outputs = [buildMockOutputListItem(MOCK_MAIN_OUTPUT_NAME, true), ...twitchOutputs, ...extraOutputs];
+
+                return successResult(requestType, {outputs});
+            }
 
             case GetProfileParameter:
                 return successResult(requestType, {parameterValue: JSON.stringify(this.buildBridgeData())});

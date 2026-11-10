@@ -34,10 +34,6 @@ export const ADVICE_DELAY_MS = 3000;
 export const ADVICE_CONGESTION = 0.5;
 export const ADVICE_LAG_SHARE = 0.005;
 
-export const DEV_OBS_CONNECTION_URL = '/dev/obs-connection';
-export const DEV_JOURNAL_URL = '/dev/journal';
-export const DEV_JOURNAL_FOLDER_URL = '/dev/journal/open-folder';
-
 export const PASSWORD_STORAGE_KEY = 'streamoscope.password';
 export const SETTINGS_STORAGE_KEY = 'streamoscope.settings';
 export const DISCARDED_SETTINGS_STORAGE_KEY = 'streamoscope.settings.discarded';

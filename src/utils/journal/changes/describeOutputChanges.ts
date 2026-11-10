@@ -25,19 +25,23 @@ export const describeOutputChanges = (previousOutputs: JournalOutputSnapshotDto[
         }
 
         if (previous.isReconnecting !== current.isReconnecting) {
-            entries.push({
+            const reconnectEntry: JournalEntryDto = {
                 level: current.isReconnecting ? Warn : Info,
                 source,
                 message: current.isReconnecting ? 'reconnecting' : 'reconnected',
-            });
+            };
+
+            entries.push(reconnectEntry);
         }
 
         if (previous.level !== current.level && previous.level !== Off && current.level !== Off) {
-            entries.push({
+            const levelEntry: JournalEntryDto = {
                 level: current.level === Ok ? Info : Warn,
                 source,
                 message: `status ${previous.level} -> ${current.level} dropped_1m=${current.recentDropped}`,
-            });
+            };
+
+            entries.push(levelEntry);
         }
     });
 

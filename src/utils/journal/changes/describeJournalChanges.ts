@@ -39,19 +39,23 @@ export const describeJournalChanges = (previous: JournalSnapshotDto, current: Jo
     }
 
     if (previous.checkStatus !== current.checkStatus && current.checkStatus !== UpdateCheckStatusEnum.Checking) {
-        entries.push({
+        const checkEntry: JournalEntryDto = {
             level: current.checkStatus === UpdateCheckStatusEnum.Failed ? Warn : Info,
             source: 'panel',
             message: `update check ${current.checkStatus}`,
-        });
+        };
+
+        entries.push(checkEntry);
     }
 
     if (current.updateStage !== null && (previous.updateStage !== current.updateStage || previous.updateVersion !== current.updateVersion)) {
-        entries.push({
+        const updateEntry: JournalEntryDto = {
             level: current.updateError ? Error : Info,
             source: 'panel',
             message: `update stage=${current.updateStage} version=${current.updateVersion ?? 'unknown'} error=${current.updateError ?? 'none'}`,
-        });
+        };
+
+        entries.push(updateEntry);
     }
 
     if (current.rolledBackVersion !== null && previous.rolledBackVersion !== current.rolledBackVersion) {
