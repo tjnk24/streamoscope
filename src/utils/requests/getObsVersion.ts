@@ -10,13 +10,17 @@ import {isRequestOfType} from './isRequestOfType';
 export const getObsVersion = (pairs: RequestResultPairDto[]): Nullable<ObsVersionDto> => {
     const data = findResultData<ObsVersionDto>(pairs, isRequestOfType(ObsRequestTypeEnum.GetVersion));
 
-    return data
-        ? {
-            obsVersion: data.obsVersion,
-            obsWebSocketVersion: data.obsWebSocketVersion,
-            platformDescription: data.platformDescription,
-            rpcVersion: data.rpcVersion,
-            availableRequests: data.availableRequests,
-        }
-        : null;
+    if (!data) {
+        return null;
+    }
+
+    const {
+        obsVersion,
+        obsWebSocketVersion,
+        platformDescription,
+        rpcVersion,
+        availableRequests,
+    } = data;
+
+    return {obsVersion, obsWebSocketVersion, platformDescription, rpcVersion, availableRequests};
 };

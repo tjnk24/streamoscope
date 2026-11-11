@@ -28,7 +28,7 @@ function Remove-BrowserDock {
     }
 
     return [pscustomobject]@{
-        Json = '[' + (($kept | ForEach-Object { $DocksJson.Substring($_.Start, $_.End - $_.Start) }) -join ', ') + ']'
+        Json = Remove-JsonArrayItem -Text $DocksJson -Array $docks -Kept $kept
         Changed = $true
     }
 }

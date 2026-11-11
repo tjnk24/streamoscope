@@ -43,10 +43,6 @@ const DiagnosticsSettings = () => {
 
     const folderBlockerKey = getJournalFolderBlockerKey(Boolean(process.env.IS_DEV_SERVER), isMockEnabled, isInsideObs(), bridge);
 
-    useEffect(() => {
-        fallbackText && textRef.current?.focus({cursor: 'all'});
-    }, [fallbackText]);
-
     const onCopy = async () => {
         const diagnostics = reportService.buildDiagnostics();
         const isCopied = await reportService.copy(diagnostics);
@@ -54,6 +50,10 @@ const DiagnosticsSettings = () => {
         setFallbackText(isCopied ? null : diagnostics);
         setCopyResult(isCopied ? Copied : Selected);
     };
+
+    useEffect(() => {
+        fallbackText && textRef.current?.focus({cursor: 'all'});
+    }, [fallbackText]);
 
     return (
         <Flex

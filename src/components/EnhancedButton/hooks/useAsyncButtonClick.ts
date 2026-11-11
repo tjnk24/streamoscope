@@ -34,6 +34,12 @@ export const useAsyncButtonClick = (onClick: MouseEventHandler<HTMLElement> | un
 
                     return resolve(onClick(event));
                 });
+            } catch (error) {
+                const isFormValidationError = typeof error === 'object' && error !== null && 'errorFields' in error;
+
+                if (!isFormValidationError) {
+                    throw error;
+                }
             } finally {
                 isPendingRef.current = false;
                 isMountedRef.current && setIsPending(false);

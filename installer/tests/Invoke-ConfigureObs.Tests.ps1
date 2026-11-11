@@ -1,85 +1,10 @@
 BeforeAll {
     Get-ChildItem -LiteralPath (Join-Path $PSScriptRoot '..\ConfigureObs') -Filter '*.ps1' -Recurse | ForEach-Object { . $_.FullName }
+    Get-ChildItem -LiteralPath (Join-Path $PSScriptRoot 'helpers\configure') -Filter '*.ps1' | ForEach-Object { . $_.FullName }
 
     $script:fixtures = Join-Path $PSScriptRoot 'fixtures'
     $script:cyrillicFolder = -join [char[]](0x041F, 0x0440, 0x043E, 0x0433, 0x0440, 0x0430, 0x043C, 0x043C, 0x044B)
     $script:cyrillicCollection = (-join [char[]](0x041C, 0x043E, 0x0438, 0x0020, 0x0441, 0x0446, 0x0435, 0x043D, 0x044B)) + '.json'
-
-    function New-ObsFixture {
-        param([string]$Name)
-
-        $root = Join-Path $TestDrive ([guid]::NewGuid().ToString('N'))
-        $config = Join-Path $root 'obs-studio'
-
-        New-Item -ItemType Directory -Path $root -Force | Out-Null
-
-        if ($Name) {
-            Copy-Item -LiteralPath (Join-Path $script:fixtures $Name) -Destination $config -Recurse
-        } else {
-            New-Item -ItemType Directory -Path $config | Out-Null
-        }
-
-        $globalIni = Join-Path $config 'global.ini'
-
-        if (Test-Path -LiteralPath $globalIni) {
-            $file = Read-TextFile -Path $globalIni
-            Write-TextFile -Path $globalIni -Text $file.Text.Replace('__ROOT__', $root.Replace('\', '\\')) -HasBom $file.HasBom
-        }
-
-        $install = Join-Path $root "$script:cyrillicFolder and spaces\streamoscope"
-        New-Item -ItemType Directory -Path $install -Force | Out-Null
-
-        return [pscustomobject]@{
-            Root = $root
-            Config = $config
-            Install = $install
-            Data = Join-Path $root 'data'
-            DockUrl = ConvertTo-FileUrl -Path (Join-Path $install 'dock\index.html')
-            BridgePath = (Join-Path $install 'streamoscope-bridge.lua').Replace('\', '/')
-        }
-    }
-
-    function Invoke-Fixture {
-        param($Fixture, [string]$Mode = 'Install')
-
-        return Invoke-ConfigureObs -Mode $Mode -InstallDirectory $Fixture.Install -ConfigDirectory $Fixture.Config -DataDirectory $Fixture.Data
-    }
-
-    function Get-Hashes {
-        param([string]$Directory)
-
-        $hashes = [ordered]@{}
-
-        Get-ChildItem -LiteralPath $Directory -Recurse -File | Sort-Object FullName | ForEach-Object {
-            $hashes[$_.FullName] = (Get-FileHash -LiteralPath $_.FullName).Hash
-        }
-
-        return ($hashes.GetEnumerator() | ForEach-Object { "$($_.Key)=$($_.Value)" }) -join "`n"
-    }
-
-    function Get-BridgePaths {
-        param([string]$Path)
-
-        $root = Read-JsonDocument -Text (Read-TextFile -Path $Path).Text
-
-        return @((Get-JsonMember -Node (Get-JsonMember -Node $root -Key 'modules') -Key 'scripts-tool').Items | ForEach-Object { (Get-JsonMember -Node $_ -Key 'path').Value })
-    }
-
-    function Get-Docks {
-        param([string]$Path)
-
-        $docks = ConvertFrom-Json -InputObject (Get-IniValue -Text (Read-TextFile -Path $Path).Text -Section 'BasicWindow' -Key 'ExtraBrowserDocks')
-
-        foreach ($dock in $docks) {
-            $dock
-        }
-    }
-
-    function ConvertTo-Canonical {
-        param([string]$Path)
-
-        return (Read-TextFile -Path $Path).Text | ConvertFrom-Json | ConvertTo-Json -Depth 100 -Compress
-    }
 }
 
 Describe 'Invoke-ConfigureObs' {
@@ -289,6 +214,29 @@ Describe 'Invoke-ConfigureObs' {
 
             Invoke-Fixture -Fixture $fixture | Should -Be ([ConfigureObsResult]::UnsupportedFormat)
             Get-Hashes -Directory $fixture.Config | Should -BeExactly $hashes
+        }
+
+        It 'reports an unsupported format and changes nothing when global.ini is not UTF-8' {
+            $fixture = New-ObsFixture -Name 'obs-30'
+            [System.IO.File]::WriteAllBytes((Join-Path $fixture.Config 'global.ini'), [byte[]](0x5B, 0xFF, 0x5D))
+            $hashes = Get-Hashes -Directory $fixture.Config
+
+            Invoke-Fixture -Fixture $fixture | Should -Be ([ConfigureObsResult]::UnsupportedFormat)
+            Get-Hashes -Directory $fixture.Config | Should -BeExactly $hashes
+        }
+
+        It 'removes the dock on uninstall even when one profile cannot be read' {
+            $fixture = New-ObsFixture -Name 'obs-33'
+
+            Invoke-Fixture -Fixture $fixture | Should -Be ([ConfigureObsResult]::Success)
+
+            $brokenProfilePath = Join-Path $fixture.Config 'basic\profiles\Recording\basic.ini'
+            [System.IO.File]::WriteAllBytes($brokenProfilePath, [byte[]](0x5B, 0x47, 0xFF, 0x5D))
+            $brokenProfileHash = (Get-FileHash -LiteralPath $brokenProfilePath).Hash
+
+            Invoke-Fixture -Fixture $fixture -Mode Uninstall | Should -Be ([ConfigureObsResult]::Success)
+            (Get-FileHash -LiteralPath $brokenProfilePath).Hash | Should -Be $brokenProfileHash
+            @(Get-Docks -Path (Join-Path $fixture.Config 'user.ini') | Where-Object { $_.url -eq $fixture.DockUrl }).Count | Should -Be 0
         }
 
         It 'restores every file when a write fails halfway' {

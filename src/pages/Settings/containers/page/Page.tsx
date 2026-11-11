@@ -7,8 +7,8 @@ import PasswordSettings from '../password-settings';
 import PortSettings from '../port-settings';
 import UpdateSettings from '../update-settings';
 
-import {SettingsGroupEnum} from './consts';
 import {useOpenGroups} from './hooks/useOpenGroups';
+import {SettingsGroupEnum} from './types';
 
 const {Display, Updates, Diagnostics, Connection} = SettingsGroupEnum;
 

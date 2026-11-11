@@ -20,7 +20,7 @@
 .bitrateRow {
     flex: 1;
     align-self: stretch;
-    margin-bottom: 6px;
+    margin-bottom: var(--ant-margin-xs);
 }
 
 .bitrate {
@@ -46,7 +46,7 @@
 }
 
 .note {
-    margin-top: 6px;
+    margin-top: var(--ant-margin-xs);
 }
 
 .congestionValue {

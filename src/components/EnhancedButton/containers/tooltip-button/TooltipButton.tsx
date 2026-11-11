@@ -12,16 +12,18 @@ const TooltipButton = ({buttonProps, tooltipProps, children, withSpinner}: Props
 
     const {className: buttonClassName, disabled, ...buttonPropsRest} = buttonProps;
 
+    const triggerStates = {
+        [style.disabledTrigger]: disabled,
+        [style.hidden]: buttonProps.hidden,
+    };
+
     return (
         <Tooltip
             {...tooltipPropsRest}
             trigger={trigger}
         >
             <span
-                className={cn(style.trigger, {
-                    [style.disabledTrigger]: disabled,
-                    [style.hidden]: buttonProps.hidden,
-                }, tooltipClassName)}
+                className={cn(style.trigger, triggerStates, tooltipClassName)}
             >
                 <CommonButton
                     {...buttonPropsRest}

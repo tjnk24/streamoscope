@@ -33,8 +33,9 @@ local function confirm_version(self, version)
         text_file.remove(self.trial_path)
     end
 
-    if self:read_rolled_back_version() == version then
-        text_file.replace(self.current_version_path, string.format(consts.CURRENT_VERSION_TEMPLATE, version))
+    local is_rolled_back = self:read_rolled_back_version() == version
+
+    if is_rolled_back and text_file.replace(self.current_version_path, string.format(consts.CURRENT_VERSION_TEMPLATE, version)) then
         text_file.remove(self.rolled_back_version_path)
     end
 end

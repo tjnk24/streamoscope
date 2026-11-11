@@ -16,10 +16,25 @@ describe('getJournalTargetLabel', () => {
     });
 
     it('names a plugin output of an unknown server by the output', () => {
-        expect(getJournalTargetLabel({...TARGET, origin: OutputOriginEnum.Plugin, outputName: 'multi-output'})).toBe('multi-output');
+        const pluginTarget = {
+            ...TARGET,
+            origin: OutputOriginEnum.Plugin,
+            outputName: 'multi-output',
+        };
+
+        expect(getJournalTargetLabel(pluginTarget)).toBe('multi-output');
     });
 
     it('names a known platform', () => {
-        expect(getJournalTargetLabel({...TARGET, platform: {title: 'Twitch', color: '#000', isKnown: true}})).toBe('Twitch');
+        const twitchTarget = {
+            ...TARGET,
+            platform: {
+                title: 'Twitch',
+                color: '#000',
+                isKnown: true,
+            },
+        };
+
+        expect(getJournalTargetLabel(twitchTarget)).toBe('Twitch');
     });
 });

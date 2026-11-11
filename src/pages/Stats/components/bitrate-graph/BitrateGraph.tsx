@@ -28,6 +28,7 @@ const BitrateGraph = ({points, now, color, isActive}: Props) => {
     const {token} = theme.useToken();
 
     const containerRef = useRef<HTMLDivElement>(null);
+
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const hasLine = points.length >= 2;
@@ -39,10 +40,9 @@ const BitrateGraph = ({points, now, color, isActive}: Props) => {
             return undefined;
         }
 
-        const resizeObserver = new ResizeObserver(([{contentRect}]) => setSize({
-            width: contentRect.width,
-            height: contentRect.height,
-        }));
+        const resizeObserver = new ResizeObserver(([{contentRect: {width, height}}]) => {
+            setSize({width, height});
+        });
 
         resizeObserver.observe(container);
 
@@ -51,15 +51,16 @@ const BitrateGraph = ({points, now, color, isActive}: Props) => {
 
     useEffect(() => {
         if (canvasRef.current && size.width > 0 && size.height > 0) {
-            drawGraph({
+            const graph = {
                 canvas: canvasRef.current,
-                width: size.width,
-                height: size.height,
+                ...size,
                 points,
                 now,
                 color,
                 baselineColor: token.colorBorder,
-            });
+            };
+
+            drawGraph(graph);
         }
     }, [color, now, points, size, token.colorBorder]);
 

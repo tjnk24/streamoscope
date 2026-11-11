@@ -66,7 +66,13 @@ function Get-ObsChanges {
             Where-Object { Test-Path -LiteralPath $_ })
 
         foreach ($profileSettingsPath in $profileSettings) {
-            $profileFile = & $readFile $profileSettingsPath
+            try {
+                $profileFile = & $readFile $profileSettingsPath
+            } catch {
+                Write-ConfigureLog "Skipped unreadable profile settings $profileSettingsPath ($($_.Exception.Message))"
+
+                continue
+            }
 
             foreach ($section in $script:BridgeProfileSections) {
                 $profileFile.Text = Remove-IniSection -Text $profileFile.Text -Section $section

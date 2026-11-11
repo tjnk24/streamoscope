@@ -14,7 +14,7 @@
     "lint": "npm-run-all lint:*",
     "lint:tsc": "npx tsc -p tsconfig.json --noEmit --skipLibCheck && npx tsc -p tsconfig.node.json --noEmit",
     "lint:src": "npx eslint . --max-warnings 0",
-    "lint:style": "npx stylelint src/**/*.scss",
+    "lint:style": "npx stylelint \"src/**/*.scss\"",
     "test": "npm-run-all lint test:unit",
     "test:unit": "vitest run",
     "lint:unused": "knip",

@@ -28,7 +28,14 @@ function Invoke-ConfigureObs {
         $ConfigDirectory = $manifest.configDirectory
     }
 
-    $paths = Resolve-ObsPaths -ConfigDirectory $ConfigDirectory -ObsDirectory $ObsDirectory
+    try {
+        $paths = Resolve-ObsPaths -ConfigDirectory $ConfigDirectory -ObsDirectory $ObsDirectory
+    } catch {
+        Write-ConfigureLog "Unsupported format, nothing changed: $($_.Exception.Message)"
+
+        return [ConfigureObsResult]::UnsupportedFormat
+    }
+
     Write-ConfigureLog "OBS config: $($paths.ConfigDirectory)"
 
     if ($null -eq $paths.DocksIni) {

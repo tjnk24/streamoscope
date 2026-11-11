@@ -106,7 +106,9 @@ export const FAILED_STATUS_PAIR: RequestResultPairDto = {
 };
 
 export const VIDEO_SETTINGS_PAIR: RequestResultPairDto = {
-    request: {requestType: 'GetVideoSettings'},
+    request: {
+        requestType: 'GetVideoSettings',
+    },
     result: {
         requestType: 'GetVideoSettings',
         requestStatus: SUCCESS_STATUS,

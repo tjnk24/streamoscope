@@ -21,7 +21,9 @@ export const useUpdateNotes = (): UpdateNotesDto => {
     const compatibility = updateService.getCompatibility();
 
     if (blocker === NoUpdater) {
-        return {isManual: true, notes: [t('update.noUpdater', {script: BRIDGE_SCRIPT_NAME})]};
+        const note = t('update.noUpdater', {script: BRIDGE_SCRIPT_NAME});
+
+        return {isManual: true, notes: [note]};
     }
 
     if (blocker === Incompatible) {

@@ -25,21 +25,25 @@ export const sendObsRequest = (requestType: string, requestData: Record<string, 
         const {authentication, requestStatus, responseData} = messageData;
 
         if (opCode === OBS_HELLO_OP) {
-            socket.send(JSON.stringify({
+            const identifyMessage = {
                 op: OBS_IDENTIFY_OP,
                 d: {
                     rpcVersion: OBS_RPC_VERSION,
                     eventSubscriptions: 0,
                     authentication: authentication && buildAuthentication(password, authentication),
                 },
-            }));
+            };
+
+            socket.send(JSON.stringify(identifyMessage));
         }
 
         if (opCode === OBS_IDENTIFIED_OP) {
-            socket.send(JSON.stringify({
+            const requestMessage = {
                 op: OBS_REQUEST_OP,
                 d: {requestType, requestId: requestType, requestData},
-            }));
+            };
+
+            socket.send(JSON.stringify(requestMessage));
         }
 
         if (opCode === OBS_REQUEST_RESPONSE_OP) {

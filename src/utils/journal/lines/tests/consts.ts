@@ -14,3 +14,9 @@ export const STACK_WITH_PRIVATE_PATHS = [
     'failed to open C:\\Users\\Ivan\\obs\\scene.json',
     'server rtmp://live.example.com/app/secret',
 ].join('\n');
+
+export const STACK_WITH_SPACED_USER_NAME = [
+    '    at render (file:///C:/Users/Ivan Petrov/AppData/Local/Programs/streamoscope/dock/app.bundle.js:1:2)',
+    'failed to open C:\\Users\\Ivan Petrov\\obs studio\\scene.json',
+    'saved to D:/Stream Files/Ivan Petrov/record.mkv',
+].join('\n');

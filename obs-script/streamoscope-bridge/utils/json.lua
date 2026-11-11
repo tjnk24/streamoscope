@@ -9,8 +9,8 @@ function json.array(items)
 end
 
 local function encode_string(value)
-    local escaped = string.gsub(value, '[%c"\\]', function(character)
-        return string.format('\\u%04x', string.byte(character))
+    local escaped = string.gsub(value, consts.JSON_ESCAPED_CHARACTER_PATTERN, function(character)
+        return string.format(consts.JSON_UNICODE_ESCAPE_TEMPLATE, string.byte(character))
     end)
 
     return '"' .. escaped .. '"'
@@ -18,10 +18,10 @@ end
 
 local function encode_number(value)
     if value == math.floor(value) then
-        return string.format('%.0f', value)
+        return string.format(consts.JSON_INTEGER_TEMPLATE, value)
     end
 
-    return string.format('%.14g', value)
+    return string.format(consts.JSON_NUMBER_TEMPLATE, value)
 end
 
 function json.encode(value)

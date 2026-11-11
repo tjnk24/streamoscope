@@ -1,18 +1,16 @@
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import type {Configuration} from 'webpack';
+import type {Configuration, RuleSetRule} from 'webpack';
 
 import {CONTENT_HASH, IS_DEVELOPMENT} from '../consts.ts';
 
 export const loadStyles = () => (webpackConfig: Configuration): Configuration => {
-    webpackConfig.plugins?.push(
-        new MiniCssExtractPlugin({
-            chunkFilename: `[name]${CONTENT_HASH}.css`,
-            filename: `[name]${CONTENT_HASH}.css`,
-            ignoreOrder: true,
-        }),
-    );
+    const extractPlugin = new MiniCssExtractPlugin({
+        chunkFilename: `[name]${CONTENT_HASH}.css`,
+        filename: `[name]${CONTENT_HASH}.css`,
+        ignoreOrder: true,
+    });
 
-    webpackConfig.module?.rules?.push({
+    const styleRule: RuleSetRule = {
         test: /\.(s*)css$/,
         use: [
             {
@@ -36,7 +34,10 @@ export const loadStyles = () => (webpackConfig: Configuration): Configuration =>
                 },
             },
         ],
-    });
+    };
+
+    webpackConfig.plugins?.push(extractPlugin);
+    webpackConfig.module?.rules?.push(styleRule);
 
     return webpackConfig;
 };

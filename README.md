@@ -83,7 +83,7 @@ If OBS has never been launched on your PC, open it once, close it, then rerun th
 
 🔄 **Updates:** new versions download quietly in the background and start the next time you launch OBS. Nothing to click, nothing interrupts a stream. A small PowerShell script checks the minisign signature and unpacks the files next to the old version; it never runs a downloaded program. A new release reaches you automatically about two days after it's published, so a bad one can be pulled first. If a new version still fails to start, the previous one comes back by itself. Prefer to stay in charge? Turn off **Update automatically** in the settings and use **Check for updates** there.
 
-🗑️ **Uninstall:** close OBS and remove **StreamoScope** via **Windows Settings → Apps**.
+🗑️ **Uninstall:** close OBS and remove **StreamoScope** via **Windows Settings → Apps**. After you confirm, it takes the dock and the bridge script out of OBS, clears the bridge data from every profile and deletes the journal. Backups of the OBS files it changed stay in `%LOCALAPPDATA%\streamoscope\backups`, just in case.
 
 ### 📦 Manual / portable installation
 

@@ -2,9 +2,9 @@ import {ComponentType, useLayoutEffect} from 'react';
 
 import {PreloadDto} from '__types/app/routing';
 
-export default function preload<P extends object>({onLoad, onDispose}: PreloadDto) {
-    return (Component: ComponentType<P>) => {
-        const Preloaded = (props: P) => {
+export default function preload<WrappedProps extends object>({onLoad, onDispose}: PreloadDto) {
+    return (Component: ComponentType<WrappedProps>) => {
+        const Preloaded = (props: WrappedProps) => {
             useLayoutEffect(() => {
                 onLoad?.();
 

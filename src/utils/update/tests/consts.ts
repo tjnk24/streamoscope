@@ -68,6 +68,9 @@ export const INSTALL_CONTEXT: UpdateInstallContextDto = {
     release: RELEASE,
     currentVersion: '0.1.0',
     bridge: BRIDGE_UPDATE_STATE,
-    compatibility: {problems: [], warnings: []},
+    compatibility: {
+        problems: [],
+        warnings: [],
+    },
     now: NOW_MS,
 };

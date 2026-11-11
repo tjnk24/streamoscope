@@ -1,3 +1,4 @@
+local consts = require('streamoscope-bridge.consts')
 local named_outputs = require('streamoscope-bridge.outputs.named_outputs')
 
 local targets = {}
@@ -7,13 +8,13 @@ local function server_origin(url)
         return nil
     end
 
-    local scheme, authority = string.match(url, '^(%a[%w+.-]*://)([^/?#]+)')
+    local scheme, authority = string.match(url, consts.SERVER_ORIGIN_PATTERN)
 
     if scheme == nil then
         return nil
     end
 
-    return scheme .. string.gsub(authority, '^.*@', '')
+    return scheme .. string.gsub(authority, consts.SERVER_USERINFO_PATTERN, '')
 end
 
 local function read_outputs(stream_outputs)

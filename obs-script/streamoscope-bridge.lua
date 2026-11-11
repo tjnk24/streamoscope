@@ -63,13 +63,15 @@ local function write_file(path, text)
     local file = ffi.C.CreateFileW(to_wide(path), GENERIC_WRITE, FILE_SHARE_READ_WRITE_DELETE, nil, CREATE_ALWAYS, 0, nil)
 
     if file == INVALID_HANDLE_VALUE then
-        return
+        return false
     end
 
     local bytes_written = ffi.new('uint32_t[1]')
+    local is_written = ffi.C.WriteFile(file, text, #text, bytes_written, nil) ~= 0 and bytes_written[0] == #text
 
-    ffi.C.WriteFile(file, text, #text, bytes_written, nil)
     ffi.C.CloseHandle(file)
+
+    return is_written
 end
 
 local install_root = script_path()
@@ -106,16 +108,25 @@ local function read_trial()
     return trial
 end
 
+local function has_version(version)
+    return read_file(version_root(version) .. MAIN_MODULE_PATH) ~= nil
+end
+
 local function switch_back(trial)
-    if read_file(version_root(trial.previous) .. MAIN_MODULE_PATH) == nil then
+    if not has_version(trial.previous) then
         return false
     end
 
     local current_version_path = install_root .. CURRENT_VERSION_FILE
     local temporary_path = current_version_path .. '.tmp'
+    local is_written = write_file(temporary_path, string.format(CURRENT_VERSION_TEMPLATE, trial.previous))
 
-    write_file(temporary_path, string.format(CURRENT_VERSION_TEMPLATE, trial.previous))
-    ffi.C.MoveFileExW(to_wide(temporary_path), to_wide(current_version_path), MOVEFILE_REPLACE_EXISTING)
+    if not is_written or ffi.C.MoveFileExW(to_wide(temporary_path), to_wide(current_version_path), MOVEFILE_REPLACE_EXISTING) == 0 then
+        ffi.C.DeleteFileW(to_wide(temporary_path))
+
+        return false
+    end
+
     write_file(install_root .. ROLLED_BACK_FILE, trial.version)
     remove_trial()
 
@@ -123,13 +134,13 @@ local function switch_back(trial)
 end
 
 local function finish_silent_trial(trial)
-    if trial.panel ~= '1' or not switch_back(trial) then
+    if trial.panel ~= '1' or not has_version(trial.previous) then
         remove_trial()
 
         return false
     end
 
-    return true
+    return switch_back(trial)
 end
 
 local function open_trial()

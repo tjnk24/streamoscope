@@ -1,5 +1,5 @@
-export type Nullable<T> = T | null;
+export type Nullable<Value> = Value | null;
 
-export type DeepPartial<T> = {
-    [Key in keyof T]?: T[Key] extends object ? DeepPartial<T[Key]> : T[Key];
+export type DeepPartial<Source> = {
+    [Key in keyof Source]?: Source[Key] extends object ? DeepPartial<Source[Key]> : Source[Key];
 };

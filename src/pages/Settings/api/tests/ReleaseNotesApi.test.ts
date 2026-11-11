@@ -15,7 +15,11 @@ import {
     RELEASES_URL,
 } from './consts';
 
-vi.mock('__services/journal/journalService', () => ({journalService: {log: vi.fn()}}));
+vi.mock('__services/journal/journalService', () => ({
+    journalService: {
+        log: vi.fn(),
+    },
+}));
 
 const fetchMock = vi.fn<typeof fetch>();
 

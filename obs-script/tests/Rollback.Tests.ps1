@@ -67,6 +67,24 @@ Describe 'Bridge loader rollback' {
         $nextLaunch.Available | Should -Be 'true'
     }
 
+    It 'keeps the trial for the next launch when current-version.js cannot be replaced' {
+        $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Trial (New-TrialText)
+        $currentVersionFile = Get-Item -LiteralPath (Join-Path $app 'current-version.js')
+
+        $currentVersionFile.IsReadOnly = $true
+
+        try {
+            (Invoke-BridgeLaunch -InstallRoot $app -ElapsedSeconds 6).Version | Should -Be $script:NewVersion
+        } finally {
+            $currentVersionFile.IsReadOnly = $false
+        }
+
+        Get-CurrentVersion -InstallRoot $app | Should -Be $script:NewVersion
+        Join-Path $app 'rolled-back-version.txt' | Should -Not -Exist
+        Join-Path $app 'current-version.js.tmp' | Should -Not -Exist
+        Join-Path $app 'update-trial.txt' | Should -Exist
+    }
+
     It 'gives no verdict before 5 seconds' {
         $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Trial (New-TrialText)
 

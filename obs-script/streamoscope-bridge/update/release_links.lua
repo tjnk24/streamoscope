@@ -10,8 +10,8 @@ local function is_allowed(url)
         return false
     end
 
-    for _index, prefix in ipairs(consts.OPEN_URL_ALLOWED_PREFIXES) do
-        if string.sub(url, 1, #prefix) == prefix then
+    for _index, allowed_pattern in ipairs(consts.OPEN_URL_ALLOWED_PATTERNS) do
+        if string.find(url, allowed_pattern) ~= nil then
             return true
         end
     end

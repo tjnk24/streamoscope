@@ -3,124 +3,18 @@ BeforeAll {
 
     Get-ChildItem -LiteralPath (Join-Path $updaterDirectory 'UpdateWidget') -Filter '*.ps1' -Recurse | ForEach-Object { . $_.FullName }
     . (Join-Path $PSScriptRoot '..\ConfigureObs\paths\Find-ObsDirectory.ps1')
+    Get-ChildItem -LiteralPath (Join-Path $PSScriptRoot 'helpers\updater') -Filter '*.ps1' -Recurse | ForEach-Object { . $_.FullName }
 
     Add-Type -AssemblyName System.IO.Compression.FileSystem
 
-    $script:minisign = $env:OBS_STATS_WIDGET_MINISIGN
+    $script:minisign = $env:STREAMOSCOPE_MINISIGN
 
     if ([string]::IsNullOrEmpty($script:minisign) -or -not (Test-Path -LiteralPath $script:minisign)) {
         throw 'Run the tests with npm run test:installer: minisign.exe is needed'
     }
 
-    function New-TestKey {
-        param([string]$Name)
-
-        $directory = Join-Path $TestDrive "keys-$Name"
-        New-Item -ItemType Directory -Path $directory -Force | Out-Null
-        & $script:minisign -G -W -p (Join-Path $directory 'key.pub') -s (Join-Path $directory 'key.sec') | Out-Null
-
-        return [pscustomobject]@{
-            Secret = Join-Path $directory 'key.sec'
-            Public = (Get-Content -LiteralPath (Join-Path $directory 'key.pub'))[1]
-        }
-    }
-
-    function Add-TestSignature {
-        param([string]$Path, $Key)
-
-        & $script:minisign -S -s $Key.Secret -m $Path | Out-Null
-    }
-
     $script:releaseKey = New-TestKey -Name 'release'
     $script:otherKey = New-TestKey -Name 'other'
-
-    function New-TestPackage {
-        param(
-            [string]$Version,
-            [string]$Destination,
-            [switch]$WithoutBridge
-        )
-
-        $source = Join-Path $TestDrive ([guid]::NewGuid().ToString('N'))
-        $package = Join-Path $source "streamoscope-$Version"
-        $randomBytes = New-Object byte[] 300000
-
-        (New-Object System.Random).NextBytes($randomBytes)
-
-        New-Item -ItemType Directory -Path (Join-Path $package 'dock'), (Join-Path $package 'updater'), (Join-Path $package 'streamoscope-bridge') -Force | Out-Null
-        [System.IO.File]::WriteAllBytes((Join-Path $package 'dock\index.html'), $randomBytes)
-        Set-Content -LiteralPath (Join-Path $package 'updater\Update-Widget.ps1') -Value 'exit 0'
-        Set-Content -LiteralPath (Join-Path $package 'compatibility.json') -Value ("{`"version`": `"$Version`"}")
-
-        if (-not $WithoutBridge) {
-            Set-Content -LiteralPath (Join-Path $package 'streamoscope-bridge\main.lua') -Value 'return {}'
-        }
-
-        [System.IO.Compression.ZipFile]::CreateFromDirectory($package, $Destination, [System.IO.Compression.CompressionLevel]::Optimal, $true)
-    }
-
-    function New-TestRelease {
-        param(
-            [string]$Version = '0.2.0',
-            [string]$CompatibilityVersion = $Version,
-            [string]$MinObsVersion = '28.0.0',
-            [string]$InstalledVersion = '0.1.0',
-            [DateTimeOffset]$PublishedAt = [DateTimeOffset]::UtcNow.AddDays(-7),
-            $Key = $script:releaseKey,
-            [switch]$TamperPackage,
-            [switch]$SkipPackage,
-            [switch]$WithoutBridge
-        )
-
-        $root = Join-Path $TestDrive ([guid]::NewGuid().ToString('N'))
-        $release = Join-Path $root "release\v$Version"
-        $install = Join-Path $root 'install'
-
-        New-Item -ItemType Directory -Path $release, (Join-Path $install "versions\$InstalledVersion") -Force | Out-Null
-        Set-Content -LiteralPath (Join-Path $install 'current-version.js') -Value "window.STREAMOSCOPE_VERSION = '$InstalledVersion';"
-
-        $compatibility = Join-Path $release 'compatibility.json'
-        Set-Content -LiteralPath $compatibility -Value ("{`"version`": `"$CompatibilityVersion`", `"minObsVersion`": `"$MinObsVersion`"}")
-        Add-TestSignature -Path $compatibility -Key $Key
-
-        if (-not $SkipPackage) {
-            $package = Join-Path $release "streamoscope-$Version.zip"
-            New-TestPackage -Version $Version -Destination $package -WithoutBridge:$WithoutBridge
-            Add-TestSignature -Path $package -Key $Key
-
-            if ($TamperPackage) {
-                [System.IO.File]::AppendAllText($package, 'tampered')
-            }
-        }
-
-        $latest = Join-Path $root 'latest.json'
-        Set-Content -LiteralPath $latest -Value ("{`"tag_name`": `"v$Version`", `"published_at`": `"$($PublishedAt.ToString('yyyy-MM-ddTHH:mm:ssZ'))`"}")
-
-        return [pscustomobject]@{
-            BaseUrl = [System.Uri]::new((Join-Path $root 'release')).AbsoluteUri
-            LatestUrl = [System.Uri]::new($latest).AbsoluteUri
-            Install = $install
-            Status = Join-Path $root 'data\update-status.json'
-        }
-    }
-
-    function Invoke-TestUpdate {
-        param($Release, [string]$Version = '0.2.0')
-
-        return Invoke-UpdateWidget -Version $Version -InstallDirectory $Release.Install -StatusPath $Release.Status -ReleaseBaseUrl $Release.BaseUrl -PublicKey $script:releaseKey.Public -MinisignPath $script:minisign
-    }
-
-    function Invoke-TestAutoUpdate {
-        param($Release)
-
-        return Invoke-AutoUpdate -InstallDirectory $Release.Install -StatusPath $Release.Status -ReleaseBaseUrl $Release.BaseUrl -LatestReleaseUrl $Release.LatestUrl -PublicKey $script:releaseKey.Public -MinisignPath $script:minisign
-    }
-
-    function Get-TestStatus {
-        param($Release)
-
-        return Get-Content -LiteralPath $Release.Status -Raw | ConvertFrom-Json
-    }
 }
 
 Describe 'Compare-SemanticVersion' {
@@ -449,14 +343,6 @@ Describe 'Update-Widget.ps1' {
     BeforeAll {
         $entry = Join-Path $updaterDirectory 'Update-Widget.ps1'
         $installerDirectory = Join-Path $PSScriptRoot '..'
-
-        function Invoke-TestEntry {
-            param([string[]]$EntryArguments)
-
-            $arguments = @('-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', "`"$entry`"") + $EntryArguments
-
-            return (Start-Process powershell.exe -ArgumentList $arguments -Wait -PassThru -WindowStyle Hidden).ExitCode
-        }
     }
 
     It 'checks updates with the public key from minisign.pub' {
@@ -469,7 +355,7 @@ Describe 'Update-Widget.ps1' {
     It 'exits with 1 and writes a failed status for a bad version' {
         $status = Join-Path $TestDrive 'entry\update-status.json'
 
-        Invoke-TestEntry -EntryArguments @('-Version', 'bad', '-InstallDirectory', "`"$installerDirectory`"", '-StatusPath', "`"$status`"") | Should -Be 1
+        Invoke-TestEntry -EntryPath $entry -EntryArguments @('-Version', 'bad', '-InstallDirectory', "`"$installerDirectory`"", '-StatusPath', "`"$status`"") | Should -Be 1
         (Get-Content -LiteralPath $status -Raw | ConvertFrom-Json).error | Should -Be 'invalidVersion'
     }
 
@@ -477,7 +363,7 @@ Describe 'Update-Widget.ps1' {
         $status = Join-Path $TestDrive 'entry-auto\update-status.json'
         $missing = [System.Uri]::new((Join-Path $TestDrive 'missing.json')).AbsoluteUri
 
-        Invoke-TestEntry -EntryArguments @('-Auto', '-InstallDirectory', "`"$installerDirectory`"", '-StatusPath', "`"$status`"", '-LatestReleaseUrl', $missing) | Should -Be 1
+        Invoke-TestEntry -EntryPath $entry -EntryArguments @('-Auto', '-InstallDirectory', "`"$installerDirectory`"", '-StatusPath', "`"$status`"", '-LatestReleaseUrl', $missing) | Should -Be 1
         Test-Path -LiteralPath $status | Should -BeFalse
     }
 
@@ -486,6 +372,6 @@ Describe 'Update-Widget.ps1' {
         New-Item -ItemType Directory -Path (Split-Path -Parent $status) -Force | Out-Null
         Set-Content -LiteralPath (Join-Path (Split-Path -Parent $status) 'update-check.stamp') -Value ''
 
-        Invoke-TestEntry -EntryArguments @('-Auto', '-InstallDirectory', "`"$installerDirectory`"", '-StatusPath', "`"$status`"") | Should -Be 0
+        Invoke-TestEntry -EntryPath $entry -EntryArguments @('-Auto', '-InstallDirectory', "`"$installerDirectory`"", '-StatusPath', "`"$status`"") | Should -Be 0
     }
 }

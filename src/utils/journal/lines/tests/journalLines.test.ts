@@ -12,6 +12,7 @@ import {
     ENTRY,
     JOURNAL_DATE,
     STACK_WITH_PRIVATE_PATHS,
+    STACK_WITH_SPACED_USER_NAME,
 } from './consts';
 
 describe('removePrivateText', () => {
@@ -23,6 +24,14 @@ describe('removePrivateText', () => {
         expect(cleaned).not.toContain('secret');
         expect(cleaned).toContain('app.bundle.js:1:2');
         expect(cleaned).toContain('scene.json');
+    });
+
+    it('removes folders with spaces in their names', () => {
+        const cleaned = removePrivateText(STACK_WITH_SPACED_USER_NAME, false);
+
+        expect(cleaned).not.toContain('Ivan');
+        expect(cleaned).not.toContain('Petrov');
+        expect(cleaned).toBe('    at render (app.bundle.js:1:2)\nfailed to open scene.json\nsaved to record.mkv');
     });
 
     it('joins lines for the journal and keeps them for the error report', () => {

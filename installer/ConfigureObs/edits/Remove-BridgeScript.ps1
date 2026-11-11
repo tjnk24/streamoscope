@@ -19,10 +19,8 @@ function Remove-BridgeScript {
         return [pscustomobject]@{Text = $CollectionText; Changed = $false}
     }
 
-    $array = '[' + (($kept | ForEach-Object { $CollectionText.Substring($_.Start, $_.End - $_.Start) }) -join ', ') + ']'
-
     return [pscustomobject]@{
-        Text = $CollectionText.Remove($scripts.Start, $scripts.End - $scripts.Start).Insert($scripts.Start, $array)
+        Text = Remove-JsonArrayItem -Text $CollectionText -Array $scripts -Kept $kept
         Changed = $true
     }
 }

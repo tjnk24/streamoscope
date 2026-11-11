@@ -9,10 +9,10 @@ type ObsRequestStatusDto = {
     comment?: string;
 };
 
-export type ObsRequestResultDto<T = unknown> = {
+export type ObsRequestResultDto<ResponseData = unknown> = {
     requestType: string;
     requestStatus: ObsRequestStatusDto;
-    responseData?: T;
+    responseData?: ResponseData;
 };
 
 export type RequestResultPairDto = {

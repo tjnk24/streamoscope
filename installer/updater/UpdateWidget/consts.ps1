@@ -1,5 +1,6 @@
 $script:SemanticVersionPattern = '^(\d+)\.(\d+)\.(\d+)$'
 $script:DownloadTimeoutMilliseconds = 30000
+$script:DownloadDeadlineMilliseconds = 600000
 $script:DownloadBufferBytes = 65536
 $script:CurrentVersionFileName = 'current-version.js'
 $script:CurrentVersionFilePattern = '\d+\.\d+\.\d+'

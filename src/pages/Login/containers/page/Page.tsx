@@ -39,15 +39,15 @@ const Page = () => {
         ? 'login.webSocketOff'
         : LOGIN_MESSAGES[status];
 
-    useEffect(() => {
-        inputRef.current?.focus();
-    }, [messageKey]);
-
     const onSubmit = async () => {
         const values = await form.validateFields();
 
         obsConnectionService.logIn(values.port, values.password);
     };
+
+    useEffect(() => {
+        inputRef.current?.focus();
+    }, [messageKey]);
 
     return (
         <Flex

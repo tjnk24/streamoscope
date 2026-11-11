@@ -23,7 +23,10 @@ export const buildRequests = (targets: StreamTargetDto[], withDiscovery: boolean
         {requestType: GetSceneCollectionList},
         ...targets
             .filter(({outputName}) => outputName !== null)
-            .map(({outputName}) => ({requestType: GetOutputStatus, requestData: {outputName}})),
+            .map(({outputName}) => ({
+                requestType: GetOutputStatus,
+                requestData: {outputName},
+            })),
     ];
 
     if (withDiscovery) {

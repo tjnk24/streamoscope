@@ -107,6 +107,15 @@ Describe 'Remove-BridgeScript' {
         $result.Text | Should -BeExactly '{"modules": {"scripts-tool": [{"path": "C:/other.lua", "settings": {}}]}}'
     }
 
+    It 'keeps the other scripts and the line breaks between them byte for byte' {
+        $other = "{`r`n                ""path"": ""C:/other.lua"",`r`n                ""settings"": {}`r`n            }"
+        $bridge = "{`r`n                ""path"": ""C:/obs/bridge.lua"",`r`n                ""settings"": {}`r`n            }"
+        $original = "{`r`n    ""modules"": {`r`n        ""scripts-tool"": [`r`n            $other,`r`n            $bridge,`r`n            $other`r`n        ]`r`n    }`r`n}"
+        $expected = "{`r`n    ""modules"": {`r`n        ""scripts-tool"": [`r`n            $other,`r`n            $other`r`n        ]`r`n    }`r`n}"
+
+        (Remove-BridgeScript -CollectionText $original -ScriptPath 'C:/obs/bridge.lua').Text | Should -BeExactly $expected
+    }
+
     It 'leaves collections without the script unchanged' -TestCases @(
         @{Text = '{"name": "Scene"}'},
         @{Text = '{"modules": {"scripts-tool": []}}'},
@@ -172,6 +181,12 @@ Describe 'Remove-BrowserDock' {
 
     It 'removes the dock by address when the uuid is unknown' {
         (Remove-BrowserDock -DocksJson $script:docks -Uuid $null -Url 'file:///C:/dock/index.html').Json | Should -BeExactly '[{"title": "Chat", "url": "https://example.com/chat", "uuid": "1"}]'
+    }
+
+    It 'keeps the compact format of the other docks' {
+        $original = '[{"title":"StreamoScope","url":"file:///C:/dock/index.html","uuid":"abc"},{"title":"Chat","url":"https://example.com/chat","uuid":"1"}]'
+
+        (Remove-BrowserDock -DocksJson $original -Uuid 'abc' -Url $null).Json | Should -BeExactly '[{"title":"Chat","url":"https://example.com/chat","uuid":"1"}]'
     }
 
     It 'changes nothing when the dock is gone' {

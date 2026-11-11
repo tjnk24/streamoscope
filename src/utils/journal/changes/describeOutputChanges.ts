@@ -21,7 +21,13 @@ export const describeOutputChanges = (previousOutputs: JournalOutputSnapshotDto[
         }
 
         if (previous.isActive !== current.isActive) {
-            entries.push({level: Info, source, message: current.isActive ? 'stream started' : 'stream stopped'});
+            const activityEntry: JournalEntryDto = {
+                level: Info,
+                source,
+                message: current.isActive ? 'stream started' : 'stream stopped',
+            };
+
+            entries.push(activityEntry);
         }
 
         if (previous.isReconnecting !== current.isReconnecting) {

@@ -43,7 +43,7 @@ local function describe_bitrate(self, label, output, elapsed_seconds)
 
     local sent_bytes = math.max(output.total_bytes - (self.previous_bytes[label] or 0), 0)
 
-    return string.format('%d', sent_bytes * 8 / 1000 / elapsed_seconds)
+    return string.format(consts.JOURNAL_BITRATE_TEMPLATE, sent_bytes * consts.BITS_PER_BYTE / consts.BITS_PER_KILOBIT / elapsed_seconds)
 end
 
 local function describe_outputs(self, outputs, elapsed_seconds)
@@ -92,11 +92,11 @@ local function describe_obs(self, gpu)
     return string.format(
         consts.JOURNAL_OBS_STATS_TEMPLATE,
         self.libobs.obs_get_active_fps(),
-        tonumber(self.libobs.obs_get_average_frame_time_ns()) / 1000000,
+        tonumber(self.libobs.obs_get_average_frame_time_ns()) / consts.NANOSECONDS_PER_MILLISECOND,
         self.libobs.obs_get_lagged_frames(),
         self.libobs.video_output_get_skipped_frames(self.libobs.obs_get_video()),
         self.libobs.os_cpu_usage_info_query(self.cpu_info),
-        tonumber(self.libobs.os_get_proc_resident_size()) / 1048576,
+        tonumber(self.libobs.os_get_proc_resident_size()) / consts.BYTES_PER_MEGABYTE,
         describe_gpu(gpu)
     )
 end

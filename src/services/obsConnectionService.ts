@@ -73,6 +73,8 @@ class ObsConnectionService {
 
     private inFlight: Nullable<InFlightBatchDto> = null;
 
+    private isIdentified = false;
+
     private requestId = 0;
 
     private pollIndex = 0;
@@ -105,6 +107,8 @@ class ObsConnectionService {
     };
 
     stop = () => {
+        this.passwordChange && this.finishPasswordChange(NoConnection);
+
         this.disconnect();
     };
 
@@ -116,6 +120,8 @@ class ObsConnectionService {
     };
 
     changePassword = (password: string) => new Promise<PasswordChangeResultEnum>(resolve => {
+        this.passwordChange && this.finishPasswordChange(NoConnection);
+
         this.passwordChange = {password, resolve};
 
         this.reconnect();
@@ -179,7 +185,7 @@ class ObsConnectionService {
         const socket = new WebSocket(`ws://127.0.0.1:${settingsSelector(state).port}`, OBS_WEBSOCKET_PROTOCOL);
 
         socket.onmessage = ({data}: MessageEvent<string>) => {
-            void this.onMessage(socket, JSON.parse(data) as ObsMessageDto);
+            void this.handleMessage(socket, data);
         };
 
         socket.onclose = ({code}) => this.onClose(socket, code);
@@ -216,6 +222,7 @@ class ObsConnectionService {
 
         this.collectionSwitchStartedAt = null;
         this.isCollectionSwitchFinished = false;
+        this.isIdentified = false;
         this.pendingRequests = [];
     };
 
@@ -253,6 +260,16 @@ class ObsConnectionService {
         this.reconnectTimer = window.setTimeout(this.connect, RECONNECT_INTERVAL_MS);
     };
 
+    private handleMessage = async (socket: WebSocket, data: string) => {
+        try {
+            await this.onMessage(socket, JSON.parse(data) as ObsMessageDto);
+        } catch (error) {
+            socket === this.socket && socket.close();
+
+            throw error;
+        }
+    };
+
     private onMessage = async (socket: WebSocket, {op: opCode, d: data}: ObsMessageDto) => {
         switch (opCode) {
             case Hello: {
@@ -285,6 +302,7 @@ class ObsConnectionService {
 
                 commonActions.connection.setStatus(ConnectionStatusEnum.Identified);
 
+                this.isIdentified = true;
                 this.startPolling();
                 break;
 
@@ -334,7 +352,7 @@ class ObsConnectionService {
             return;
         }
 
-        if (!this.socket || (this.inFlight && now - this.inFlight.since < REQUEST_TIMEOUT_MS)) {
+        if (!this.socket || !this.isIdentified || (this.inFlight && now - this.inFlight.since < REQUEST_TIMEOUT_MS)) {
             return;
         }
 

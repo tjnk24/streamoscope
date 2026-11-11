@@ -37,7 +37,13 @@ describe('useConnectionAlertView', () => {
     });
 
     it('says it is retrying once the attempt is running', () => {
-        const state = {...STATE, connection: {...STATE.connection, reconnectAt: NOW - 500}};
+        const state = {
+            ...STATE,
+            connection: {
+                ...STATE.connection,
+                reconnectAt: NOW - 500,
+            },
+        };
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
@@ -45,7 +51,14 @@ describe('useConnectionAlertView', () => {
     });
 
     it('shows the connecting text before the first failure', () => {
-        const state = {...STATE, connection: {...STATE.connection, status: ConnectionStatusEnum.Connecting, reconnectAt: null}};
+        const state = {
+            ...STATE,
+            connection: {
+                ...STATE.connection,
+                status: ConnectionStatusEnum.Connecting,
+                reconnectAt: null,
+            },
+        };
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 

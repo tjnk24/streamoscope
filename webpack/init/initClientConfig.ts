@@ -33,39 +33,38 @@ export const initClientConfig = ({entry}: InitClientConfigOptions) => (webpackCo
         },
     });
 
-    webpackConfig.plugins?.push(
-        new webpack.DefinePlugin(defineGlobals()),
-        new HtmlWebpackPlugin({
-            template: './src/index.html',
-            favicon: './src/images/streamoscope-icon.png',
-        }),
-    );
+    const htmlPlugin = new HtmlWebpackPlugin({
+        template: './src/index.html',
+        favicon: './src/images/streamoscope-icon.png',
+    });
+
+    webpackConfig.plugins?.push(new webpack.DefinePlugin(defineGlobals()), htmlPlugin);
 
     if (IS_DEVELOPMENT) {
-        webpackConfig.plugins?.push(
-            new ForkTsCheckerWebpackPlugin({
-                async: true,
-                typescript: {
-                    diagnosticOptions: {
-                        semantic: true,
-                        syntactic: true,
-                    },
+        const typeCheckerPlugin = new ForkTsCheckerWebpackPlugin({
+            async: true,
+            typescript: {
+                diagnosticOptions: {
+                    semantic: true,
+                    syntactic: true,
                 },
-            }),
-        );
+            },
+        });
+
+        webpackConfig.plugins?.push(typeCheckerPlugin);
     }
 
     if (IS_DEVELOPMENT && !IS_DEV_SERVER) {
-        webpackConfig.plugins?.push(
-            new EslintWebpackPlugin({
-                files: 'src/**/*.{ts,tsx,js,jsx}',
-                emitError: true,
-                failOnError: false,
-                emitWarning: true,
-                failOnWarning: false,
-                cache: true,
-            }),
-        );
+        const eslintPlugin = new EslintWebpackPlugin({
+            files: 'src/**/*.{ts,tsx,js,jsx}',
+            emitError: true,
+            failOnError: false,
+            emitWarning: true,
+            failOnWarning: false,
+            cache: true,
+        });
+
+        webpackConfig.plugins?.push(eslintPlugin);
     }
 
     if (IS_DEV_SERVER) {

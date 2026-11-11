@@ -29,7 +29,7 @@ end
 
 local function close_sources()
     for _key, source in pairs(sources) do
-        source:close()
+        pcall(source.close, source)
     end
 
     sources = {}
@@ -50,7 +50,7 @@ local function handle_commands()
 end
 
 local function publish()
-    publisher.publish(sources)
+    pcall(publisher.publish, sources)
 end
 
 local function on_event(event)
@@ -63,6 +63,8 @@ local function on_event(event)
     elseif event == obs.OBS_FRONTEND_EVENT_PROFILE_CHANGED or event == obs.OBS_FRONTEND_EVENT_SCENE_COLLECTION_CHANGED then
         publish()
     elseif event == obs.OBS_FRONTEND_EVENT_SCRIPTING_SHUTDOWN then
+        obs.timer_remove(publish)
+        obs.timer_remove(handle_commands)
         publisher.clear()
         close_sources()
     end

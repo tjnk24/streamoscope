@@ -35,6 +35,14 @@ export const BRIDGE: BridgeUpdateStateDto = {
 };
 
 export const STATE = {
-    update: {checkStatus: UpdateCheckStatusEnum.Available, latest: RELEASE, bridge: null, request: null},
-    settings: {lastUpdateCheckAt: NOW - 60_000, isAutoUpdateEnabled: true},
+    update: {
+        checkStatus: UpdateCheckStatusEnum.Available,
+        latest: RELEASE,
+        bridge: null,
+        request: null,
+    },
+    settings: {
+        lastUpdateCheckAt: NOW - 60_000,
+        isAutoUpdateEnabled: true,
+    },
 } as unknown as BaseStore;

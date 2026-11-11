@@ -8,6 +8,11 @@ export const SCRIPT_PATH = 'C:\\Users\\Streamer\\AppData\\Local\\Programs\\strea
 export const SCENE_COLLECTION = 'Main scenes';
 
 export const STATE = {
-    connection: {status: ConnectionStatusEnum.Identified, sceneCollection: SCENE_COLLECTION},
-    update: {bridgeMissingChecks: 2},
+    connection: {
+        status: ConnectionStatusEnum.Identified,
+        sceneCollection: SCENE_COLLECTION,
+    },
+    update: {
+        bridgeMissingChecks: 2,
+    },
 } as unknown as BaseStore;

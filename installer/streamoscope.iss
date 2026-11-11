@@ -278,11 +278,17 @@ begin
 end;
 
 procedure RemoveFromObs;
+var
+  Code: Integer;
 begin
   if not ShouldRemoveFromObs then
     Exit;
 
-  if RunConfigureObs('Uninstall') <> ResultSuccess then
+  Code := RunConfigureObs('Uninstall');
+
+  Log('configure-obs.ps1 exit code: ' + IntToStr(Code));
+
+  if (Code <> ResultSuccess) and (Code <> ResultObsConfigNotFound) then
     SuppressibleMsgBox(CustomMessage('UninstallFailed') + #13#10#13#10 + CustomMessage('Details') + ' ' + GetLogPath, mbInformation, MB_OK, IDOK);
 end;
 

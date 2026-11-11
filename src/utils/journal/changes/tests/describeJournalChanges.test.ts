@@ -13,41 +13,59 @@ import {describeJournalChanges} from '../describeJournalChanges';
 
 import {OUTPUT, SNAPSHOT} from './consts';
 
+const {Closed, Identified} = ConnectionStatusEnum;
+
 const {Info, Warn, Error: ErrorLevel} = JournalLevelEnum;
 
 describe('describeJournalChanges', () => {
     it('writes nothing when nothing changed', () => {
-        expect(describeJournalChanges(SNAPSHOT, {...SNAPSHOT})).toEqual([]);
+        const entries = describeJournalChanges(SNAPSHOT, {...SNAPSHOT});
+
+        expect(entries).toEqual([]);
     });
 
     it('writes a lost connection with its close code', () => {
-        expect(describeJournalChanges(SNAPSHOT, {...SNAPSHOT, status: ConnectionStatusEnum.Closed, lastCloseCode: 1006})).toEqual([{
+        const closed = {...SNAPSHOT, status: Closed, lastCloseCode: 1006};
+
+        const entries = describeJournalChanges(SNAPSHOT, closed);
+
+        expect(entries).toEqual([{
             level: Warn,
             source: 'obs',
-            message: `connection ${ConnectionStatusEnum.Identified} -> ${ConnectionStatusEnum.Closed} code=1006`,
+            message: `connection ${Identified} -> ${Closed} code=1006`,
         }]);
     });
 
     it('writes when the bridge goes missing, but not when it comes back to missing state unchanged', () => {
         const missing = {...SNAPSHOT, isBridgeMissing: true, bridgeVersion: null};
 
-        expect(describeJournalChanges(SNAPSHOT, missing).map(({level}) => level)).toEqual([Warn]);
-        expect(describeJournalChanges(missing, missing)).toEqual([]);
+        const missingLevels = describeJournalChanges(SNAPSHOT, missing).map(({level}) => level);
+
+        const repeatedEntries = describeJournalChanges(missing, missing);
+
+        expect(missingLevels).toEqual([Warn]);
+        expect(repeatedEntries).toEqual([]);
     });
 
     it('writes a failed update as an error', () => {
-        const [entry] = describeJournalChanges(SNAPSHOT, {
+        const failedUpdate = {
             ...SNAPSHOT,
             updateStage: UpdateStageEnum.Failed,
             updateVersion: '2.0.0',
             updateError: 'signature',
-        });
+        };
+
+        const [entry] = describeJournalChanges(SNAPSHOT, failedUpdate);
 
         expect(entry).toEqual({level: ErrorLevel, source: 'panel', message: 'update stage=failed version=2.0.0 error=signature'});
     });
 
     it('writes a rollback as a warning', () => {
-        expect(describeJournalChanges(SNAPSHOT, {...SNAPSHOT, rolledBackVersion: '2.0.0'})).toEqual([{
+        const rolledBack = {...SNAPSHOT, rolledBackVersion: '2.0.0'};
+
+        const entries = describeJournalChanges(SNAPSHOT, rolledBack);
+
+        expect(entries).toEqual([{
             level: Warn,
             source: 'panel',
             message: 'rolled back version=2.0.0',
@@ -57,22 +75,46 @@ describe('describeJournalChanges', () => {
     it('writes the health of an output with the dropped frames', () => {
         const unstable = {...OUTPUT, level: HealthLevelEnum.Warn, recentDropped: 40};
 
-        expect(describeJournalChanges(SNAPSHOT, {...SNAPSHOT, outputs: [unstable]})).toEqual([{
+        const withUnstable = {...SNAPSHOT, outputs: [unstable]};
+
+        const worsenedEntries = describeJournalChanges(SNAPSHOT, withUnstable);
+
+        const recoveredLevels = describeJournalChanges(withUnstable, SNAPSHOT).map(({level}) => level);
+
+        expect(worsenedEntries).toEqual([{
             level: Warn,
             source: 'Twitch',
             message: 'status ok -> warn dropped_1m=40',
         }]);
 
-        expect(describeJournalChanges({...SNAPSHOT, outputs: [unstable]}, SNAPSHOT).map(({level}) => level)).toEqual([Info]);
+        expect(recoveredLevels).toEqual([Info]);
     });
 
     it('writes reconnecting and the end of a stream', () => {
-        expect(describeJournalChanges(SNAPSHOT, {...SNAPSHOT, outputs: [{...OUTPUT, isReconnecting: true}]})[0].message).toBe('reconnecting');
-        expect(describeJournalChanges(SNAPSHOT, {...SNAPSHOT, outputs: [{...OUTPUT, isActive: false, level: HealthLevelEnum.Off}]})[0].message).toBe('stream stopped');
+        const reconnecting = {
+            ...SNAPSHOT,
+            outputs: [{...OUTPUT, isReconnecting: true}],
+        };
+
+        const stopped = {
+            ...SNAPSHOT,
+            outputs: [{...OUTPUT, isActive: false, level: HealthLevelEnum.Off}],
+        };
+
+        const [reconnectingEntry] = describeJournalChanges(SNAPSHOT, reconnecting);
+
+        const [stoppedEntry] = describeJournalChanges(SNAPSHOT, stopped);
+
+        expect(reconnectingEntry.message).toBe('reconnecting');
+        expect(stoppedEntry.message).toBe('stream stopped');
     });
 
     it('writes the settings the user changed', () => {
-        expect(describeJournalChanges(SNAPSHOT, {...SNAPSHOT, isAutoUpdateEnabled: false})).toEqual([{
+        const withoutAutoUpdate = {...SNAPSHOT, isAutoUpdateEnabled: false};
+
+        const entries = describeJournalChanges(SNAPSHOT, withoutAutoUpdate);
+
+        expect(entries).toEqual([{
             level: Info,
             source: 'user',
             message: 'changed auto_update=false',

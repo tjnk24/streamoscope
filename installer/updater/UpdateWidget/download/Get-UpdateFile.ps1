@@ -24,8 +24,13 @@ function Get-UpdateFile {
             $buffer = New-Object byte[] $script:DownloadBufferBytes
             $received = 0
             $reportedPercent = -1
+            $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
             while (($read = $stream.Read($buffer, 0, $buffer.Length)) -gt 0) {
+                if ($stopwatch.ElapsedMilliseconds -gt $script:DownloadDeadlineMilliseconds) {
+                    throw "Download took longer than $($script:DownloadDeadlineMilliseconds) ms: $Url"
+                }
+
                 $file.Write($buffer, 0, $read)
                 $received += $read
 
@@ -37,6 +42,10 @@ function Get-UpdateFile {
                         $reportedPercent = $percent
                     }
                 }
+            }
+
+            if ($total -ge 0 -and $received -ne $total) {
+                throw "Download ended after $received of $total bytes: $Url"
             }
         } finally {
             $file.Dispose()

@@ -10,6 +10,8 @@ import {createRequestSlice} from '../createRequestSlice';
 
 import {DATA, INITIAL_STATE} from './consts';
 
+const {Pending, Success, Failed} = RequestStatusEnum;
+
 const {reducer, actions} = createRequestSlice<string[]>('items');
 
 describe('createRequestSlice', () => {
@@ -20,10 +22,10 @@ describe('createRequestSlice', () => {
     it('keeps the data after a successful request', () => {
         const pending = reducer(INITIAL_STATE, actions.pending());
 
-        expect(pending.status).toBe(RequestStatusEnum.Pending);
+        expect(pending.status).toBe(Pending);
         expect(reducer(pending, actions.success(DATA))).toEqual({
             ...INITIAL_STATE,
-            status: RequestStatusEnum.Success,
+            status: Success,
             data: DATA,
         });
     });
@@ -33,7 +35,7 @@ describe('createRequestSlice', () => {
 
         expect(failed).toEqual({
             ...INITIAL_STATE,
-            status: RequestStatusEnum.Failed,
+            status: Failed,
             error: 'GitHub is down',
         });
         expect(reducer(failed, actions.reset())).toEqual(INITIAL_STATE);

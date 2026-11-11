@@ -25,7 +25,9 @@ Things worth reporting include:
   The public key is [minisign.pub](minisign.pub) and is also built into the updater.
 - The updater downloads only from this repository's releases, checks the signatures before running anything
   and refuses versions older than or equal to the installed one.
-- The bridge script opens in the browser only this repository's GitHub pages and local `http://127.0.0.1:` addresses
-  (used to test updates), through the Windows URL handler; the only other program it starts is the bundled updater.
+- The bridge script opens in the browser only this repository's GitHub pages and local `http://127.0.0.1:<port>/` addresses
+  (used to test updates), through the Windows URL handler; addresses with user info (`@`), quotes or spaces are refused.
+  The only other programs it starts are the bundled updater and Windows Explorer, which opens the journal folder
+  when you press the button for it.
 
 To check a download yourself, see [Verify downloads in the README](README.md#-verify-downloads).

@@ -62,10 +62,12 @@ export const discoverTargets = (pairs: RequestResultPairDto[]): StreamTargetDto[
         const notes: NoteDto[] = [];
 
         if (counts[outputName] > 1) {
-            notes.push({
+            const sameNameNote: NoteDto = {
                 text: t('stats.sameOutputName', {name: outputName, count: counts[outputName]}),
                 type: 'warning',
-            });
+            };
+
+            notes.push(sameNameNote);
         }
 
         return {

@@ -13,7 +13,9 @@ export const detectPlatform = (service: Nullable<string>, server: Nullable<strin
     ));
 
     if (rule) {
-        return {title: rule.title, color: rule.color, isKnown: true};
+        const {title, color} = rule;
+
+        return {title, color, isKnown: true};
     }
 
     return {title: service || host || fallbackTitle, color: UNKNOWN_PLATFORM_COLOR, isKnown: false};

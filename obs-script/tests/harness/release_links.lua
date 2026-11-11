@@ -24,6 +24,26 @@ store['StreamoScope/OpenUrlCommand'] = 'https://github.com/tjnk24/streamoscope/r
 timers[250]()
 record('freshCommandOpened', #opened_command_lines)
 
+store['StreamoScope/OpenUrlCommand'] = 'http://127.0.0.1:3063/releases/tag/v1.2.3'
+timers[250]()
+record('testServerOpened', #opened_command_lines)
+
+for _index, rejected_url in ipairs({
+    'http://127.0.0.1:1@evil.example/releases',
+    'http://127.0.0.1:/releases',
+    'http://127.0.0.1:3063',
+    'https://github.com/tjnk24/streamoscope.evil.example/',
+    'https://evil.example/tjnk24/streamoscope/',
+    'https://github.com/tjnk24/streamoscope/releases" --evil',
+    'https://github.com/tjnk24/streamoscope/' .. string.rep('a', 2048),
+}) do
+    store['StreamoScope/OpenUrlCommand'] = rejected_url
+    timers[250]()
+end
+
+record('rejectedOpened', #opened_command_lines)
+record('rejectedCommandLeft', store['StreamoScope/OpenUrlCommand'] ~= nil)
+
 script_unload()
 
 return table.concat(results, '\n')

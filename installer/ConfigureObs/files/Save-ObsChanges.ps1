@@ -38,8 +38,12 @@ function Save-ObsChanges {
         throw
     }
 
-    Get-ChildItem -LiteralPath $BackupRoot -Directory |
-        Sort-Object Name -Descending |
-        Select-Object -Skip $script:KeptBackups |
-        Remove-Item -Recurse -Force
+    try {
+        Get-ChildItem -LiteralPath $BackupRoot -Directory |
+            Sort-Object Name -Descending |
+            Select-Object -Skip $script:KeptBackups |
+            Remove-Item -Recurse -Force
+    } catch {
+        Write-ConfigureLog "Old backups were not removed: $($_.Exception.Message)"
+    }
 }

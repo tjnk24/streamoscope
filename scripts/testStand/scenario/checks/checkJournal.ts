@@ -9,17 +9,11 @@ import {
     JOURNAL_STATS_PATTERN,
 } from '../../consts.ts';
 import {readWebSocketConfig} from '../../obs/readWebSocketConfig.ts';
-import {sendObsRequest} from '../../obs/sendObsRequest.ts';
 import {waitFor} from '../../processes/waitFor.ts';
 import {readStandFile} from '../readStandFile.ts';
 
 import {checkStep} from './checkStep.ts';
-
-const sendJournalParameter = (parameterName: string, parameterValue: string) => sendObsRequest('SetProfileParameter', {
-    parameterCategory: 'StreamoScope',
-    parameterName,
-    parameterValue,
-});
+import {sendJournalParameter} from './sendJournalParameter.ts';
 
 export const checkJournal = async () => {
     await waitFor('the stream stop in the journal', () => readStandFile(JOURNAL_PATH)?.includes('stream stopped') ?? false, CONNECTION_WAIT_MS);

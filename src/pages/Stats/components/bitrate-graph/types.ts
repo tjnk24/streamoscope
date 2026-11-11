@@ -9,9 +9,11 @@ interface OwnProps {
 
 export type Props = OwnProps;
 
-export type DrawGraphParams = Omit<OwnProps, 'isActive'> & {
+interface GraphCanvasProps {
     canvas: HTMLCanvasElement;
     baselineColor: string;
     width: number;
     height: number;
-};
+}
+
+export type DrawGraphParams = Omit<OwnProps, 'isActive'> & GraphCanvasProps;

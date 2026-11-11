@@ -14,7 +14,7 @@ if ($null -eq $minisign) {
     throw 'minisign.exe is not in node_modules\.cache\minisign, run: node scripts/buildInstaller/fetchMinisign.ts'
 }
 
-$env:OBS_STATS_WIDGET_MINISIGN = $minisign.FullName
+$env:STREAMOSCOPE_MINISIGN = $minisign.FullName
 
 Import-Module Pester -MinimumVersion 5.0
 

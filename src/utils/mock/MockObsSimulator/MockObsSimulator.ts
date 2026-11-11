@@ -120,8 +120,8 @@ export class MockObsSimulator {
         const {requestType} = request;
 
         switch (requestType) {
-            case GetStats:
-                return successResult(requestType, {
+            case GetStats: {
+                const stats = {
                     activeFps: this.getFps(runningSeconds),
                     averageFrameRenderTime: randomBetween(0.8, 1.1),
                     cpuUsage: randomBetween(3, 6),
@@ -131,7 +131,10 @@ export class MockObsSimulator {
                     renderTotalFrames: this.renderTotalFrames,
                     outputSkippedFrames: this.encoderSkippedFrames,
                     outputTotalFrames: this.encoderTotalFrames,
-                });
+                };
+
+                return successResult(requestType, stats);
+            }
 
             case GetStreamStatus: {
                 const congestion = this.isMainDipping(runningSeconds) ? 0.6 : 0.02;
@@ -144,11 +147,14 @@ export class MockObsSimulator {
             case GetOutputStatus:
                 return this.answerOutputStatus(requestType, String(request.requestData?.outputName), now, runningSeconds);
 
-            case GetStreamServiceSettings:
-                return successResult(requestType, {
+            case GetStreamServiceSettings: {
+                const serviceSettings = {
                     streamServiceType: 'rtmp_common',
                     streamServiceSettings: {service: 'YouTube - RTMPS', server: 'rtmps://a.rtmps.youtube.com:443/live2'},
-                });
+                };
+
+                return successResult(requestType, serviceSettings);
+            }
 
             case GetOutputList: {
                 const twitchOutputs = this.twitchOutput
@@ -174,14 +180,17 @@ export class MockObsSimulator {
             case SetProfileParameter:
                 return successResult(requestType, {});
 
-            case GetVersion:
-                return successResult(requestType, {
+            case GetVersion: {
+                const version = {
                     obsVersion: 'mock',
                     obsWebSocketVersion: 'mock',
                     platformDescription: 'mock data',
                     rpcVersion: OBS_RPC_VERSION,
                     availableRequests: Object.values(ObsRequestTypeEnum),
-                });
+                };
+
+                return successResult(requestType, version);
+            }
 
             default:
                 return failureResult(requestType, OBS_UNKNOWN_REQUEST_CODE);

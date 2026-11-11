@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 
 import {useUpdateProgress} from '../../update-settings/hooks/useUpdateProgress';
-import {SettingsGroupEnum} from '../consts';
+import {SettingsGroupEnum} from '../types';
 
 const {Display, Updates} = SettingsGroupEnum;
 
@@ -12,13 +12,13 @@ export const useOpenGroups = () => {
 
     const isUpdateImportant = errorKey !== null || isRunning;
 
-    useEffect(() => {
-        isUpdateImportant && setOpenGroups(groups => (groups.includes(Updates) ? groups : [...groups, Updates]));
-    }, [isUpdateImportant]);
-
     const toggleGroup = (group: SettingsGroupEnum) => {
         setOpenGroups(groups => (groups.includes(group) ? groups.filter(openGroup => openGroup !== group) : [...groups, group]));
     };
+
+    useEffect(() => {
+        isUpdateImportant && setOpenGroups(groups => (groups.includes(Updates) ? groups : [...groups, Updates]));
+    }, [isUpdateImportant]);
 
     return {openGroups, toggleGroup};
 };

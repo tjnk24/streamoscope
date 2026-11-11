@@ -17,12 +17,7 @@ export const writeObsConfig = () => {
     const profileDirectory = path.join(OBS_CONFIG_DIRECTORY, 'basic', 'profiles', STAND_COLLECTION_NAME);
     const scenesDirectory = path.join(OBS_CONFIG_DIRECTORY, 'basic', 'scenes');
 
-    fs.mkdirSync(profileDirectory, {recursive: true});
-    fs.mkdirSync(scenesDirectory, {recursive: true});
-    fs.mkdirSync(path.dirname(OBS_WEBSOCKET_CONFIG_PATH), {recursive: true});
-    fs.writeFileSync(OBS_PORTABLE_MARKER, '');
-
-    fs.writeFileSync(path.join(OBS_CONFIG_DIRECTORY, 'global.ini'), `${UTF8_BOM}${[
+    const globalIniLines = [
         '[General]',
         'FirstRun=true',
         `LastVersion=${OBS_VERSION_NUMBER}`,
@@ -30,9 +25,9 @@ export const writeObsConfig = () => {
         'Pre33.0Migrated=true',
         'EnableAutoUpdates=false',
         '',
-    ].join('\n')}`);
+    ];
 
-    fs.writeFileSync(path.join(OBS_CONFIG_DIRECTORY, 'user.ini'), `${UTF8_BOM}${[
+    const userIniLines = [
         '[General]',
         'FirstRun=true',
         `LastVersion=${OBS_VERSION_NUMBER}`,
@@ -44,9 +39,9 @@ export const writeObsConfig = () => {
         `SceneCollection=${STAND_COLLECTION_NAME}`,
         `SceneCollectionFile=${STAND_COLLECTION_NAME}`,
         '',
-    ].join('\n')}`);
+    ];
 
-    fs.writeFileSync(path.join(profileDirectory, 'basic.ini'), [
+    const profileIniLines = [
         '[General]',
         `Name=${STAND_COLLECTION_NAME}`,
         '',
@@ -66,9 +61,9 @@ export const writeObsConfig = () => {
         'StreamEncoder=x264',
         'Preset=ultrafast',
         '',
-    ].join('\n'));
+    ];
 
-    fs.writeFileSync(path.join(profileDirectory, 'service.json'), JSON.stringify({
+    const service = {
         type: 'rtmp_custom',
         settings: {
             server: STAND_RTMP_SERVER,
@@ -76,9 +71,9 @@ export const writeObsConfig = () => {
             use_auth: false,
             bwtest: false,
         },
-    }));
+    };
 
-    fs.writeFileSync(path.join(scenesDirectory, `${STAND_COLLECTION_NAME}.json`), JSON.stringify({
+    const collection = {
         current_scene: STAND_COLLECTION_NAME,
         current_program_scene: STAND_COLLECTION_NAME,
         name: STAND_COLLECTION_NAME,
@@ -90,14 +85,25 @@ export const writeObsConfig = () => {
             name: STAND_COLLECTION_NAME,
             settings: {id_counter: 0, custom_size: false, items: []},
         }],
-    }, null, 4));
+    };
 
-    fs.writeFileSync(OBS_WEBSOCKET_CONFIG_PATH, JSON.stringify({
+    const webSocketConfig = {
         alerts_enabled: false,
         auth_required: true,
         first_load: false,
         server_enabled: false,
         server_password: randomBytes(16).toString('hex'),
         server_port: STAND_WEBSOCKET_PORT,
-    }, null, 4));
+    };
+
+    fs.mkdirSync(profileDirectory, {recursive: true});
+    fs.mkdirSync(scenesDirectory, {recursive: true});
+    fs.mkdirSync(path.dirname(OBS_WEBSOCKET_CONFIG_PATH), {recursive: true});
+    fs.writeFileSync(OBS_PORTABLE_MARKER, '');
+    fs.writeFileSync(path.join(OBS_CONFIG_DIRECTORY, 'global.ini'), `${UTF8_BOM}${globalIniLines.join('\n')}`);
+    fs.writeFileSync(path.join(OBS_CONFIG_DIRECTORY, 'user.ini'), `${UTF8_BOM}${userIniLines.join('\n')}`);
+    fs.writeFileSync(path.join(profileDirectory, 'basic.ini'), profileIniLines.join('\n'));
+    fs.writeFileSync(path.join(profileDirectory, 'service.json'), JSON.stringify(service));
+    fs.writeFileSync(path.join(scenesDirectory, `${STAND_COLLECTION_NAME}.json`), JSON.stringify(collection, null, 4));
+    fs.writeFileSync(OBS_WEBSOCKET_CONFIG_PATH, JSON.stringify(webSocketConfig, null, 4));
 };

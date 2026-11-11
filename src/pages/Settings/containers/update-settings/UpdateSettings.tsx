@@ -21,6 +21,8 @@ import ReleaseNotesModal from '../release-notes-modal';
 
 import {useUpdateSettingsView} from './hooks/useUpdateSettingsView';
 
+const {Current, Newer} = ReleaseNotesModeEnum;
+
 const UpdateSettings = () => {
     const {isVisible: isReleaseNotesVisible} = useSelector(releaseNotesModalSelector);
 
@@ -67,7 +69,7 @@ const UpdateSettings = () => {
                         buttonProps={{
                             type: 'link',
                             size: 'small',
-                            onClick: () => openReleaseNotes(ReleaseNotesModeEnum.Current, currentReleaseUrl),
+                            onClick: () => openReleaseNotes(Current, currentReleaseUrl),
                         }}
                         withSpinner={false}
                     >
@@ -139,7 +141,7 @@ const UpdateSettings = () => {
                                 buttonProps={{
                                     type: 'link',
                                     size: 'small',
-                                    onClick: () => openReleaseNotes(ReleaseNotesModeEnum.Newer, latestReleaseUrl),
+                                    onClick: () => openReleaseNotes(Newer, latestReleaseUrl),
                                 }}
                                 withSpinner={false}
                             >

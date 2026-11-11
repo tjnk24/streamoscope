@@ -24,7 +24,13 @@ vi.mock('react-redux', () => ({useSelector: vi.fn()}));
 
 describe('useBridgeNoticeView', () => {
     beforeAll(() => {
-        vi.stubGlobal('window', {location: {href: DOCK_HREF}});
+        const dockWindow = {
+            location: {
+                href: DOCK_HREF,
+            },
+        };
+
+        vi.stubGlobal('window', dockWindow);
     });
 
     afterAll(() => {
@@ -42,7 +48,13 @@ describe('useBridgeNoticeView', () => {
     });
 
     it('waits for a second check before showing', () => {
-        const state = {...STATE, update: {...STATE.update, bridgeMissingChecks: 1}};
+        const state = {
+            ...STATE,
+            update: {
+                ...STATE.update,
+                bridgeMissingChecks: 1,
+            },
+        };
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
@@ -50,7 +62,13 @@ describe('useBridgeNoticeView', () => {
     });
 
     it('stays hidden when the bridge works', () => {
-        const state = {...STATE, update: {...STATE.update, bridgeMissingChecks: 0}};
+        const state = {
+            ...STATE,
+            update: {
+                ...STATE.update,
+                bridgeMissingChecks: 0,
+            },
+        };
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
@@ -58,7 +76,13 @@ describe('useBridgeNoticeView', () => {
     });
 
     it('stays hidden while OBS is not connected', () => {
-        const state = {...STATE, connection: {...STATE.connection, status: ConnectionStatusEnum.Closed}};
+        const state = {
+            ...STATE,
+            connection: {
+                ...STATE.connection,
+                status: ConnectionStatusEnum.Closed,
+            },
+        };
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 

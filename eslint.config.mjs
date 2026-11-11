@@ -71,7 +71,9 @@ export default [
             react,
             "react-hooks": fixupPluginRules(reactHooks),
             '@stylistic': stylistic,
-            streamoscope: {rules: {'import-column': importColumnRule}},
+            streamoscope: {
+                rules: {'import-column': importColumnRule},
+            },
         },
 
         languageOptions: {

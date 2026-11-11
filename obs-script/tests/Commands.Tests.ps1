@@ -116,6 +116,15 @@ Describe 'Opening a release page' {
     It 'opens a page asked for after the load' {
         $script:LinkResults.freshCommandOpened | Should -Be '1'
     }
+
+    It 'opens a page of the local test release server' {
+        $script:LinkResults.testServerOpened | Should -Be '2'
+    }
+
+    It 'opens nothing for user info, a missing port or path, a foreign host, quotes or an overlong address' {
+        $script:LinkResults.rejectedOpened | Should -Be '2'
+        $script:LinkResults.rejectedCommandLeft | Should -Be 'false'
+    }
 }
 
 Describe 'Bridge copied by hand into one folder' {

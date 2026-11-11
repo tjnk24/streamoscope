@@ -81,7 +81,7 @@ local function handle_lines(self)
     local cleaned_lines = {}
 
     for line in string.gmatch(lines, consts.JOURNAL_LINE_PATTERN) do
-        local cleaned_line = string.gsub(string.sub(line, 1, consts.JOURNAL_MAX_LINE_BYTES), '%c', ' ')
+        local cleaned_line = string.gsub(string.sub(line, 1, consts.JOURNAL_MAX_LINE_BYTES), consts.JOURNAL_CONTROL_CHARACTER_PATTERN, ' ')
 
         cleaned_lines[#cleaned_lines + 1] = cleaned_line .. '\r\n'
     end

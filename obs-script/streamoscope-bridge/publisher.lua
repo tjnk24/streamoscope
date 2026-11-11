@@ -26,7 +26,7 @@ local function build_payload(sources)
         bridgeVersion = consts.BRIDGE_VERSION,
         updated = os.time(),
         sceneCollection = obs.obs_frontend_get_current_scene_collection(),
-        outputs = json.array(targets.read(sources.stream_outputs)),
+        outputs = json.array(sample_safely(targets.read, sources.stream_outputs) or {}),
         gpu = sources.gpu ~= nil and sample_safely(sources.gpu.sample, sources.gpu) or nil,
         systemMemory = sample_safely(system_memory.sample),
         update = sources.updater ~= nil and sample_safely(describe_update, sources.updater) or nil,

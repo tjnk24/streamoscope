@@ -96,9 +96,13 @@ end
 function text_file.replace(path, text)
     local temporary_path = path .. '.tmp'
 
-    if text_file.write(temporary_path, text) then
-        ffi.C.MoveFileExW(wide_string.from_text(temporary_path), wide_string.from_text(path), consts.MOVEFILE_REPLACE_EXISTING)
+    if text_file.write(temporary_path, text) and text_file.move(temporary_path, path) then
+        return true
     end
+
+    text_file.remove(temporary_path)
+
+    return false
 end
 
 function text_file.remove(path)

@@ -14,7 +14,7 @@ export const useConnectionAlertView = (): ConnectionAlertViewDto => {
     const {status, reconnectAt} = useSelector(connectionSelector);
     const port = useSelector(settingsPortSelector);
 
-    const [now, setNow] = useState(Date.now);
+    const [_tickedAt, setTickedAt] = useState(Date.now);
 
     const {t} = useTranslation();
 
@@ -22,7 +22,7 @@ export const useConnectionAlertView = (): ConnectionAlertViewDto => {
 
     const isWebSocketOff = isClosed && isInsideObs();
 
-    const remainingMs = reconnectAt === null ? RECONNECT_INTERVAL_MS : reconnectAt - now;
+    const remainingMs = reconnectAt === null ? RECONNECT_INTERVAL_MS : reconnectAt - Date.now();
 
     const retry = remainingMs > 0 ? t('connection.retryIn', {seconds: Math.ceil(remainingMs / 1000)}) : t('connection.retrying');
 
@@ -33,7 +33,7 @@ export const useConnectionAlertView = (): ConnectionAlertViewDto => {
             return undefined;
         }
 
-        const timer = window.setInterval(() => setNow(Date.now()), RECONNECT_COUNTDOWN_TICK_MS);
+        const timer = window.setInterval(() => setTickedAt(Date.now()), RECONNECT_COUNTDOWN_TICK_MS);
 
         return () => window.clearInterval(timer);
     }, [isClosed]);

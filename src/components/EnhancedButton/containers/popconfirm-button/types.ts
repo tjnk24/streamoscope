@@ -6,9 +6,11 @@ import {
 import type {Nullable} from 'infrastructure/common';
 import {ReactNode} from 'react';
 
-export type EnhancedPopconfirmProps = Omit<PopconfirmProps, 'title'> & {
+interface PopconfirmTitleProps {
     title?: ReactNode;
-};
+}
+
+export type EnhancedPopconfirmProps = Omit<PopconfirmProps, 'title'> & PopconfirmTitleProps;
 
 interface OwnProps {
     buttonProps: ButtonProps;

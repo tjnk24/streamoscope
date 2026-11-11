@@ -11,6 +11,8 @@ import {parseBridgeData} from '../parseBridgeData';
 
 import {
     BRIDGE_PARAMETER,
+    BRIDGE_PARAMETER_WITHOUT_OUTPUTS,
+    BRIDGE_PARAMETER_WITHOUT_TIME,
     BRIDGE_PUBLISHED_AT,
     BRIDGE_SCENE_COLLECTION,
     OLD_BRIDGE_PARAMETER,
@@ -52,5 +54,8 @@ describe('parseBridgeData', () => {
     it('drops an empty or broken parameter', () => {
         expect(parseBridgeData(null)).toBeNull();
         expect(parseBridgeData({parameterValue: 'not json'})).toBeNull();
+        expect(parseBridgeData({parameterValue: 'null'})).toBeNull();
+        expect(parseBridgeData(BRIDGE_PARAMETER_WITHOUT_TIME)).toBeNull();
+        expect(parseBridgeData(BRIDGE_PARAMETER_WITHOUT_OUTPUTS)).toBeNull();
     });
 });

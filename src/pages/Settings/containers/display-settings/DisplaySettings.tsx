@@ -35,9 +35,9 @@ const DisplaySettings = () => {
                 gap={14}
             >
                 <Typography.Text>
-                    <GlobalOutlined/>
+                    <GlobalOutlined className={style.languageIcon}/>
 
-                    {` ${t('settings.languageLabel')}`}
+                    {t('settings.languageLabel')}
                 </Typography.Text>
 
                 <Select<LanguageEnum>

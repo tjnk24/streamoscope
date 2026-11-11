@@ -20,3 +20,11 @@ export const BRIDGE_PARAMETER: ObsProfileParameterDto = {
 export const OLD_BRIDGE_PARAMETER: ObsProfileParameterDto = {
     parameterValue: JSON.stringify({bridgeVersion: 1, updated: BRIDGE_PUBLISHED_AT, outputs: []}),
 };
+
+export const BRIDGE_PARAMETER_WITHOUT_TIME: ObsProfileParameterDto = {
+    parameterValue: JSON.stringify({bridgeVersion: 2, updated: 'now', outputs: []}),
+};
+
+export const BRIDGE_PARAMETER_WITHOUT_OUTPUTS: ObsProfileParameterDto = {
+    parameterValue: JSON.stringify({bridgeVersion: 2, updated: BRIDGE_PUBLISHED_AT}),
+};

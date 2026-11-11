@@ -5,6 +5,10 @@ export const TARGET: StreamTargetDto = {
     origin: OutputOriginEnum.Main,
     outputName: null,
     pluginName: null,
-    platform: {title: 'live.example.com', color: '#000', isKnown: false},
+    platform: {
+        title: 'live.example.com',
+        color: '#000',
+        isKnown: false,
+    },
     notes: [],
 };

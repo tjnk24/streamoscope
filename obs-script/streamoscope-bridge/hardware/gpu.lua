@@ -94,7 +94,7 @@ local function read_adapter_loads(self)
     local engine_loads = {}
 
     for _position, item in ipairs(read_counter(self, self.counters.engine)) do
-        local adapter, engine, engine_type = string.match(item.name, 'luid_(0x%x+_0x%x+_phys_%d+)_eng_(%d+)_engtype_(.*)$')
+        local adapter, engine, engine_type = string.match(item.name, consts.GPU_ENGINE_COUNTER_PATTERN)
 
         if adapter ~= nil then
             local key = adapter .. '|' .. engine
@@ -110,9 +110,9 @@ local function read_adapter_loads(self)
     for _key, load in pairs(engine_loads) do
         local adapter = adapters[load.adapter] or {usage = 0, encoder = 0, dedicated = 0, shared = 0}
 
-        if load.engine_type == '3D' then
+        if load.engine_type == consts.GPU_RENDER_ENGINE_TYPE then
             adapter.usage = math.max(adapter.usage, load.value)
-        elseif string.find(load.engine_type, 'Encode') or string.find(load.engine_type, 'Codec') then
+        elseif string.find(load.engine_type, consts.GPU_ENCODE_ENGINE_TYPE) or string.find(load.engine_type, consts.GPU_CODEC_ENGINE_TYPE) then
             adapter.encoder = math.max(adapter.encoder, load.value)
         end
 
@@ -124,7 +124,7 @@ end
 
 local function read_adapter_memory(self, adapters, counter, field)
     for _position, item in ipairs(read_counter(self, counter)) do
-        local adapter = adapters[string.match(item.name, 'luid_(0x%x+_0x%x+_phys_%d+)')]
+        local adapter = adapters[string.match(item.name, consts.GPU_ADAPTER_COUNTER_PATTERN)]
 
         if adapter ~= nil then
             adapter[field] = item.value
@@ -136,7 +136,7 @@ local function find_busiest_adapter(self, adapters)
     local busiest = nil
 
     for key, adapter in pairs(adapters) do
-        adapter.name = self.adapter_names[string.lower(string.match(key, '^(0x%x+_0x%x+)'))]
+        adapter.name = self.adapter_names[string.lower(string.match(key, consts.GPU_ADAPTER_KEY_PATTERN))]
 
         if busiest == nil
             or adapter.usage > busiest.usage

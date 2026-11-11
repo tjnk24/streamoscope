@@ -23,7 +23,13 @@ describe('useHeaderStageView', () => {
     });
 
     it('shows nothing while OBS is not connected', () => {
-        const state = {...STATE, connection: {...STATE.connection, status: ConnectionStatusEnum.Connecting}};
+        const state = {
+            ...STATE,
+            connection: {
+                ...STATE.connection,
+                status: ConnectionStatusEnum.Connecting,
+            },
+        };
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
@@ -33,9 +39,18 @@ describe('useHeaderStageView', () => {
     it('puts the scene collection switch first', () => {
         const state = {
             ...STATE,
-            connection: {...STATE.connection, isSwitchingCollection: true},
-            stats: {...STATE.stats, targets: []},
-            update: {...STATE.update, bridge: null},
+            connection: {
+                ...STATE.connection,
+                isSwitchingCollection: true,
+            },
+            stats: {
+                ...STATE.stats,
+                targets: [],
+            },
+            update: {
+                ...STATE.update,
+                bridge: null,
+            },
         };
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
@@ -44,7 +59,17 @@ describe('useHeaderStageView', () => {
     });
 
     it('waits for the first data before looking for the bridge', () => {
-        const state = {...STATE, stats: {...STATE.stats, targets: []}, update: {...STATE.update, bridge: null}};
+        const state = {
+            ...STATE,
+            stats: {
+                ...STATE.stats,
+                targets: [],
+            },
+            update: {
+                ...STATE.update,
+                bridge: null,
+            },
+        };
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
@@ -52,7 +77,14 @@ describe('useHeaderStageView', () => {
     });
 
     it('looks for the bridge until the missing checks run out', () => {
-        const state = {...STATE, update: {...STATE.update, bridge: null, bridgeMissingChecks: 1}};
+        const state = {
+            ...STATE,
+            update: {
+                ...STATE.update,
+                bridge: null,
+                bridgeMissingChecks: 1,
+            },
+        };
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
@@ -60,7 +92,14 @@ describe('useHeaderStageView', () => {
     });
 
     it('stops looking once the notice is shown', () => {
-        const state = {...STATE, update: {...STATE.update, bridge: null, bridgeMissingChecks: 2}};
+        const state = {
+            ...STATE,
+            update: {
+                ...STATE.update,
+                bridge: null,
+                bridgeMissingChecks: 2,
+            },
+        };
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 

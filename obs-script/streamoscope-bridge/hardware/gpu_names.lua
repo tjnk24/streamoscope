@@ -41,7 +41,7 @@ local function release(object)
 end
 
 local function adapter_key(high_part, low_part)
-    return string.format('0x%08x_0x%08x', bit.band(high_part, 0xffffffff), low_part)
+    return string.format(consts.GPU_ADAPTER_KEY_TEMPLATE, bit.band(high_part, consts.GPU_LUID_HIGH_PART_MASK), low_part)
 end
 
 function gpu_names.read()

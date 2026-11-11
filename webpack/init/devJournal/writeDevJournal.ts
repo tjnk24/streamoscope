@@ -2,8 +2,7 @@ import fs from 'node:fs';
 import type {Request, Response} from 'webpack-dev-server';
 
 import {DEV_JOURNAL_MAX_REQUEST_BYTES, DEV_JOURNAL_PATH} from '../../consts.ts';
-
-import {isSameOriginRequest} from './isSameOriginRequest.ts';
+import {isSameOriginRequest} from '../isSameOriginRequest.ts';
 
 export const writeDevJournal = (request: Request, response: Response) => {
     if (!isSameOriginRequest(request)) {
@@ -30,7 +29,14 @@ export const writeDevJournal = (request: Request, response: Response) => {
             return;
         }
 
-        fs.appendFileSync(DEV_JOURNAL_PATH, `${Buffer.concat(chunks).toString('utf8')}\n`);
+        try {
+            fs.appendFileSync(DEV_JOURNAL_PATH, `${Buffer.concat(chunks).toString('utf8')}\n`);
+        } catch {
+            response.status(500).end();
+
+            return;
+        }
+
         response.status(204).end();
     });
 };
