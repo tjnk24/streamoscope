@@ -210,6 +210,35 @@ Describe 'Get-IniValue and Set-IniValue' {
     }
 }
 
+Describe 'Remove-IniSection' {
+    BeforeAll {
+        $script:sections = "[General]`nName=general`n`n[StreamoScope]`nPluginOutputs={}`nJournalLines=`n`n[Audio]`nRate=48000`n"
+        $script:withoutBridge = "[General]`nName=general`n`n[Audio]`nRate=48000`n"
+    }
+
+    It 'removes a section in the middle and keeps one blank line between the others' {
+        Remove-IniSection -Text $script:sections -Section 'StreamoScope' | Should -BeExactly $script:withoutBridge
+    }
+
+    It 'removes the last section with all its keys' {
+        $lastSection = "[General]`nName=general`n`n[StreamoScope]`nPluginOutputs={}`n"
+
+        Remove-IniSection -Text $lastSection -Section 'StreamoScope' | Should -BeExactly "[General]`nName=general`n"
+    }
+
+    It 'leaves the text alone without the section, a similar name or a key with that name' {
+        $similar = "[General]`nStreamoScope=1`n`n[StreamoScopeNotes]`nText=not ours`n"
+
+        Remove-IniSection -Text $similar -Section 'StreamoScope' | Should -BeExactly $similar
+    }
+
+    It 'keeps Windows line endings' {
+        $crlf = $script:sections.Replace("`n", "`r`n")
+
+        Remove-IniSection -Text $crlf -Section 'StreamoScope' | Should -BeExactly $script:withoutBridge.Replace("`n", "`r`n")
+    }
+}
+
 Describe 'Enable-WebSocketServer' {
     It 'turns the server on and changes nothing else' {
         $original = "{`n    `"server_enabled`": false,`n    `"server_password`": `"secret`"`n}"

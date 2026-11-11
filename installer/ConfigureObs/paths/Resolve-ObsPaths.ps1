@@ -43,6 +43,7 @@ function Resolve-ObsPaths {
 
     $userDirectory = & $resolveLocation 'Configuration'
     $scenesDirectory = Join-Path (& $resolveLocation 'SceneCollections') 'basic\scenes'
+    $profilesDirectory = Join-Path (& $resolveLocation 'Profiles') 'basic\profiles'
     $userIni = Join-Path $userDirectory 'user.ini'
 
     $docksIni = if (Test-Path -LiteralPath $userIni) {
@@ -63,6 +64,7 @@ function Resolve-ObsPaths {
         GlobalIni = $globalIni
         DocksIni = $docksIni
         ScenesDirectory = $scenesDirectory
+        ProfilesDirectory = $profilesDirectory
         WebSocketConfig = $webSocketConfig
     }
 }

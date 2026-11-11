@@ -2,6 +2,7 @@ import {spawnSync} from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
+import {getBuildLabel} from '../../webpack/init/getBuildLabel.ts';
 import {
     PACKAGE_DIRECTORY,
     RELEASE_DIRECTORY,
@@ -30,14 +31,21 @@ if (testServer && testPublicKey) {
     stageTestUpdater(testServer, testPublicKey);
 }
 
-const result = spawnSync(findCompiler(), [
+const buildLabel = getBuildLabel();
+const setupName = buildLabel ? `streamoscope-setup-${VERSION}-local` : `streamoscope-setup-${VERSION}`;
+
+const compilerArguments = [
     '/Qp',
     `/DAppVersion=${VERSION}`,
+    `/DSetupName=${setupName}`,
+    ...(buildLabel ? [`/DBuildLabel=${buildLabel}`] : []),
     `/DPackageDir=${PACKAGE_DIRECTORY}`,
     `/DMinisignPath=${minisign}`,
     `/DOutputDir=${RELEASE_DIRECTORY}`,
     path.join(ROOT_DIRECTORY, 'installer', 'streamoscope.iss'),
-], {stdio: 'inherit'});
+];
+
+const result = spawnSync(findCompiler(), compilerArguments, {stdio: 'inherit'});
 
 if (result.status !== 0) {
     throw new Error(`Inno Setup failed with exit code ${result.status}`);
@@ -47,4 +55,8 @@ if (testServer) {
     console.log(`TEST BUILD: the dock and the updater take releases from ${testServer}`);
 }
 
-console.log(`Built ${path.relative(ROOT_DIRECTORY, path.join(RELEASE_DIRECTORY, `streamoscope-setup-${VERSION}.exe`))}`);
+if (buildLabel) {
+    console.log(`LOCAL BUILD ${buildLabel}: not a release, only the release workflow builds one from a tag`);
+}
+
+console.log(`Built ${path.relative(ROOT_DIRECTORY, path.join(RELEASE_DIRECTORY, `${setupName}.exe`))}`);

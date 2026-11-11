@@ -57,7 +57,21 @@ The workflow appends a machine-readable `<!-- compatibility: {...} -->` comment 
 
 Version numbers follow [Semantic Versioning](https://semver.org/). During the `0.x` series, minor versions may also change settings or installation steps; document those changes in the release notes.
 
+Only the release workflow builds a release, from a `v*` tag. Every other build, from `npm run start:dev` to `npm run package:installer` on your machine or CI on `main`, keeps the version from `package.json` and gets a build label from `git describe`, such as `v0.6.0-5-g4420f14-dirty`: five commits after `v0.6.0`, with uncommitted changes; outside a git checkout the label is `unknown`. The version itself stays a plain `X.Y.Z`, because the updater, the bridge and the loaders of old installs compare it. The label shows under the version in the dock settings, in **Copy diagnostics** and in the journal line about the dock start, and the installer becomes `streamoscope-setup-<version>-local.exe` with `StreamoScope (local build <label>)` in its wizard and in Windows Apps. The Apps entry keeps that name after a background update to a real release, and fairly so: the uninstaller and the loaders still come from the local installer until an official one runs.
+
 CI runs checks and build tests on pushes to `main` and on pull requests. Manual workflow runs test the release process without publishing. A Husky pre-commit hook lints changed files and checks types.
+
+### Urgent fixes
+
+A release is a tag on `main`; there is no release branch, because the tag already says exactly what people have. When a released version needs a fix and `main` already holds unreleased work, branch from the tag:
+
+```bash
+git switch -c hotfix/0.6.1 v0.6.0
+```
+
+Fix it there, write `docs/release-notes/0.6.1.md`, run `npm version patch` and `git push --follow-tags -u origin hotfix/0.6.1`. The release workflow starts from the tag wherever it lives and runs the full build and tests before asking for approval; CI doesn't watch such branches. Then merge the branch into `main`, so the fix and the notes don't get lost, and delete it.
+
+Fix only the newest released line. GitHub treats the release published last as the latest, and the dock, the updater and the Releases page all follow it: a 0.6.2 published after 0.7.0 would send new installs back to 0.6. An older line would need `--latest=false` in `release.yml`, which the workflow doesn't have. The workshop hopes never to need it.
 
 ## The journal
 
@@ -129,6 +143,8 @@ A new bridge can meet an old dock: switching the scene collection reloads the sc
 
 The installer puts application files in `%LOCALAPPDATA%\Programs\streamoscope` in the layout above, adds the OBS dock and Lua bridge, and attempts to configure the local WebSocket server. It keeps backups under `%LOCALAPPDATA%\streamoscope\backups` and writes `%LOCALAPPDATA%\streamoscope\configure-obs.log`.
 
-Close OBS before installation or removal. Uninstallation leaves OBS WebSocket enabled because another application might rely on it. It removes the journal (`%LOCALAPPDATA%\streamoscope\logs`) and its setting; installing or updating leaves them in place.
+Close OBS before installation or removal. Removal asks for confirmation first and only then takes the dock and the bridge out of OBS, together with the bridge data in every profile (the `[StreamoScope]` section of `basic.ini`). It leaves OBS WebSocket enabled because another application might rely on it. It deletes the application folder, the journal (`%LOCALAPPDATA%\streamoscope\logs`) with its setting and the updater state; installing or updating leaves the journal in place. The backups and `configure-obs.log` stay, so a removal that went wrong can still be undone and explained.
+
+The uninstaller comes from the last installer that ran: background updates don't replace it, so the installer version decides what removal deletes.
 
 The Windows executable does **not** currently have an Authenticode signature. Release assets are protected separately with minisign signatures, and the README explains how to verify manual downloads.

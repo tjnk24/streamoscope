@@ -177,19 +177,37 @@ Describe 'Invoke-ConfigureObs' {
             (Read-TextFile -Path (Join-Path $script:fixture.Config 'basic\scenes\Main.json')).Text | Should -BeExactly $script:before[(Join-Path $script:fixture.Config 'basic\scenes\Main.json')]
             Test-Path -LiteralPath (Join-Path $script:fixture.Install 'install-manifest.json') | Should -BeFalse
         }
+
+        It 'removes the bridge data from the profile and keeps the rest byte for byte' {
+            $profilePath = Join-Path $script:fixture.Config 'basic\profiles\Untitled\basic.ini'
+            $bridgeSection = "[StreamoScope]`r`nPluginOutputs={`"bridgeVersion`":5,`"updated`":1760000000,`"outputs`":[]}`r`n`r`n"
+            $profileFile = Read-TextFile -Path $profilePath
+
+            $profileFile.Text | Should -BeExactly $script:before[$profilePath].Replace($bridgeSection, '')
+            $profileFile.HasBom | Should -BeTrue
+        }
     }
 
-    Context 'OBS 33: user.ini, [Locations], several collections' {
+    Context 'OBS 33: user.ini, [Locations], several collections and profiles' {
         BeforeAll {
             $script:fixture = New-ObsFixture -Name 'obs-33'
             Copy-Item -LiteralPath (Join-Path $script:fixture.Config 'basic\scenes\Stream.json') -Destination (Join-Path $script:fixture.Config "basic\scenes\$script:cyrillicCollection")
             $script:globalHash = (Get-FileHash -LiteralPath (Join-Path $script:fixture.Config 'global.ini')).Hash
             $script:userIni = (Read-TextFile -Path (Join-Path $script:fixture.Config 'user.ini')).Text
             $script:streamCanonical = ConvertTo-Canonical -Path (Join-Path $script:fixture.Config 'basic\scenes\Stream.json')
+            $script:streamProfilePath = Join-Path $script:fixture.Config 'basic\profiles\Stream\basic.ini'
+            $script:streamProfile = (Read-TextFile -Path $script:streamProfilePath).Text
+            $script:recordingProfilePath = Join-Path $script:fixture.Config 'basic\profiles\Recording\basic.ini'
+            $script:recordingProfileHash = (Get-FileHash -LiteralPath $script:recordingProfilePath).Hash
         }
 
         It 'installs' {
             Invoke-Fixture -Fixture $script:fixture | Should -Be ([ConfigureObsResult]::Success)
+        }
+
+        It 'leaves profiles alone on install' {
+            (Read-TextFile -Path $script:streamProfilePath).Text | Should -BeExactly $script:streamProfile
+            (Get-FileHash -LiteralPath $script:recordingProfilePath).Hash | Should -Be $script:recordingProfileHash
         }
 
         It 'writes the dock to user.ini under a free title and leaves global.ini alone' {
@@ -219,6 +237,31 @@ Describe 'Invoke-ConfigureObs' {
 
             (Read-TextFile -Path (Join-Path $script:fixture.Config 'user.ini')).Text | Should -BeExactly $script:userIni
             ConvertTo-Canonical -Path (Join-Path $script:fixture.Config 'basic\scenes\Stream.json') | Should -BeExactly $script:streamCanonical
+        }
+
+        It 'removes the current and the old bridge sections from every profile and nothing else' {
+            $bridgeSectionsStart = $script:streamProfile.IndexOf("`n[ObsStatsDock]")
+
+            (Read-TextFile -Path $script:streamProfilePath).Text | Should -BeExactly $script:streamProfile.Substring(0, $bridgeSectionsStart)
+            (Get-FileHash -LiteralPath $script:recordingProfilePath).Hash | Should -Be $script:recordingProfileHash
+        }
+    }
+
+    Context 'check before uninstall' {
+        It 'reports a running OBS' {
+            Mock Test-ObsRunning { $true }
+            $fixture = New-ObsFixture -Name 'obs-33'
+
+            Invoke-Fixture -Fixture $fixture -Mode Check | Should -Be ([ConfigureObsResult]::ObsRunning)
+        }
+
+        It 'changes nothing when OBS is closed' {
+            $fixture = New-ObsFixture -Name 'obs-33'
+            $hashes = Get-Hashes -Directory $fixture.Config
+
+            Invoke-Fixture -Fixture $fixture -Mode Check | Should -Be ([ConfigureObsResult]::Success)
+            Get-Hashes -Directory $fixture.Config | Should -BeExactly $hashes
+            Test-Path -LiteralPath (Join-Path $fixture.Install 'install-manifest.json') | Should -BeFalse
         }
     }
 

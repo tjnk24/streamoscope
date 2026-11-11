@@ -68,6 +68,7 @@ export const ru: TranslationDto = {
         languageLabel: 'Язык интерфейса',
         updatesTitle: 'Обновления',
         currentVersion: 'Версия {{version}}',
+        localBuild: 'Локальная сборка {{label}}',
         lastCheck: 'Последняя проверка: {{date}}',
         neverChecked: 'Ещё не проверяли',
         checkUpdates: 'Проверить обновления',

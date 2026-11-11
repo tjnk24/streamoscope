@@ -66,6 +66,7 @@ export const en = {
         languageLabel: 'Interface language',
         updatesTitle: 'Updates',
         currentVersion: 'Version {{version}}',
+        localBuild: 'Local build {{label}}',
         lastCheck: 'Last checked: {{date}}',
         neverChecked: 'Not checked yet',
         checkUpdates: 'Check for updates',

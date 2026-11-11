@@ -1,6 +1,6 @@
 function Invoke-ConfigureObs {
     param(
-        [Parameter(Mandatory)][ValidateSet('Install', 'Uninstall')][string]$Mode,
+        [Parameter(Mandatory)][ValidateSet('Install', 'Uninstall', 'Check')][string]$Mode,
         [Parameter(Mandatory)][string]$InstallDirectory,
         [AllowNull()][AllowEmptyString()][string]$ObsDirectory,
         [AllowNull()][AllowEmptyString()][string]$ConfigDirectory,
@@ -15,6 +15,10 @@ function Invoke-ConfigureObs {
         Write-ConfigureLog 'OBS is running'
 
         return [ConfigureObsResult]::ObsRunning
+    }
+
+    if ($Mode -eq 'Check') {
+        return [ConfigureObsResult]::Success
     }
 
     $manifestPath = Join-Path $InstallDirectory 'install-manifest.json'

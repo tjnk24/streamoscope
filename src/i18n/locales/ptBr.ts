@@ -68,6 +68,7 @@ export const ptBr: TranslationDto = {
         languageLabel: 'Idioma da interface',
         updatesTitle: 'Atualizações',
         currentVersion: 'Versão {{version}}',
+        localBuild: 'Build local {{label}}',
         lastCheck: 'Última verificação: {{date}}',
         neverChecked: 'Ainda não verificado',
         checkUpdates: 'Verificar atualizações',

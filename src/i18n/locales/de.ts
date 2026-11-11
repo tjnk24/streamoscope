@@ -68,6 +68,7 @@ export const de: TranslationDto = {
         languageLabel: 'Sprache der Oberfläche',
         updatesTitle: 'Updates',
         currentVersion: 'Version {{version}}',
+        localBuild: 'Lokaler Build {{label}}',
         lastCheck: 'Zuletzt geprüft: {{date}}',
         neverChecked: 'Noch nicht geprüft',
         checkUpdates: 'Nach Updates suchen',

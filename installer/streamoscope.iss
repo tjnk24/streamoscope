@@ -2,6 +2,16 @@
   #error AppVersion is not defined, build with npm run package:installer
 #endif
 
+#ifndef SetupName
+  #error SetupName is not defined, build with npm run package:installer
+#endif
+
+#ifdef BuildLabel
+  #define BuildSuffix " (local build " + BuildLabel + ")"
+#else
+  #define BuildSuffix ""
+#endif
+
 #ifndef PackageDir
   #error PackageDir is not defined, build with npm run package:installer
 #endif
@@ -22,7 +32,7 @@
 AppId={{6D39D358-2386-4437-8FE3-CF5511816FD1}
 AppName={#AppName}
 AppVersion={#AppVersion}
-AppVerName={#AppName} {#AppVersion}
+AppVerName={#AppName} {#AppVersion}{#BuildSuffix}
 AppPublisher=tjnk24
 AppPublisherURL={#AppUrl}
 AppSupportURL={#AppUrl}/issues
@@ -34,7 +44,7 @@ PrivilegesRequired=lowest
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 OutputDir={#OutputDir}
-OutputBaseFilename={#AppSlug}-setup-{#AppVersion}
+OutputBaseFilename={#SetupName}
 Compression=lzma2/max
 SolidCompression=yes
 WizardStyle=modern
@@ -43,7 +53,7 @@ WizardImageFile=images\wizard-164.png,images\wizard-246.png,images\wizard-328.pn
 WizardSmallImageFile=images\wizard-small-55.png,images\wizard-small-83.png,images\wizard-small-110.png
 UninstallDisplayIcon={app}\streamoscope.ico
 CloseApplications=no
-UninstallDisplayName={#AppName}
+UninstallDisplayName={#AppName}{#BuildSuffix}
 VersionInfoVersion={#AppVersion}
 VersionInfoProductName={#AppName}
 
@@ -70,7 +80,16 @@ Type: files; Name: "{localappdata}\streamoscope\update-check.stamp"
 [UninstallDelete]
 Type: filesandordirs; Name: "{localappdata}\streamoscope\logs"
 Type: files; Name: "{localappdata}\streamoscope\journal.txt"
+Type: files; Name: "{localappdata}\streamoscope\auto-update.txt"
+Type: files; Name: "{localappdata}\streamoscope\update-status.json"
+Type: files; Name: "{localappdata}\streamoscope\update-status.json.lock"
+Type: files; Name: "{localappdata}\streamoscope\update-check.stamp"
 Type: filesandordirs; Name: "{app}\versions"
+Type: filesandordirs; Name: "{app}\dock"
+Type: filesandordirs; Name: "{app}\streamoscope-bridge"
+Type: filesandordirs; Name: "{app}\ConfigureObs"
+Type: filesandordirs; Name: "{app}\updater"
+Type: files; Name: "{app}\install-manifest.json"
 Type: files; Name: "{app}\current-version.js"
 Type: files; Name: "{app}\update-trial.txt"
 Type: files; Name: "{app}\healthy-version.txt"
@@ -86,13 +105,6 @@ Source: "images\streamoscope.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ConfigureObs\*.ps1"; DestDir: "{app}\ConfigureObs"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#MinisignPath}"; DestDir: "{app}\updater"; Flags: ignoreversion
 Source: "third-party\minisign-LICENSE.txt"; DestDir: "{app}\updater"; Flags: ignoreversion
-
-[UninstallDelete]
-Type: files; Name: "{app}\install-manifest.json"
-Type: filesandordirs; Name: "{app}\dock"
-Type: filesandordirs; Name: "{app}\streamoscope-bridge"
-Type: filesandordirs; Name: "{app}\ConfigureObs"
-Type: filesandordirs; Name: "{app}\updater"
 
 [CustomMessages]
 en.ConfiguringObs=Setting up OBS...
@@ -166,6 +178,7 @@ const
 
 var
   ObsSetupNote: String;
+  ShouldRemoveFromObs: Boolean;
 
 function GetLogPath: String;
 begin
@@ -247,26 +260,48 @@ begin
 end;
 
 function InitializeUninstall: Boolean;
-var
-  Code: Integer;
 begin
   Result := True;
+  ShouldRemoveFromObs := True;
 
-  repeat
-    Code := RunConfigureObs('Uninstall');
-
-    if Code <> ResultObsRunning then
-      Break;
-
+  while RunConfigureObs('Check') = ResultObsRunning do
+  begin
     if SuppressibleMsgBox(CustomMessage('UninstallObsRunning'), mbError, MB_RETRYCANCEL, IDCANCEL) <> IDRETRY then
     begin
       if SuppressibleMsgBox(CustomMessage('UninstallFilesOnly'), mbConfirmation, MB_YESNO, IDNO) <> IDYES then
         Result := False;
 
+      ShouldRemoveFromObs := False;
       Exit;
     end;
-  until False;
+  end;
+end;
 
-  if Code <> ResultSuccess then
+procedure RemoveFromObs;
+begin
+  if not ShouldRemoveFromObs then
+    Exit;
+
+  if RunConfigureObs('Uninstall') <> ResultSuccess then
     SuppressibleMsgBox(CustomMessage('UninstallFailed') + #13#10#13#10 + CustomMessage('Details') + ' ' + GetLogPath, mbInformation, MB_OK, IDOK);
+end;
+
+procedure RemoveInstallDirectory;
+var
+  InstallDirectory: String;
+begin
+  InstallDirectory := ExpandConstant('{app}');
+
+  if CompareText(InstallDirectory, ExpandConstant('{userpf}\{#AppSlug}')) = 0 then
+    DelTree(InstallDirectory, True, True, True);
+end;
+
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+begin
+  case CurUninstallStep of
+    usUninstall:
+      RemoveFromObs;
+    usPostUninstall:
+      RemoveInstallDirectory;
+  end;
 end;

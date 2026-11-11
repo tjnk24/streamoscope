@@ -68,6 +68,7 @@ export const es: TranslationDto = {
         languageLabel: 'Idioma de la interfaz',
         updatesTitle: 'Actualizaciones',
         currentVersion: 'Versión {{version}}',
+        localBuild: 'Compilación local {{label}}',
         lastCheck: 'Última comprobación: {{date}}',
         neverChecked: 'Aún no se ha comprobado',
         checkUpdates: 'Buscar actualizaciones',

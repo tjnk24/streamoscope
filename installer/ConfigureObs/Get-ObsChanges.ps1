@@ -60,6 +60,24 @@ function Get-ObsChanges {
         }
     }
 
+    if ($Mode -eq 'Uninstall' -and (Test-Path -LiteralPath $Paths.ProfilesDirectory)) {
+        $profileSettings = @(Get-ChildItem -LiteralPath $Paths.ProfilesDirectory -Directory |
+            ForEach-Object { Join-Path $_.FullName 'basic.ini' } |
+            Where-Object { Test-Path -LiteralPath $_ })
+
+        foreach ($profileSettingsPath in $profileSettings) {
+            $profileFile = & $readFile $profileSettingsPath
+
+            foreach ($section in $script:BridgeProfileSections) {
+                $profileFile.Text = Remove-IniSection -Text $profileFile.Text -Section $section
+            }
+
+            if ($profileFile.Text -cne $profileFile.Original) {
+                $profileFile.Description += 'bridge data'
+            }
+        }
+    }
+
     $webSocket = 'unchanged'
 
     if ($Mode -eq 'Install') {

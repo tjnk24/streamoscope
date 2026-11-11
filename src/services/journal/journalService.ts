@@ -44,9 +44,10 @@ class JournalService {
         this.stop();
 
         const state = getStore();
+        const buildText = process.env.BUILD_LABEL ? ` build=${process.env.BUILD_LABEL}` : '';
 
         this.snapshot = buildJournalSnapshot(state);
-        this.log(Info, 'panel', `started version=${process.env.APP_VERSION} language=${settingsSelector(state).language ?? 'auto'} browser=${navigator.userAgent}`);
+        this.log(Info, 'panel', `started version=${process.env.APP_VERSION}${buildText} language=${settingsSelector(state).language ?? 'auto'} browser=${navigator.userAgent}`);
 
         this.unsubscribe = store.subscribe(this.onStoreChange);
         this.flushTimer = window.setInterval(this.flush, JOURNAL_FLUSH_INTERVAL_MS);

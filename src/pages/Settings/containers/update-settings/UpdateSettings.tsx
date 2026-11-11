@@ -75,6 +75,12 @@ const UpdateSettings = () => {
                     </EnhancedButton>
                 </Flex>
 
+                {process.env.BUILD_LABEL && (
+                    <Typography.Text type="secondary">
+                        {t('settings.localBuild', {label: process.env.BUILD_LABEL})}
+                    </Typography.Text>
+                )}
+
                 <Typography.Text type="secondary">
                     {lastCheckText}
                 </Typography.Text>

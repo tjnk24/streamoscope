@@ -12,7 +12,8 @@ OBS keeps these settings in memory and writes them back on exit.
   lies in the OBS folder (two levels above `bin\64bit\obs64.exe`).
 - `global.ini` always lies in this folder. From OBS 31 its section `[Locations]` (`Configuration`, `SceneCollections`,
   `Profiles`, `PluginManagerSettings`) holds the base folders for the rest, with doubled backslashes; by default
-  they all point to `%APPDATA%`, and `obs-studio\user.ini` and `obs-studio\basic\scenes` are under them.
+  they all point to `%APPDATA%`, and `obs-studio\user.ini`, `obs-studio\basic\scenes` and `obs-studio\basic\profiles`
+  are under them.
   The script reads these paths and falls back to the config folder when the section or a key is missing (OBS 28–30).
 
 ## When there is nothing to configure
@@ -54,6 +55,14 @@ and the migration is skipped. So:
   The path is stored as OBS got it from the file dialog, usually with forward slashes; compare paths
   case-insensitively and with both separators.
 - Scripts are per scene collection, so the bridge is added to every collection.
+
+## Profile parameters
+
+- Every profile is `basic\profiles\<folder>\basic.ini` under the `Profiles` base folder (UTF-8 with BOM, LF).
+- Profile parameters that obs-websocket (`SetProfileParameter`) and scripts write are sections and keys of that file.
+  The bridge and the dock use `[StreamoScope]` (`PluginOutputs`, the command keys); before 0.3.0 it was `[ObsStatsDock]`.
+  OBS keeps sections it doesn't know as they are.
+- Uninstall removes both sections from every profile, with the lines in them and the blank line after them.
 
 ## obs-websocket
 

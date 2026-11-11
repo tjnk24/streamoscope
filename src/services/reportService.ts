@@ -56,9 +56,10 @@ class ReportService {
 
     private buildEnvironmentLines = () => {
         const {obsVersion, status} = connectionSelector(getStore());
+        const buildText = process.env.BUILD_LABEL ? ` (local build ${process.env.BUILD_LABEL})` : '';
 
         return [
-            `StreamoScope: ${process.env.APP_VERSION}`,
+            `StreamoScope: ${process.env.APP_VERSION}${buildText}`,
             `OBS: ${obsVersion?.obsVersion ?? 'unknown'}`,
             `obs-websocket: ${obsVersion?.obsWebSocketVersion ?? 'unknown'}`,
             `Platform: ${obsVersion?.platformDescription ?? 'unknown'}`,

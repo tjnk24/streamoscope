@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('Install', 'Uninstall')][string]$Mode = 'Install',
+    [ValidateSet('Install', 'Uninstall', 'Check')][string]$Mode = 'Install',
     [string]$InstallDirectory,
     [string]$ObsDirectory,
     [string]$ConfigDirectory,
