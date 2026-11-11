@@ -1,7 +1,8 @@
 local ffi = require('ffi')
 
 return {
-    BRIDGE_VERSION = 5,
+    BRIDGE_VERSION = 6,
+    STUB_MODULE = 'streamoscope-bridge.stub',
     PARAMETER_SECTION = 'StreamoScope',
     DESCRIPTION_ICON_HTML = '<p><img src="file:///%sstreamoscope-bridge/icon.png" width="64" height="64"></p>',
     PARAMETER_NAME = 'PluginOutputs',

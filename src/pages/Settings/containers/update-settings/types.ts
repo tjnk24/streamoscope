@@ -29,4 +29,6 @@ export type UpdateSettingsViewDto = {
     currentReleaseUrl: string;
     latestReleaseUrl: Nullable<string>;
     isAutoUpdateEnabled: boolean;
+    isInstallerNeeded: boolean;
+    installerUrl: string;
 };

@@ -9,6 +9,7 @@ import {compareVersions} from '__utils/update/compareVersions';
 
 import {LAST_CHECK_FORMAT, UPDATE_CHECK_TEXTS} from '../consts';
 import {UpdateSettingsViewDto} from '../types';
+import {isInstallerNeeded} from '../utils/isInstallerNeeded';
 
 import {useUpdateNotes} from './useUpdateNotes';
 import {useUpdateProgress} from './useUpdateProgress';
@@ -16,7 +17,7 @@ import {useUpdateProgress} from './useUpdateProgress';
 const {Available, Failed} = UpdateCheckStatusEnum;
 
 export const useUpdateSettingsView = (): UpdateSettingsViewDto => {
-    const {checkStatus, latest} = useSelector(updateSelector);
+    const {checkStatus, latest, bridge} = useSelector(updateSelector);
     const {lastUpdateCheckAt, isAutoUpdateEnabled} = useSelector(settingsSelector);
 
     const {t, i18n} = useTranslation();
@@ -58,5 +59,7 @@ export const useUpdateSettingsView = (): UpdateSettingsViewDto => {
         currentReleaseUrl: `${RELEASES_PAGE_URL}/tag/v${currentVersion}`,
         latestReleaseUrl: latest?.url ?? null,
         isAutoUpdateEnabled,
+        isInstallerNeeded: isInstallerNeeded(bridge),
+        installerUrl: `${RELEASES_PAGE_URL}/latest`,
     };
 };

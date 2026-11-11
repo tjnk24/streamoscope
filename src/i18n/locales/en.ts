@@ -180,6 +180,8 @@ export const en = {
         whatsNew: 'What\'s new',
         download: 'Download manually',
         retry: 'Try again',
+        installerNeeded: 'Some fixes come only with the installer. Run it once over this installation: your settings, the journal and OBS stay as they are.',
+        downloadInstaller: 'Download the installer',
         noUpdater: 'Automatic updates work in the widget installed by the installer, with the {{script}} script in this scene collection. You can install the new version manually.',
         stages: {
             preparing: 'Preparing…',

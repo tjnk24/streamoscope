@@ -25,7 +25,8 @@ timers[3000]()
 local payload = store['StreamoScope/PluginOutputs'] or ''
 local rolled_back = string.match(payload, '"rolledBackVersion":"([^"]*)"') or '-'
 local available = string.match(payload, '"available":(%a+)') or '-'
-local result = script_path() .. '|' .. rolled_back .. '|' .. available
+local stub = string.match(payload, '"stubVersion":(%d+)') or '-'
+local result = script_path() .. '|' .. rolled_back .. '|' .. available .. '|' .. stub
 
 script_unload()
 

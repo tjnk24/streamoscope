@@ -182,6 +182,8 @@ export const ptBr: TranslationDto = {
         whatsNew: 'Novidades',
         download: 'Baixar manualmente',
         retry: 'Tentar de novo',
+        installerNeeded: 'Algumas correções só chegam com o instalador. Execute-o uma vez sobre esta instalação: suas configurações, o registro e o OBS ficam como estão.',
+        downloadInstaller: 'Baixar o instalador',
         noUpdater: 'As atualizações automáticas funcionam no widget instalado pelo instalador, com o script {{script}} nesta coleção de cenas. Você pode instalar a versão nova manualmente.',
         stages: {
             preparing: 'Preparando…',

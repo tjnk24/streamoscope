@@ -124,6 +124,12 @@ function Updater:read_rolled_back_version()
     return string.match(text_file.read(self.rolled_back_version_path) or '', consts.ROLLED_BACK_VERSION_PATTERN)
 end
 
+function Updater:read_stub_version()
+    local stub = package.loaded[consts.STUB_MODULE]
+
+    return type(stub) == 'table' and stub.version or nil
+end
+
 function Updater:close()
 end
 

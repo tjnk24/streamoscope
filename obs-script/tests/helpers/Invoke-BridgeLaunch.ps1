@@ -30,15 +30,17 @@ function Invoke-BridgeLaunch {
             Error = $result.Text
             RolledBack = $script:NoBridgeResult
             Available = $script:NoBridgeResult
+            Stub = $script:NoBridgeResult
         }
     }
 
-    $bridgePath, $rolledBack, $available = $result.Text -split '\|'
+    $bridgePath, $rolledBack, $available, $stub = $result.Text -split '\|'
 
     return [pscustomobject]@{
         Version = ($bridgePath.TrimEnd('/') -split '/')[-1]
         Error = ''
         RolledBack = $rolledBack
         Available = $available
+        Stub = $stub
     }
 }

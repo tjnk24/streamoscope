@@ -14,6 +14,12 @@ AfterAll {
 }
 
 Describe 'Bridge loader stub' {
+    It 'tells the bridge that it runs under the stub' {
+        $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory
+
+        (Invoke-BridgeLaunch -InstallRoot $app).Stub | Should -Be '1'
+    }
+
     It 'lets the loader of the previous version judge a version on trial' {
         $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Trial (New-TrialText) -Breaks $script:BrokenMain
         $oldLoaderPath = Join-Path $PSScriptRoot 'harness\loader_0_6_0.lua'

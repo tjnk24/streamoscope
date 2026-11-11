@@ -54,6 +54,7 @@ export const BRIDGE_UPDATE_STATE: BridgeUpdateStateDto = {
     bridgeVersion: 2,
     status: null,
     rolledBackVersion: null,
+    stubVersion: null,
 };
 
 const RELEASE: ReleaseDto = {

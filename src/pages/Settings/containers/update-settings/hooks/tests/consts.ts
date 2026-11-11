@@ -32,6 +32,7 @@ export const BRIDGE: BridgeUpdateStateDto = {
     bridgeVersion: 4,
     status: null,
     rolledBackVersion: null,
+    stubVersion: null,
 };
 
 export const STATE = {

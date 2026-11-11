@@ -76,7 +76,33 @@ describe('useUpdateSettingsView', () => {
             currentReleaseUrl: 'https://github.com/tjnk24/streamoscope/releases/tag/v0.1.0',
             latestReleaseUrl: RELEASE.url,
             isAutoUpdateEnabled: true,
+            isInstallerNeeded: false,
+            installerUrl: 'https://github.com/tjnk24/streamoscope/releases/latest',
         });
+    });
+
+    it.each([
+        [6, null, true, true],
+        [6, 1, true, false],
+        [6, null, false, false],
+        [5, null, true, false],
+    ])('asks to run the installer for bridge %i, stub %s, updater %s: %s', (bridgeVersion, stubVersion, isAvailable, isExpected) => {
+        const state = {
+            ...STATE,
+            update: {
+                ...STATE.update,
+                bridge: {
+                    ...BRIDGE,
+                    bridgeVersion,
+                    stubVersion,
+                    isAvailable,
+                },
+            },
+        };
+
+        vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
+
+        expect(useUpdateSettingsView().isInstallerNeeded).toBe(isExpected);
     });
 
     it('offers a manual download and says why when there is no updater', () => {

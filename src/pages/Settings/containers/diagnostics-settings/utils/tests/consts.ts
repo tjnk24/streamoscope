@@ -5,4 +5,5 @@ export const BRIDGE: BridgeUpdateStateDto = {
     bridgeVersion: 5,
     status: null,
     rolledBackVersion: null,
+    stubVersion: null,
 };

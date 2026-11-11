@@ -42,6 +42,8 @@ const UpdateSettings = () => {
         currentReleaseUrl,
         latestReleaseUrl,
         isAutoUpdateEnabled,
+        isInstallerNeeded,
+        installerUrl,
     } = useUpdateSettingsView();
 
     const openReleaseNotes = (mode: ReleaseNotesModeEnum, url: Nullable<string>) => {
@@ -87,6 +89,28 @@ const UpdateSettings = () => {
                     {lastCheckText}
                 </Typography.Text>
             </Flex>
+
+            {isInstallerNeeded && (
+                <Flex
+                    align="center"
+                    gap={14}
+                    wrap
+                >
+                    <Typography.Text type="warning">
+                        {t('update.installerNeeded')}
+                    </Typography.Text>
+
+                    <EnhancedButton
+                        buttonProps={{
+                            size: 'small',
+                            onClick: () => updateService.openReleasePage(installerUrl),
+                        }}
+                        withSpinner={false}
+                    >
+                        {t('update.downloadInstaller')}
+                    </EnhancedButton>
+                </Flex>
+            )}
 
             <Flex
                 align="center"

@@ -84,6 +84,8 @@ export const OPEN_URL_COMMAND_PARAMETER: ProfileParameterKeyDto = {
 };
 export const OPEN_URL_MIN_BRIDGE_VERSION = 2;
 
+export const STUB_MIN_BRIDGE_VERSION = 6;
+
 export const JOURNAL_LINES_PARAMETER: ProfileParameterKeyDto = {
     parameterCategory: 'StreamoScope',
     parameterName: 'JournalLines',

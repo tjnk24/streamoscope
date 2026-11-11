@@ -32,6 +32,7 @@ export type BridgeUpdateDto = {
     available: boolean;
     status: Nullable<string>;
     rolledBackVersion?: string;
+    stubVersion?: number;
 };
 
 export type BridgeUpdateStateDto = {
@@ -39,4 +40,5 @@ export type BridgeUpdateStateDto = {
     bridgeVersion: number;
     status: Nullable<UpdateStatusDto>;
     rolledBackVersion: Nullable<string>;
+    stubVersion: Nullable<number>;
 };

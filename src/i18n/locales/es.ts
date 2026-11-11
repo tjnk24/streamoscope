@@ -182,6 +182,8 @@ export const es: TranslationDto = {
         whatsNew: 'Novedades',
         download: 'Descargar manualmente',
         retry: 'Reintentar',
+        installerNeeded: 'Algunas correcciones solo llegan con el instalador. Ejecútalo una vez sobre esta instalación: tus ajustes, el registro y OBS se quedan como están.',
+        downloadInstaller: 'Descargar el instalador',
         noUpdater: 'Las actualizaciones automáticas funcionan en el widget instalado con el instalador, con el script {{script}} en esta colección de escenas. Puedes instalar la versión nueva manualmente.',
         stages: {
             preparing: 'Preparando…',
