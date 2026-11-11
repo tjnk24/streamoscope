@@ -6,10 +6,78 @@ BeforeAll {
     $script:OriginalLocalAppData = $env:LOCALAPPDATA
     $script:WorkDirectory = Join-Path $TestDrive "$($script:UserDirectoryName)\rollback"
     $script:BrokenMain = @{ $script:MainModuleRelativePath = $script:BrokenBridgeSource }
+    $script:BrokenLoader = @{ $script:LoaderFileName = "this is not lua`n" }
 }
 
 AfterAll {
     $env:LOCALAPPDATA = $script:OriginalLocalAppData
+}
+
+Describe 'Bridge loader stub' {
+    It 'lets the loader of the previous version judge a version on trial' {
+        $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Trial (New-TrialText) -Breaks $script:BrokenMain
+        $oldLoaderPath = Join-Path $PSScriptRoot 'harness\loader_0_6_0.lua'
+
+        Copy-Item -LiteralPath $oldLoaderPath -Destination (Join-Path $app "versions\$($script:PreviousVersion)\$($script:LoaderFileName)") -Force
+
+        $launch = Invoke-BridgeLaunch -InstallRoot $app
+
+        $launch.Version | Should -Be $script:PreviousVersion
+        $launch.RolledBack | Should -Be $script:NewVersion
+        Get-CurrentVersion -InstallRoot $app | Should -Be $script:PreviousVersion
+    }
+
+    It 'runs the loader of the new version once its trial is over' {
+        $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Trial (New-TrialText)
+        $healthyLoaderPath = Join-Path $app 'healthy-loader.txt'
+
+        (Invoke-BridgeLaunch -InstallRoot $app -EarlyCommand "healthy:$($script:NewVersion)").Version | Should -Be $script:NewVersion
+        [System.IO.File]::ReadAllText($healthyLoaderPath) | Should -Be $script:PreviousVersion
+
+        (Invoke-BridgeLaunch -InstallRoot $app).Version | Should -Be $script:NewVersion
+        [System.IO.File]::ReadAllText($healthyLoaderPath) | Should -Be $script:NewVersion
+    }
+
+    It 'goes back to the loader that worked last when the new one breaks after its trial' {
+        $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Trial (New-TrialText) -Breaks $script:BrokenLoader
+
+        (Invoke-BridgeLaunch -InstallRoot $app -EarlyCommand "healthy:$($script:NewVersion)").Version | Should -Be $script:NewVersion
+        Join-Path $app 'update-trial.txt' | Should -Not -Exist
+
+        $launch = Invoke-BridgeLaunch -InstallRoot $app
+
+        $launch.Version | Should -Be $script:PreviousVersion
+        $launch.RolledBack | Should -Be $script:NewVersion
+        Get-CurrentVersion -InstallRoot $app | Should -Be $script:PreviousVersion
+        Join-Path $app 'current-version.js.tmp' | Should -Not -Exist
+        (Invoke-BridgeLaunch -InstallRoot $app).Version | Should -Be $script:PreviousVersion
+    }
+
+    It 'falls back to the last healthy version without a trial' {
+        $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Healthy $script:PreviousVersion -Breaks $script:BrokenLoader
+
+        (Invoke-BridgeLaunch -InstallRoot $app).Version | Should -Be $script:PreviousVersion
+        Get-CurrentVersion -InstallRoot $app | Should -Be $script:PreviousVersion
+        [System.IO.File]::ReadAllText((Join-Path $app 'rolled-back-version.txt')) | Should -Be $script:NewVersion
+    }
+
+    It 'passes the error on when there is no version to fall back to' {
+        $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Healthy $script:NewVersion -Breaks $script:BrokenLoader
+
+        (Invoke-BridgeLaunch -InstallRoot $app).Version | Should -Be 'ERROR'
+        Get-CurrentVersion -InstallRoot $app | Should -Be $script:NewVersion
+        Join-Path $app 'rolled-back-version.txt' | Should -Not -Exist
+    }
+
+    It 'passes the error on when the version to fall back to has no loader' {
+        $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Trial (New-TrialText) -Breaks $script:BrokenLoader
+
+        Remove-Item -LiteralPath (Join-Path $app "versions\$($script:PreviousVersion)\$($script:LoaderFileName)")
+
+        (Invoke-BridgeLaunch -InstallRoot $app).Version | Should -Be 'ERROR'
+        Get-CurrentVersion -InstallRoot $app | Should -Be $script:NewVersion
+        Join-Path $app 'update-trial.txt' | Should -Exist
+    }
 }
 
 Describe 'Bridge loader rollback' {

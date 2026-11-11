@@ -25,7 +25,7 @@ function New-BridgeInstall {
         [System.IO.File]::WriteAllText((Join-Path $versionRoot 'updater\Update-Widget.ps1'), 'exit 0')
     }
 
-    Copy-Item -LiteralPath (Join-Path (Get-RepositoryRoot) 'obs-script\streamoscope-bridge.lua') -Destination $installRoot
+    Copy-Item -LiteralPath (Join-Path (Get-RepositoryRoot) 'installer\loader\streamoscope-bridge.lua') -Destination $installRoot
     New-Item -ItemType Directory -Path (Join-Path $installRoot 'updater') | Out-Null
     [System.IO.File]::WriteAllBytes((Join-Path $installRoot 'updater\minisign.exe'), [byte[]]@())
     [System.IO.File]::WriteAllText((Join-Path $installRoot 'current-version.js'), ($script:CurrentVersionTemplate -f $script:NewVersion))

@@ -5,7 +5,7 @@
 | Логику панели | `npm run test:unit`, входит в `npm test` |
 | Панель глазами | `npm run start:dev` или `preview_start` с именем `dock-dev` |
 | Журнал без OBS | `npm run start:dev` с включёнными моками, файл `.dev-journal/streamoscope.log` |
-| Код моста на Lua, загрузчик, откат | `npm run test:bridge`: настоящий LuaJIT из OBS, путь с кириллицей, без самого OBS |
+| Код моста на Lua, загрузчик, заглушка, откат | `npm run test:bridge`: настоящий LuaJIT из OBS, путь с кириллицей, без самого OBS; судейство пробы загрузчиком 0.6.0 (`harness/loader_0_6_0.lua`) |
 | Настройку OBS и обновлятор | `npm run test:installer` |
 | Панель в настоящем OBS, поток, обновление и откат | тестовый стенд, `npm run test:stand` |
 

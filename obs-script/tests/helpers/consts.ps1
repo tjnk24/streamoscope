@@ -8,6 +8,7 @@ $script:FakeProcessId = 1
 $script:NoBridgeResult = '-'
 $script:BrokenBridgeSource = "error('boom')`n"
 $script:MainModuleRelativePath = 'streamoscope-bridge\main.lua'
+$script:LoaderFileName = 'streamoscope-bridge.lua'
 $script:ScriptLoadLine = "function script_load(_settings)`n"
 $script:UpdaterStub = @'
 param([string]$Version, [switch]$Auto)

@@ -33,8 +33,8 @@ export const installCurrentVersion = async () => {
 
     fs.cpSync(packageDirectory, versionDirectory, {recursive: true});
     fs.rmSync(path.join(versionDirectory, 'README.txt'));
-    fs.copyFileSync(path.join(packageDirectory, 'streamoscope-bridge.lua'), path.join(INSTALL_DIRECTORY, 'streamoscope-bridge.lua'));
     removeProjectCopy();
+    fs.copyFileSync(path.join(installerDirectory, 'loader', 'streamoscope-bridge.lua'), path.join(INSTALL_DIRECTORY, 'streamoscope-bridge.lua'));
     fs.copyFileSync(path.join(installerDirectory, 'loader', 'index.html'), path.join(INSTALL_DIRECTORY, 'dock', 'index.html'));
     fs.copyFileSync(path.join(installerDirectory, 'configure-obs.ps1'), path.join(INSTALL_DIRECTORY, 'configure-obs.ps1'));
     fs.cpSync(path.join(installerDirectory, 'ConfigureObs'), path.join(INSTALL_DIRECTORY, 'ConfigureObs'), {recursive: true});

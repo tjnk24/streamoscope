@@ -94,11 +94,12 @@ Type: files; Name: "{app}\current-version.js"
 Type: files; Name: "{app}\update-trial.txt"
 Type: files; Name: "{app}\healthy-version.txt"
 Type: files; Name: "{app}\healthy-process.txt"
+Type: files; Name: "{app}\healthy-loader.txt"
 Type: files; Name: "{app}\rolled-back-version.txt"
 
 [Files]
 Source: "{#PackageDir}\*"; DestDir: "{app}\versions\{#AppVersion}"; Excludes: "README.txt"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "{#PackageDir}\streamoscope-bridge.lua"; DestDir: "{app}"; Flags: ignoreversion
+Source: "loader\streamoscope-bridge.lua"; DestDir: "{app}"; Flags: ignoreversion
 Source: "loader\index.html"; DestDir: "{app}\dock"; Flags: ignoreversion
 Source: "configure-obs.ps1"; DestDir: "{app}"; Flags: ignoreversion
 Source: "images\streamoscope.ico"; DestDir: "{app}"; Flags: ignoreversion

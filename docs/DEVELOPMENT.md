@@ -111,14 +111,14 @@ Updates work the way Chrome does them: the new version lands next to the old one
 ```text
 %LOCALAPPDATA%\Programs\streamoscope
   dock\index.html             loader, redirects to the current version
-  streamoscope-bridge.lua     loader, runs the bridge of the current version
+  streamoscope-bridge.lua     stub, runs the bridge loader of a version
   current-version.js          which version is current
   update-trial.txt            the new version is on trial, see below
-  versions\<version>\         dock, bridge and updater scripts of that version
+  versions\<version>\         dock, bridge loader, bridge and updater scripts of that version
   updater\minisign.exe        checks signatures, comes only with the installer
 ```
 
-OBS keeps the paths of the two loaders in its configuration, so they never move and rarely change.
+OBS keeps the paths of the dock loader and the bridge stub in its configuration, so they never move. Both are tiny and never change, so everything else updates with the version. The stub runs `versions\<version>\streamoscope-bridge.lua`, the full loader with the rollback logic. Until 0.7.0 the installer put that loader itself in the root, so installs set up by an older installer keep their old loader until a newer installer runs once.
 
 About a minute after OBS starts and then once a day, the bridge starts `Update-Widget.ps1 -Auto`. It asks GitHub for the latest release at most once an hour, skips releases younger than 48 hours and major versions, then verifies and unpacks the archive. The last step is one atomic rewrite of `current-version.js`: a failure before it leaves the current version alone. The three newest versions and the one to roll back to stay on disk. The **Update** button runs the same steps through `-Version X.Y.Z`, without the wait.
 
@@ -128,7 +128,7 @@ The switch **Update automatically** is stored by the bridge in `%LOCALAPPDATA%\s
 
 ### Automatic rollback
 
-A freshly switched version is on trial, and `update-trial.txt` names it and the previous version. Only the bridge loader judges it, because it's the one piece of code that doesn't change with the version.
+A freshly switched version is on trial, and `update-trial.txt` names it and the previous version. The loader of the previous version judges it: that code has already proved itself, while the new version's own loader might be as broken as the rest of it. Once the trial is over, the stub runs the new version's loader. If a loader fails to load, the stub switches to the previous version of the trial, the last healthy version or the version whose loader worked last, marks the broken one as rolled back and runs that loader instead.
 
 - The bridge fails to load: back to the previous version at once, in the same session.
 - The dock is healthy: a second after it finds the bridge, a dock inside OBS that hasn't hit a render error sends `healthy:X.Y.Z`. The bridge records it in `healthy-version.txt`, notes the OBS process in `healthy-process.txt` and ends the trial.
