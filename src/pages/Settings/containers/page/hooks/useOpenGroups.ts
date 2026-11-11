@@ -1,3 +1,4 @@
+import xor from 'lodash/xor';
 import {useEffect, useState} from 'react';
 
 import {useUpdateProgress} from '../../update-settings/hooks/useUpdateProgress';
@@ -13,7 +14,7 @@ export const useOpenGroups = () => {
     const isUpdateImportant = errorKey !== null || isRunning;
 
     const toggleGroup = (group: SettingsGroupEnum) => {
-        setOpenGroups(groups => (groups.includes(group) ? groups.filter(openGroup => openGroup !== group) : [...groups, group]));
+        setOpenGroups(groups => xor(groups, [group]));
     };
 
     useEffect(() => {

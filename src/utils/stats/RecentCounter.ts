@@ -1,3 +1,5 @@
+import last from 'lodash/last';
+
 import {RecentSampleDto} from '__types/stats/tracking';
 
 export class RecentCounter {
@@ -10,9 +12,9 @@ export class RecentCounter {
     }
 
     add(time: number, count: number, total: number) {
-        const last = this.samples[this.samples.length - 1];
+        const lastSample = last(this.samples);
 
-        if (last && (count < last.count || total < last.total)) {
+        if (lastSample && (count < lastSample.count || total < lastSample.total)) {
             this.samples = [];
         }
 

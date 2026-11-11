@@ -1,5 +1,7 @@
 import type {Nullable} from 'infrastructure/common';
+import isNumber from 'lodash/isNumber';
 import isPlainObject from 'lodash/isPlainObject';
+import isString from 'lodash/isString';
 
 import {UpdateStageEnum, UpdateStatusDto} from '__types/update/bridgeUpdate';
 import {UPDATE_STAGES} from '__utils/consts';
@@ -30,14 +32,20 @@ export const parseUpdateStatus = (raw: Nullable<string>): Nullable<UpdateStatusD
     } = parsed as Partial<Record<keyof UpdateStatusDto, unknown>>;
 
     if (
-        typeof version !== 'string'
-        || typeof stage !== 'string' || !UPDATE_STAGES.includes(stage)
-        || typeof percent !== 'number'
-        || (error !== null && typeof error !== 'string')
-        || typeof updated !== 'number'
+        !isString(version)
+        || !isString(stage) || !UPDATE_STAGES.includes(stage)
+        || !isNumber(percent)
+        || (error !== null && !isString(error))
+        || !isNumber(updated)
     ) {
         return null;
     }
 
-    return {version, stage: stage as UpdateStageEnum, percent, error, updated};
+    return {
+        version,
+        stage: stage as UpdateStageEnum,
+        percent,
+        error,
+        updated,
+    };
 };

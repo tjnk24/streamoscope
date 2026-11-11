@@ -1,4 +1,5 @@
 import {Progress, theme} from 'antd';
+import clamp from 'lodash/clamp';
 
 import {
     CONGESTION_BAD_SHARE,
@@ -11,7 +12,7 @@ import {formatProgressPercent} from './utils/formatProgressPercent';
 const CongestionProgress = ({value}: Props) => {
     const {token} = theme.useToken();
 
-    const share = Math.max(0, Math.min(1, value || 0));
+    const share = clamp(value || 0, 0, 1);
 
     const strokeColor = share < CONGESTION_WARN_SHARE
         ? token.colorSuccess

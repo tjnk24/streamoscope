@@ -1,4 +1,5 @@
 import type {Nullable} from 'infrastructure/common';
+import isString from 'lodash/isString';
 
 import {ObsRequestTypeEnum} from '__types/obs/ObsRequestTypeEnum';
 import {RequestResultPairDto} from '__types/obs/requests';
@@ -10,5 +11,7 @@ import {isRequestOfType} from './isRequestOfType';
 export const getSceneCollection = (pairs: RequestResultPairDto[]): Nullable<string> => {
     const list = findResultData<ObsSceneCollectionListDto>(pairs, isRequestOfType(ObsRequestTypeEnum.GetSceneCollectionList));
 
-    return typeof list?.currentSceneCollectionName === 'string' ? list.currentSceneCollectionName : null;
+    const sceneCollectionName = list?.currentSceneCollectionName;
+
+    return isString(sceneCollectionName) ? sceneCollectionName : null;
 };

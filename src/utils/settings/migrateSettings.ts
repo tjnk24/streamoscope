@@ -1,3 +1,6 @@
+import find from 'lodash/find';
+import isNil from 'lodash/isNil';
+import isNumber from 'lodash/isNumber';
 import isPlainObject from 'lodash/isPlainObject';
 
 import {
@@ -19,7 +22,7 @@ export const migrateSettings = (
     migrations: SettingsMigrationDto[] = SETTINGS_MIGRATIONS,
     currentVersion: number = SETTINGS_VERSION,
 ): MigratedSettingsDto => {
-    if (stored === null || stored === undefined) {
+    if (isNil(stored)) {
         return {settings: DEFAULT_SETTINGS, isDiscarded: false, isChanged: false};
     }
 
@@ -30,14 +33,14 @@ export const migrateSettings = (
     const storedSettings = stored as StoredSettingsDto;
     const storedVersion = storedSettings.settingsVersion ?? FIRST_SETTINGS_VERSION;
 
-    if (typeof storedVersion !== 'number' || !Number.isInteger(storedVersion) || storedVersion < FIRST_SETTINGS_VERSION || storedVersion > currentVersion) {
+    if (!isNumber(storedVersion) || !Number.isInteger(storedVersion) || storedVersion < FIRST_SETTINGS_VERSION || storedVersion > currentVersion) {
         return DISCARDED_SETTINGS;
     }
 
     let settings = storedSettings;
 
     for (let version = storedVersion; version < currentVersion; version++) {
-        const migration = migrations.find(({fromVersion}) => fromVersion === version);
+        const migration = find(migrations, {fromVersion: version});
 
         if (!migration) {
             return DISCARDED_SETTINGS;

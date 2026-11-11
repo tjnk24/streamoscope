@@ -8,6 +8,7 @@ import {
     Tooltip,
 } from 'antd';
 import cn from 'classnames';
+import isNumber from 'lodash/isNumber';
 import {useTranslation} from 'react-i18next';
 
 import EnhancedText from '__components/EnhancedText';
@@ -90,7 +91,7 @@ const OutputCard = ({target}: Props) => {
                 <Statistic
                     value={bitrate}
                     loading={isBitrateLoading}
-                    formatter={value => (typeof value === 'number' ? formatNumber(value) : value)}
+                    formatter={value => (isNumber(value) ? formatNumber(value) : value)}
                     suffix={t('stats.bitrateUnit')}
                     classNames={{
                         root: style.bitrate,

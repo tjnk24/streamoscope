@@ -1,5 +1,7 @@
 import type {Nullable} from 'infrastructure/common';
+import isNumber from 'lodash/isNumber';
 import isPlainObject from 'lodash/isPlainObject';
+import isString from 'lodash/isString';
 
 import {CompatibilityDto} from '__types/update/compatibility';
 
@@ -21,15 +23,22 @@ export const parseCompatibility = (value: unknown): Nullable<CompatibilityDto> =
     } = data;
 
     if (
-        typeof version !== 'string' || !parseVersion(version)
-        || typeof minObsVersion !== 'string' || !parseVersion(minObsVersion)
-        || typeof obsWebSocketRpcVersion !== 'number'
-        || typeof minChromiumVersion !== 'number'
-        || typeof minBridgeVersion !== 'number'
-        || !Array.isArray(requiredRequests) || !requiredRequests.every(request => typeof request === 'string')
+        !isString(version) || !parseVersion(version)
+        || !isString(minObsVersion) || !parseVersion(minObsVersion)
+        || !isNumber(obsWebSocketRpcVersion)
+        || !isNumber(minChromiumVersion)
+        || !isNumber(minBridgeVersion)
+        || !Array.isArray(requiredRequests) || !requiredRequests.every(isString)
     ) {
         return null;
     }
 
-    return {version, minObsVersion, obsWebSocketRpcVersion, minChromiumVersion, minBridgeVersion, requiredRequests};
+    return {
+        version,
+        minObsVersion,
+        obsWebSocketRpcVersion,
+        minChromiumVersion,
+        minBridgeVersion,
+        requiredRequests,
+    };
 };

@@ -1,3 +1,5 @@
+import find from 'lodash/find.js';
+
 import {
     CONNECTION_WAIT_MS,
     DOCK_CONNECTED_TEXT,
@@ -22,7 +24,7 @@ import {readStandFile} from '../readStandFile.ts';
 import {checkStep} from './checkStep.ts';
 
 export const checkRollback = async (brokenVersion: string, healthyVersion: string) => {
-    const obsProcess = findStandProcesses().find(({name}) => name === OBS_PROCESS_NAME);
+    const obsProcess = find(findStandProcesses(), {name: OBS_PROCESS_NAME});
 
     await waitFor('the health report of this launch of OBS', () => readStandFile(HEALTHY_PROCESS_PATH) === String(obsProcess?.id), CONNECTION_WAIT_MS);
     await sendBridgeCommand(`install:${brokenVersion}`);

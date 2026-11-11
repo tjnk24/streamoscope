@@ -1,4 +1,6 @@
 import type {Nullable} from 'infrastructure/common';
+import isNumber from 'lodash/isNumber';
+import isString from 'lodash/isString';
 
 import {BridgeDataDto} from '__types/bridge';
 import {ObsProfileParameterDto} from '__types/obs/responses';
@@ -8,11 +10,11 @@ export const parseBridgeData = (parameter: Nullable<ObsProfileParameterDto>, sce
     try {
         const data = JSON.parse(parameter?.parameterValue ?? '') as Nullable<BridgeDataDto>;
 
-        if (data === null || typeof data.updated !== 'number' || !Array.isArray(data.outputs)) {
+        if (data === null || !isNumber(data.updated) || !Array.isArray(data.outputs)) {
             return null;
         }
 
-        const isOtherCollection = sceneCollection !== null && typeof data.sceneCollection === 'string' && data.sceneCollection !== sceneCollection;
+        const isOtherCollection = sceneCollection !== null && isString(data.sceneCollection) && data.sceneCollection !== sceneCollection;
 
         if ((Date.now() / 1000) - data.updated > BRIDGE_STALE_SEC || isOtherCollection) {
             return null;

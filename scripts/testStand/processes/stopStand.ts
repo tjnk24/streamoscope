@@ -1,3 +1,4 @@
+import some from 'lodash/some.js';
 import {spawnSync} from 'node:child_process';
 
 import {CLOSE_WAIT_MS, OBS_PROCESS_NAME} from '../consts.ts';
@@ -11,7 +12,7 @@ export const stopStand = async ({isObsOnly = false} = {}) => {
         .forEach(({id}) => spawnSync('taskkill', ['/PID', String(id)], {stdio: 'ignore'}));
 
     try {
-        await waitFor('OBS to close', () => !findStandProcesses().some(({name}) => name === OBS_PROCESS_NAME), CLOSE_WAIT_MS);
+        await waitFor('OBS to close', () => !some(findStandProcesses(), {name: OBS_PROCESS_NAME}), CLOSE_WAIT_MS);
     } catch {
         findStandProcesses()
             .filter(({name}) => name === OBS_PROCESS_NAME)

@@ -1,3 +1,5 @@
+import find from 'lodash/find';
+
 import {
     JournalEntryDto,
     JournalLevelEnum,
@@ -13,7 +15,7 @@ export const describeOutputChanges = (previousOutputs: JournalOutputSnapshotDto[
     const entries: JournalEntryDto[] = [];
 
     currentOutputs.forEach(current => {
-        const previous = previousOutputs.find(({label}) => label === current.label);
+        const previous = find(previousOutputs, {label: current.label});
         const {label: source} = current;
 
         if (!previous) {

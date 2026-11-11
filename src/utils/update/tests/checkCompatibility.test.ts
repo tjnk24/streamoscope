@@ -33,7 +33,13 @@ describe('checkCompatibility', () => {
     });
 
     it('skips checks it has no data for', () => {
-        const unknown = {...ENVIRONMENT, obsVersion: null, rpcVersion: null, availableRequests: null, chromiumVersion: null};
+        const unknown = {
+            ...ENVIRONMENT,
+            obsVersion: null,
+            rpcVersion: null,
+            availableRequests: null,
+            chromiumVersion: null,
+        };
 
         expect(checkCompatibility(COMPATIBILITY, unknown)).toEqual({problems: [], warnings: []});
     });

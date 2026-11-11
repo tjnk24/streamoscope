@@ -1,4 +1,5 @@
 import type {Nullable} from 'infrastructure/common';
+import some from 'lodash/some';
 
 import {ObsRequestTypeEnum} from '__types/obs/ObsRequestTypeEnum';
 import {RequestResultPairDto} from '__types/obs/requests';
@@ -65,7 +66,7 @@ export class StatsTracker {
         const statuses: Nullable<ObsOutputStatusDto>[] = [];
 
         this.outputs.forEach((_output, key) => {
-            !targets.some(target => target.key === key) && this.outputs.delete(key);
+            !some(targets, {key}) && this.outputs.delete(key);
         });
 
         targets.forEach(({key, outputName}) => {

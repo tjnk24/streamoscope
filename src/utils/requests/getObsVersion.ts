@@ -22,5 +22,11 @@ export const getObsVersion = (pairs: RequestResultPairDto[]): Nullable<ObsVersio
         availableRequests,
     } = data;
 
-    return {obsVersion, obsWebSocketVersion, platformDescription, rpcVersion, availableRequests};
+    return {
+        obsVersion,
+        obsWebSocketVersion,
+        platformDescription,
+        rpcVersion,
+        availableRequests,
+    };
 };
