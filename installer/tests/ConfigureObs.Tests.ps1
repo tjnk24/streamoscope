@@ -196,6 +196,41 @@ Describe 'Remove-BrowserDock' {
     }
 }
 
+Describe 'Hide-UserPath' {
+    BeforeAll {
+        $script:savedFolders = @{
+            LOCALAPPDATA = $env:LOCALAPPDATA
+            APPDATA = $env:APPDATA
+            USERPROFILE = $env:USERPROFILE
+        }
+
+        $env:USERPROFILE = 'C:\Users\Ivan Petrov'
+        $env:APPDATA = 'C:\Users\Ivan Petrov\AppData\Roaming'
+        $env:LOCALAPPDATA = 'C:\Users\Ivan Petrov\AppData\Local'
+    }
+
+    AfterAll {
+        $env:LOCALAPPDATA = $script:savedFolders.LOCALAPPDATA
+        $env:APPDATA = $script:savedFolders.APPDATA
+        $env:USERPROFILE = $script:savedFolders.USERPROFILE
+    }
+
+    It 'hides the user folder in <Text>' -TestCases @(
+        @{Text = 'OBS config: C:\Users\Ivan Petrov\AppData\Roaming\obs-studio'; Expected = 'OBS config: %APPDATA%\obs-studio'},
+        @{Text = 'Install from c:\users\ivan petrov\appdata\local\Programs\streamoscope'; Expected = 'Install from %LOCALAPPDATA%\Programs\streamoscope'},
+        @{Text = 'Written: C:\Users\Ivan Petrov\Documents\obs\basic.ini (bridge data)'; Expected = 'Written: %USERPROFILE%\Documents\obs\basic.ini (bridge data)'},
+        @{Text = 'Script: C:/Users/Ivan Petrov/AppData/Local/Programs/streamoscope/streamoscope-bridge.lua'; Expected = 'Script: %LOCALAPPDATA%/Programs/streamoscope/streamoscope-bridge.lua'}
+    ) {
+        param($Text, $Expected)
+
+        Hide-UserPath -Text $Text | Should -BeExactly $Expected
+    }
+
+    It 'leaves paths outside the user folder alone' {
+        Hide-UserPath -Text 'OBS config: D:\OBS\config\obs-studio' | Should -BeExactly 'OBS config: D:\OBS\config\obs-studio'
+    }
+}
+
 Describe 'Get-IniValue and Set-IniValue' {
     BeforeAll {
         $script:ini = "[General]`nName=general`n`n[BasicWindow]`nName=window`nOther=1`n`n[Audio]`nRate=48000`n"

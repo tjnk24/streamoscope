@@ -48,4 +48,4 @@ body:
     id: extra
     attributes:
       label: Anything else
-      description: Screenshots, the journal (Settings → Diagnostics → Open journal folder, or %LOCALAPPDATA%\streamoscope\logs), the installer log (%LOCALAPPDATA%\streamoscope\configure-obs.log), other plugins you use.
+      description: Screenshots, the journal (Settings → Diagnostics → Open journal folder, or %LOCALAPPDATA%\streamoscope\logs), the installer log (%LOCALAPPDATA%\streamoscope\configure-obs.log; your Windows user folder is already hidden there, but it lists the names of your scene collections and profiles, so edit them out if they are private), other plugins you use.
