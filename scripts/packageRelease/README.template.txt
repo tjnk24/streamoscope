@@ -6,4 +6,6 @@ StreamoScope {{version}}
 4. OBS: Tools -> Scripts. Add streamoscope-bridge.lua (needed for obs-multi-rtmp outputs, GPU and memory).
    Keep the streamoscope-bridge folder next to it: the script loads its parts from there.
 
+configure-obs.ps1 and the ConfigureObs folder are used by the installer; a manual install doesn't need them.
+
 Full guide: https://github.com/tjnk24/streamoscope#readme

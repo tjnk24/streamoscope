@@ -48,7 +48,7 @@ The `v*` tag triggers the GitHub Actions release workflow: build, test, sign and
 | Asset | Purpose |
 | --- | --- |
 | `streamoscope-setup-<version>.exe` | Windows installer |
-| `streamoscope-<version>.zip` | Dock, Lua bridge and updater scripts. Manual installs unpack it; the installed dock updates itself from it |
+| `streamoscope-<version>.zip` | Dock, Lua bridge, updater and OBS setup scripts. Manual installs unpack it; the installed dock updates itself from it |
 | `compatibility.json` | OBS, WebSocket, Chromium and bridge compatibility information |
 | `.minisig` files | Signatures for released assets |
 | `SHA256SUMS.txt` | Checksums for the installer and archive |
