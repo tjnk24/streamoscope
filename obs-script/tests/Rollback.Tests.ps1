@@ -21,6 +21,20 @@ Describe 'Bridge loader stub' {
         (Invoke-BridgeLaunch -InstallRoot $app).Stub | Should -Be '1'
     }
 
+    It 'reports no stub under the loader of 0.6.0, so the dock asks for the installer' {
+        $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory
+        $oldLoaderPath = Join-Path $PSScriptRoot 'harness\loader_0_6_0.lua'
+
+        Copy-Item -LiteralPath $oldLoaderPath -Destination (Join-Path $app $script:LoaderFileName) -Force
+
+        $launch = Invoke-BridgeLaunch -InstallRoot $app
+
+        $launch.Version | Should -Be $script:NewVersion
+        $launch.Available | Should -Not -Be $script:NoBridgeResult
+        $launch.Stub | Should -Be $script:NoBridgeResult
+        Join-Path $app 'healthy-loader.txt' | Should -Not -Exist
+    }
+
     It 'lets the loader of the previous version judge a version on trial' {
         $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Trial (New-TrialText) -Breaks $script:BrokenMain
         $oldLoaderPath = Join-Path $PSScriptRoot 'harness\loader_0_6_0.lua'

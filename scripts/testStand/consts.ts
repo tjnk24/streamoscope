@@ -163,7 +163,7 @@ export const REGISTRY_KEY_PATTERN = /\$script:UninstallRegistryKey = '[^']*'/;
 
 export const STAND_REGISTRY_KEY_LINE = '$script:UninstallRegistryKey = \'HKCU:\\Software\\StreamoScopeTestStandMissing\'';
 
-export const BROKEN_DOCK_PAGE = '<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Broken on purpose</title></head><body><script>throw new Error("broken on purpose");</script></body></html>\n';
+const BROKEN_DOCK_PAGE = '<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Broken on purpose</title></head><body><script>throw new Error("broken on purpose");</script></body></html>\n';
 
 const BROKEN_LOADER_SOURCE = 'local broken_on_purpose = nil\nbroken_on_purpose()\n';
 
