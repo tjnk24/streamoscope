@@ -131,6 +131,7 @@ export const ru: TranslationDto = {
         recentLag: ' · +{{count}} за мин',
         reset: 'Сбросить графики',
         hide: 'Скрыть карточку',
+        restore: 'Вернуть',
         hiddenTitle: 'Карточка OBS скрыта',
         hiddenText: 'Вернуть её можно в $t(pageTitles.settings) → $t(settings.displayTitle) → «$t(settings.generalCard)».',
         hints: {

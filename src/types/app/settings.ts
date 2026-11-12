@@ -8,6 +8,7 @@ export type SettingsDto = {
     settingsVersion: number;
     port: number;
     isShowGeneralCard: boolean;
+    hasSeenGeneralCardNotice: boolean;
     language: Nullable<LanguageEnum>;
     isMockEnabled: boolean;
     isAutoUpdateEnabled: boolean;

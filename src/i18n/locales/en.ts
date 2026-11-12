@@ -129,6 +129,7 @@ export const en = {
         recentLag: ' · +{{count}} per min',
         reset: 'Reset graphs',
         hide: 'Hide card',
+        restore: 'Restore',
         hiddenTitle: 'OBS card hidden',
         hiddenText: 'Bring it back in $t(pageTitles.settings) → $t(settings.displayTitle) → “$t(settings.generalCard)”.',
         hints: {

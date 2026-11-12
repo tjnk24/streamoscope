@@ -131,6 +131,7 @@ export const ptBr: TranslationDto = {
         recentLag: ' · +{{count}} por min',
         reset: 'Zerar gráficos',
         hide: 'Ocultar cartão',
+        restore: 'Restaurar',
         hiddenTitle: 'Cartão do OBS oculto',
         hiddenText: 'Você pode trazê-lo de volta em $t(pageTitles.settings) → $t(settings.displayTitle) → “$t(settings.generalCard)”.',
         hints: {

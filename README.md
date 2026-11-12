@@ -60,7 +60,7 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 
 🧲 **Your streams, your order.** Drag a stream card by its header (the dotted handle shows up once there are two cards to sort) and the dock remembers where you put it. Until you do, the main OBS stream comes first. Changed your mind? **Restore default order** in the display settings.
 
-🙈 **Not into OBS health today?** Close the OBS card with the ✕ in its corner. It waits for you in **Settings → Display → OBS card**, and the dock says so on the way out.
+🙈 **Not into OBS health today?** Hover over the OBS card to fade in the ✕ in its corner, then click it to hide the card. The cross fades out when you leave; keyboard focus reveals it too. It waits for you in **Settings → Display → OBS card**, and a one-time notification offers **Restore** to bring it back immediately. Once shown, the notification stays out of your way, including after a restart.
 
 🌍 The interface supports **English, Russian, Spanish, German and Brazilian Portuguese**.
 

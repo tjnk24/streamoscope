@@ -131,6 +131,7 @@ export const de: TranslationDto = {
         recentLag: ' · +{{count}} pro Min.',
         reset: 'Diagramme zurücksetzen',
         hide: 'Karte ausblenden',
+        restore: 'Wiederherstellen',
         hiddenTitle: 'OBS-Karte ausgeblendet',
         hiddenText: 'Zurückholen kannst du sie unter $t(pageTitles.settings) → $t(settings.displayTitle) → „$t(settings.generalCard)“.',
         hints: {

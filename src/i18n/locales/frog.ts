@@ -77,6 +77,7 @@ export const frog: DeepPartial<TranslationDto> = {
         recentLag: ' · +{{count}} мух за мин',
         reset: 'Взбаламутить графики',
         hide: 'Спрятать в тину',
+        restore: 'Вернуть',
         hiddenTitle: 'Болото OBS ушло под воду',
         hiddenText: 'Вынырнет обратно в $t(pageTitles.settings) → $t(settings.displayTitle) → «$t(settings.generalCard)».',
         hints: {

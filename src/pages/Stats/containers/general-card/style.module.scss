@@ -1,3 +1,21 @@
+.card .closeButton {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ant-motion-duration-mid) ease-in-out;
+}
+
+.card:hover .closeButton,
+.card:focus-within .closeButton {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card .closeButton {
+        transition: none;
+    }
+}
+
 .actions {
     margin-top: var(--ant-margin-md);
 }

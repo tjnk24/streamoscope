@@ -131,6 +131,7 @@ export const es: TranslationDto = {
         recentLag: ' · +{{count}} por min',
         reset: 'Reiniciar gráficos',
         hide: 'Ocultar tarjeta',
+        restore: 'Restaurar',
         hiddenTitle: 'Tarjeta de OBS oculta',
         hiddenText: 'Puedes recuperarla en $t(pageTitles.settings) → $t(settings.displayTitle) → «$t(settings.generalCard)».',
         hints: {

@@ -51,6 +51,18 @@ describe('migrateSettings', () => {
         expect(migrateSettings(stored)).toEqual({settings: stored, isDiscarded: false, isChanged: false});
     });
 
+    it.each([false, true])('preserves the one-time OBS card notice choice: %s', hasSeenGeneralCardNotice => {
+        const stored = {...DEFAULT_SETTINGS, hasSeenGeneralCardNotice};
+
+        expect(migrateSettings(stored).settings.hasSeenGeneralCardNotice).toBe(hasSeenGeneralCardNotice);
+    });
+
+    it('lets existing installations see the OBS card notice once', () => {
+        const {hasSeenGeneralCardNotice: _hasSeenGeneralCardNotice, ...stored} = DEFAULT_SETTINGS;
+
+        expect(migrateSettings(stored).settings.hasSeenGeneralCardNotice).toBe(false);
+    });
+
     it('runs every migration in order, whatever order they are listed in', () => {
         const result = migrateSettings({settingsVersion: 1, obsPort: 4480, showCard: false}, MIGRATIONS, 3);
 
