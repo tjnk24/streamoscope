@@ -222,6 +222,8 @@ local is_loaded, load_error = pcall(require, MAIN_MODULE)
 if not is_loaded then
     if trial == nil or not switch_back(trial) then
         error(load_error, 0)
+
+        return false
     end
 
     bridge_root = version_root(trial.previous)
@@ -248,6 +250,8 @@ function script_load(settings)
         end
 
         error(start_error, 0)
+
+        return
     end
 
     if is_new_launch then

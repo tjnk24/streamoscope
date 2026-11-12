@@ -6,7 +6,7 @@ $script:CurrentVersionTemplate = "window.STREAMOSCOPE_VERSION = '{0}';`r`n"
 $script:TrialTemplate = "version={0}`r`nprevious={1}`r`npanel={2}`r`nprocess={3}`r`nlaunches={4}`r`n"
 $script:FakeProcessId = 1
 $script:NoBridgeResult = '-'
-$script:BrokenBridgeSource = "error('boom')`n"
+$script:BrokenBridgeSource = "assert(false, 'boom')`n"
 $script:MainModuleRelativePath = 'streamoscope-bridge\main.lua'
 $script:LoaderFileName = 'streamoscope-bridge.lua'
 $script:ScriptLoadLine = "function script_load(_settings)`n"

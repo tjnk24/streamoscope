@@ -7,6 +7,7 @@ BeforeAll {
     $script:WorkDirectory = Join-Path $TestDrive "$($script:UserDirectoryName)\rollback"
     $script:BrokenMain = @{ $script:MainModuleRelativePath = $script:BrokenBridgeSource }
     $script:BrokenLoader = @{ $script:LoaderFileName = "this is not lua`n" }
+    $script:GivingUpLoader = @{ $script:LoaderFileName = "error('gave up')`nreturn false`n" }
 }
 
 AfterAll {
@@ -67,10 +68,33 @@ Describe 'Bridge loader stub' {
         [System.IO.File]::ReadAllText((Join-Path $app 'rolled-back-version.txt')) | Should -Be $script:NewVersion
     }
 
+    It 'falls back when the loader of the new version gives up with false' {
+        $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Healthy $script:PreviousVersion -Breaks $script:GivingUpLoader
+
+        (Invoke-BridgeLaunch -InstallRoot $app).Version | Should -Be $script:PreviousVersion
+        Get-CurrentVersion -InstallRoot $app | Should -Be $script:PreviousVersion
+        [System.IO.File]::ReadAllText((Join-Path $app 'healthy-loader.txt')) | Should -Be $script:PreviousVersion
+    }
+
+    It 'stops at a damaged current-version.js without running a loader' {
+        $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory
+
+        [System.IO.File]::WriteAllText((Join-Path $app 'current-version.js'), 'garbage')
+
+        $launch = Invoke-BridgeLaunch -InstallRoot $app
+
+        $launch.Version | Should -Be 'ERROR'
+        $launch.Error | Should -Match 'missing or damaged'
+        $launch.Error | Should -Not -Match 'attempt to'
+        Join-Path $app 'healthy-loader.txt' | Should -Not -Exist
+    }
+
     It 'passes the error on when there is no version to fall back to' {
         $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Healthy $script:NewVersion -Breaks $script:BrokenLoader
+        $launch = Invoke-BridgeLaunch -InstallRoot $app
 
-        (Invoke-BridgeLaunch -InstallRoot $app).Version | Should -Be 'ERROR'
+        $launch.Version | Should -Be 'ERROR'
+        $launch.Error | Should -Not -Match 'attempt to'
         Get-CurrentVersion -InstallRoot $app | Should -Be $script:NewVersion
         Join-Path $app 'rolled-back-version.txt' | Should -Not -Exist
     }
@@ -80,7 +104,10 @@ Describe 'Bridge loader stub' {
 
         Remove-Item -LiteralPath (Join-Path $app "versions\$($script:PreviousVersion)\$($script:LoaderFileName)")
 
-        (Invoke-BridgeLaunch -InstallRoot $app).Version | Should -Be 'ERROR'
+        $launch = Invoke-BridgeLaunch -InstallRoot $app
+
+        $launch.Version | Should -Be 'ERROR'
+        $launch.Error | Should -Not -Match 'attempt to'
         Get-CurrentVersion -InstallRoot $app | Should -Be $script:NewVersion
         Join-Path $app 'update-trial.txt' | Should -Exist
     }
@@ -115,14 +142,18 @@ Describe 'Bridge loader rollback' {
     It 'switches the files and passes the error on when the bridge throws in script_load' {
         $mainPath = Join-Path (Get-RepositoryRoot) "obs-script\$($script:MainModuleRelativePath)"
         $mainSource = [System.IO.File]::ReadAllText($mainPath, [System.Text.Encoding]::UTF8).Replace("`r`n", "`n")
-        $brokenStart = $mainSource.Replace($script:ScriptLoadLine, "$($script:ScriptLoadLine)    error('boom at start')`n")
+        $brokenStart = $mainSource.Replace($script:ScriptLoadLine, "$($script:ScriptLoadLine)    assert(false, 'boom at start')`n")
 
         $brokenStart | Should -Not -Be $mainSource
 
         $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Trial (New-TrialText) -Breaks @{ $script:MainModuleRelativePath = $brokenStart }
 
-        (Invoke-BridgeLaunch -InstallRoot $app).Version | Should -Be 'ERROR'
+        $launch = Invoke-BridgeLaunch -InstallRoot $app
+
+        $launch.Version | Should -Be 'ERROR'
+        $launch.Error | Should -Match 'boom at start'
         Get-CurrentVersion -InstallRoot $app | Should -Be $script:PreviousVersion
+        Join-Path $app 'update-trial.txt' | Should -Not -Exist
         (Invoke-BridgeLaunch -InstallRoot $app).Version | Should -Be $script:PreviousVersion
     }
 
@@ -286,12 +317,16 @@ Describe 'Bridge loader rollback' {
 
         $launch.Version | Should -Be 'ERROR'
         $launch.Error | Should -Match 'boom'
+        $launch.Error | Should -Not -Match 'attempt to'
     }
 
     It 'passes the error on when a broken bridge has no trial' {
         $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Breaks $script:BrokenMain
+        $launch = Invoke-BridgeLaunch -InstallRoot $app
 
-        (Invoke-BridgeLaunch -InstallRoot $app).Version | Should -Be 'ERROR'
+        $launch.Version | Should -Be 'ERROR'
+        $launch.Error | Should -Match 'boom'
+        $launch.Error | Should -Not -Match 'attempt to'
         Get-CurrentVersion -InstallRoot $app | Should -Be $script:NewVersion
     }
 

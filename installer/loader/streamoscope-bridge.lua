@@ -100,13 +100,19 @@ local function run_loader(version)
         return false, compile_error
     end
 
-    local is_loaded, load_error = pcall(chunk)
+    local is_called, load_result = pcall(chunk)
 
-    if is_loaded then
-        write_file(install_root .. HEALTHY_LOADER_FILE, version)
+    if not is_called then
+        return false, load_result
     end
 
-    return is_loaded, load_error
+    if load_result == false then
+        return false, 'StreamoScope: ' .. path .. ' failed to load'
+    end
+
+    write_file(install_root .. HEALTHY_LOADER_FILE, version)
+
+    return true
 end
 
 local function find_fallback(broken_version, trial_previous)
@@ -166,6 +172,8 @@ local current_version = read_version(CURRENT_VERSION_FILE)
 
 if current_version == nil then
     error('StreamoScope: ' .. install_root .. CURRENT_VERSION_FILE .. ' is missing or damaged', 0)
+
+    return false
 end
 
 local trial_version = read_version(TRIAL_FILE, 'version=(' .. VERSION_PATTERN .. ')')
@@ -178,6 +186,8 @@ if not is_loaded then
 
     if fallback_version == nil or not switch_to(fallback_version, current_version) then
         error(load_error, 0)
+
+        return false
     end
 
     reset_loader_state()
@@ -186,5 +196,7 @@ if not is_loaded then
 
     if not is_fallback_loaded then
         error(fallback_error, 0)
+
+        return false
     end
 end

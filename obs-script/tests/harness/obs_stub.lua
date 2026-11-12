@@ -4,6 +4,14 @@ local timers = {}
 local event_callbacks = {}
 local fake_now = 1000000
 local real_time = os.time
+local raise_error = error
+local logged_errors = {}
+
+error = function(message)
+    if type(message) == 'string' or type(message) == 'number' then
+        logged_errors[#logged_errors + 1] = tostring(message)
+    end
+end
 
 os.time = function(...)
     if select('#', ...) > 0 then
@@ -54,7 +62,15 @@ local loader = function()
 __LOADER__
 end
 
-loader()
+if loader() == false then
+    raise_error(table.concat(logged_errors, '\n'), 0)
+end
+
+local errors_before_start = #logged_errors
 
 script_load({})
+
+if #logged_errors > errors_before_start then
+    raise_error(table.concat(logged_errors, '\n'), 0)
+end
 
