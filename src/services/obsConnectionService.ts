@@ -42,6 +42,7 @@ import {buildRequests} from '__utils/requests/buildRequests';
 import {getObsVersion} from '__utils/requests/getObsVersion';
 import {getSceneCollection} from '__utils/requests/getSceneCollection';
 import {isRequestOfType} from '__utils/requests/isRequestOfType';
+import {ProfileParameterQueue} from '__utils/requests/ProfileParameterQueue';
 import {StatsTracker} from '__utils/stats/StatsTracker';
 import {discoverTargets} from '__utils/targets/discoverTargets';
 
@@ -58,7 +59,7 @@ const {
 
 const {CurrentSceneCollectionChanging, CurrentSceneCollectionChanged} = ObsEventTypeEnum;
 
-const {SetProfileParameter, GetProfileParameter, GetStats} = ObsRequestTypeEnum;
+const {GetProfileParameter, GetStats} = ObsRequestTypeEnum;
 
 const {Connecting, Closed, NeedPassword, WrongPassword} = ConnectionStatusEnum;
 
@@ -92,6 +93,8 @@ class ObsConnectionService {
     private isCollectionSwitchFinished = false;
 
     private readonly tracker = new StatsTracker();
+
+    private readonly profileParameters = new ProfileParameterQueue();
 
     start = async () => {
         if (process.env.IS_DEV_SERVER) {
@@ -144,15 +147,8 @@ class ObsConnectionService {
     };
 
     setProfileParameter = (parameter: ProfileParameterKeyDto, parameterValue: string) => {
-        const request: ObsRequestDto = {
-            requestType: SetProfileParameter,
-            requestData: {
-                ...parameter,
-                parameterValue,
-            },
-        };
-
-        this.sendRequest(request);
+        this.profileParameters.push(parameter, parameterValue);
+        this.poll();
     };
 
     sendRequest = (request: ObsRequestDto) => {
@@ -224,6 +220,7 @@ class ObsConnectionService {
         this.isCollectionSwitchFinished = false;
         this.isIdentified = false;
         this.pendingRequests = [];
+        this.profileParameters.clear();
     };
 
     private onClose = (socket: WebSocket, code: number) => {
@@ -472,6 +469,7 @@ class ObsConnectionService {
         const requests = [
             ...buildRequests(statsSelector(getStore()).targets, this.pollIndex++ % DISCOVERY_EVERY_POLLS === 0),
             ...this.pendingRequests,
+            ...this.profileParameters.takeDue(performance.now()),
         ];
 
         this.pendingRequests = [];
