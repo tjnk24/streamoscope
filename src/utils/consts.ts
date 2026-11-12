@@ -23,6 +23,7 @@ export const PROFILE_PARAMETER_SPACING_MS = 750;
 export const REQUEST_TIMEOUT_MS = 5000;
 export const RECONNECT_INTERVAL_MS = 3000;
 export const RECONNECT_COUNTDOWN_TICK_MS = 250;
+export const VIEW_RESUME_DELAY_MS = 300;
 export const GRAPH_SPAN_SEC = 120;
 export const RECENT_WINDOW_SEC = 60;
 export const DISCOVERY_EVERY_POLLS = 5;
@@ -50,6 +51,7 @@ export const DEFAULT_SETTINGS: SettingsDto = {
     isJournalEnabled: true,
     lastUpdateCheckAt: null,
     isMockEnabled: false,
+    cardOrder: [],
 };
 
 export const OBS_LANGUAGE_PREFIXES: ObsLanguagePrefixDto[] = [

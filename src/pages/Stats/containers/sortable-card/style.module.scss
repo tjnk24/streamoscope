@@ -1,0 +1,10 @@
+.sortable {
+    display: flex;
+    flex-direction: column;
+}
+
+.dragging {
+    position: relative;
+    z-index: 1;
+    will-change: transform;
+}

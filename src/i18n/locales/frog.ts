@@ -51,6 +51,7 @@ export const frog: DeepPartial<TranslationDto> = {
         mainTagHint: 'Пруд из $t(obs.settings) → $t(obs.stream)',
         pluginTag: 'Кувшинка',
         pluginTagHint: 'Кувшинка плагина «{{name}}»',
+        dragHint: 'Перетащите за лапку, чтобы поменять порядок',
         crappyPlatform: 'Болото гавна',
         graphTooltip: 'Кваканье за последние {{minutes}} мин',
         graphCollecting: 'Ловим мух битрейта…',

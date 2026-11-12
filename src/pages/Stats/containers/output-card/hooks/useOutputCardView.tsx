@@ -2,7 +2,7 @@ import {Tag} from 'antd';
 import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
-import {statsViewSelector} from '__selectors/statsSelectors';
+import {statsSelector} from '__selectors/statsSelectors';
 import {AdviceEnum, HealthLevelEnum} from '__types/stats/views';
 import {StreamTargetDto} from '__types/targets';
 import {OFF_OUTPUT_VIEW, RECENT_WINDOW_SEC} from '__utils/consts';
@@ -30,7 +30,7 @@ const {
 } = OutputStatKeyEnum;
 
 export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto => {
-    const {outputs, now} = useSelector(statsViewSelector);
+    const {view: {outputs, now}, targets} = useSelector(statsSelector);
 
     const {t} = useTranslation();
 
@@ -64,6 +64,7 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
         color,
         notes,
         hasReconnectAdvice: advices.includes(Reconnecting),
+        hasDragHandle: targets.length > 1,
         platformMark: PLATFORM_MARKS[title] ?? null,
         healthTag: HEALTH_TAGS[isReconnecting ? Warn : level],
         statusKey: isReconnecting ? 'stats.statuses.reconnecting' : `stats.statuses.${level}`,

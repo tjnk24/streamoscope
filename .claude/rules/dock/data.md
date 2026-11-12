@@ -32,7 +32,7 @@ paths:
   - селектор разбора, который собирает новые данные (`parsedReleaseNotesSelector`): иначе новый массив на каждом вызове перерисовывал бы компонент;
   - селектор статуса запроса. Статус в компоненте не сравниваем: на каждый нужный статус - `<слайс>Is<Pending|Success|Failed>Selector` = `createSelector([releaseNotesSelector], checkPending)`. `checkPending`, `checkSuccess`, `checkFailed` (`utils/redux`) сами берут `status` из слайса, поэтому без обёртки. Ненужный селектор статуса не заводим (knip).
 - **Несколько полей одного слайса в компоненте - одним селектором слайса**: `const {latest, bridge, request} = useSelector(updateSelector);`. Immer отдаёт новый объект слайса только при изменении; лишние перерисовки от чужих полей для `update`, `settings` и компонентов на частых полях `stats` (`useItems`) неважны.
-- **Точечный селектор поля** (`connectionStatusSelector`, `statsTargetsSelector`, `statsViewSelector`, `settingsPortSelector`) - только когда компоненту нужно одно поле слайса. Селектор, который собирает новый объект (`state => ({a: state.x.a})`), не пишем: перерисовка на каждое изменение стора.
+- **Точечный селектор поля** (`connectionStatusSelector`, `statsTargetsSelector`, `settingsCardOrderSelector`, `settingsPortSelector`) - только когда компоненту нужно одно поле слайса. Селектор, который собирает новый объект (`state => ({a: state.x.a})`), не пишем: перерисовка на каждое изменение стора.
 - **Сервисы читают стор селектором слайса**: `const {latest, bridge} = updateSelector(getStore());`, `settingsSelector(state).isMockEnabled`. Точечные селекторы ради сервиса не заводим, неиспользуемый удаляем (knip покажет).
 
 ## HTTP-запросы

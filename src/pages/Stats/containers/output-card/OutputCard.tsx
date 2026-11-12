@@ -1,3 +1,4 @@
+import {HolderOutlined} from '@ant-design/icons';
 import {
     Alert,
     Badge,
@@ -9,6 +10,7 @@ import {
 } from 'antd';
 import cn from 'classnames';
 import isNumber from 'lodash/isNumber';
+import {memo} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import EnhancedText from '__components/EnhancedText';
@@ -24,7 +26,7 @@ import {Props} from './types';
 
 import style from './style.module.scss';
 
-const OutputCard = ({target}: Props) => {
+const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props) => {
     const {t} = useTranslation();
 
     const {
@@ -32,6 +34,7 @@ const OutputCard = ({target}: Props) => {
         color,
         notes,
         hasReconnectAdvice,
+        hasDragHandle,
         platformMark,
         healthTag,
         statusKey,
@@ -43,20 +46,30 @@ const OutputCard = ({target}: Props) => {
         items,
     } = useOutputCardView(target);
 
+    const dragHint = isDragging ? null : t('stats.dragHint');
+
     return (
         <Card
             size="small"
             classNames={{
-                root: style.card,
+                root: cn(style.card, {[style.dragging]: isDragging}),
                 title: style.title,
                 body: style.body,
             }}
             title={(
                 <Flex
-                    className={style.heading}
+                    ref={setActivatorNodeRef}
+                    className={cn(style.heading, {[style.draggable]: hasDragHandle})}
                     align="center"
                     gap={6}
+                    {...listeners}
                 >
+                    {hasDragHandle && (
+                        <Tooltip title={dragHint}>
+                            <HolderOutlined className={style.handle}/>
+                        </Tooltip>
+                    )}
+
                     <Badge color={color}/>
 
                     <EnhancedText>
@@ -123,4 +136,4 @@ const OutputCard = ({target}: Props) => {
     );
 };
 
-export default OutputCard;
+export default memo(OutputCard);

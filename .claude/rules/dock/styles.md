@@ -15,6 +15,7 @@ paths:
 - **Загрузка - `Skeleton` вокруг содержимого** (решение пользователя): `<Skeleton loading={isPending} active>...</Skeleton>`; отдельный `{isPending && <Skeleton active/>}` и проверки `!isPending` внутри не пишем (`release-notes-modal`).
 - **Сначала возможности antd, потом свой CSS**: отступы - `Flex`/`Space` с `gap`, коробка - `Card`, текст - `Typography` с пропсами (`type`, `strong`). Свой CSS - для раскладки.
 - **Инлайн-стилей нет**: ни `style`, ни `styles` у antd, ни `CSSProperties` в `consts.ts`.
+  - Исключение - `transform` и `transition` от `useSortable` (dnd-kit) у перетаскиваемой карточки (`SortableCard`): их пересчитывают на каждом кадре перетаскивания, классом не задать.
   - Внутренние части antd (`title`, `body`, `label`, `content`, `suffix`) - через `classNames` классами из `style.module.scss`; чтобы перебить вложенные селекторы antd, класс части пишем внутри класса корня (`.card .title`, `.list .itemLabel`).
   - Стиль по условию - условный класс (`content: isActive ? undefined : style.inactiveBitrate`), цвет темы - CSS-переменной, а не `theme.useToken()`.
 - **Цвета и отступы - CSS-переменные темы antd** (`var(--ant-color-border)`, `var(--ant-padding-xs)`, `var(--ant-margin-sm)`), доступны везде: класс `css-var-app` на `<html>`. Новых хексов в SCSS нет, тема одна - `utils/theme.ts`. `theme.useToken()` - только где CSS не достаёт: canvas и пропсы-цвета antd (`strokeColor` у `Progress`).

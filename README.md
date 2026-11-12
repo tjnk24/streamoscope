@@ -56,6 +56,8 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 
 ¹ Hardware readings come from the StreamoScope Lua bridge and are available on Windows.
 
+🧲 **Your streams, your order.** Drag a stream card by its header (the dotted handle shows up once there are two cards to sort) and the dock remembers where you put it. Until you do, the main OBS stream comes first. Changed your mind? **Restore default order** in the display settings.
+
 🌍 The interface supports **English, Russian, Spanish, German and Brazilian Portuguese**.
 
 <p align="center">

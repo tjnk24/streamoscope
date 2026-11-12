@@ -33,6 +33,9 @@ const slice = createSlice({
         setLastUpdateCheckAt: (state, {payload}: PayloadAction<number>) => {
             state.lastUpdateCheckAt = payload;
         },
+        setCardOrder: (state, {payload}: PayloadAction<string[]>) => {
+            state.cardOrder = payload;
+        },
     },
 });
 

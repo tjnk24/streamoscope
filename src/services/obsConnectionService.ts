@@ -6,6 +6,7 @@ import {connectionSelector} from '__selectors/connectionSelectors';
 import {settingsSelector} from '__selectors/settingsSelectors';
 import {statsSelector} from '__selectors/statsSelectors';
 import {getStore} from '__store';
+import {HardwareDto} from '__types/bridge';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
 import {PasswordChangeDto, PasswordChangeResultEnum} from '__types/connection/passwordChange';
 import {
@@ -22,6 +23,7 @@ import {
     ProfileParameterKeyDto,
     RequestResultPairDto,
 } from '__types/obs/requests';
+import {StatsViewDto} from '__types/stats/views';
 import {getAuthString} from '__utils/auth/getAuthString';
 import {getBridgeUpdate} from '__utils/bridge/getBridgeUpdate';
 import {getHardware} from '__utils/bridge/getHardware';
@@ -35,6 +37,7 @@ import {
     POLL_INTERVAL_MS,
     RECONNECT_INTERVAL_MS,
     REQUEST_TIMEOUT_MS,
+    VIEW_RESUME_DELAY_MS,
 } from '__utils/consts';
 import {fetchDevObsConnection} from '__utils/dev/fetchDevObsConnection';
 import {MockObsSimulator} from '__utils/mock/MockObsSimulator';
@@ -92,6 +95,14 @@ class ObsConnectionService {
 
     private isCollectionSwitchFinished = false;
 
+    private isViewPaused = false;
+
+    private viewResumeTimer: Nullable<number> = null;
+
+    private pausedView: Nullable<StatsViewDto> = null;
+
+    private pausedHardware: Nullable<HardwareDto> = null;
+
     private readonly tracker = new StatsTracker();
 
     private readonly profileParameters = new ProfileParameterQueue();
@@ -144,6 +155,16 @@ class ObsConnectionService {
 
     resetStats = () => {
         commonActions.stats.setView(this.tracker.resetGraphs());
+    };
+
+    pauseView = () => {
+        this.clearViewResumeTimer();
+        this.isViewPaused = true;
+    };
+
+    resumeView = () => {
+        this.clearViewResumeTimer();
+        this.viewResumeTimer = window.setTimeout(this.flushPausedView, VIEW_RESUME_DELAY_MS);
     };
 
     setProfileParameter = (parameter: ProfileParameterKeyDto, parameterValue: string) => {
@@ -219,6 +240,8 @@ class ObsConnectionService {
         this.collectionSwitchStartedAt = null;
         this.isCollectionSwitchFinished = false;
         this.isIdentified = false;
+        this.pausedHardware = null;
+        this.pausedView = null;
         this.pendingRequests = [];
         this.profileParameters.clear();
     };
@@ -384,7 +407,7 @@ class ObsConnectionService {
         if (pairs.some(({request, result}) => isRequestOfType(GetProfileParameter)(request) && result?.requestStatus.result)) {
             const {sceneCollection} = connectionSelector(getStore());
 
-            commonActions.stats.setHardware(getHardware(pairs, sceneCollection));
+            this.showHardware(getHardware(pairs, sceneCollection));
             commonActions.update.setBridge(getBridgeUpdate(pairs, sceneCollection));
         }
 
@@ -394,7 +417,43 @@ class ObsConnectionService {
             commonActions.connection.setObsVersion(obsVersion);
         }
 
-        commonActions.stats.setView(this.tracker.ingest(statsSelector(getStore()).targets, pairs, performance.now()));
+        this.showView(this.tracker.ingest(statsSelector(getStore()).targets, pairs, performance.now()));
+    };
+
+    private flushPausedView = () => {
+        this.viewResumeTimer = null;
+        this.isViewPaused = false;
+
+        if (this.pausedHardware) {
+            commonActions.stats.setHardware(this.pausedHardware);
+        }
+
+        if (this.pausedView) {
+            commonActions.stats.setView(this.pausedView);
+        }
+
+        this.pausedHardware = null;
+        this.pausedView = null;
+    };
+
+    private showView = (view: StatsViewDto) => {
+        if (this.isViewPaused) {
+            this.pausedView = view;
+
+            return;
+        }
+
+        commonActions.stats.setView(view);
+    };
+
+    private showHardware = (hardware: HardwareDto) => {
+        if (this.isViewPaused) {
+            this.pausedHardware = hardware;
+
+            return;
+        }
+
+        commonActions.stats.setHardware(hardware);
     };
 
     private updateSceneCollection = (sceneCollection: Nullable<string>) => {
@@ -480,6 +539,11 @@ class ObsConnectionService {
     private clearReconnectTimer = () => {
         this.reconnectTimer !== null && window.clearTimeout(this.reconnectTimer);
         this.reconnectTimer = null;
+    };
+
+    private clearViewResumeTimer = () => {
+        this.viewResumeTimer !== null && window.clearTimeout(this.viewResumeTimer);
+        this.viewResumeTimer = null;
     };
 }
 

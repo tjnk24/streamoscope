@@ -4,13 +4,12 @@ import {useSelector} from 'react-redux';
 
 import {connectionStatusSelector} from '__selectors/connectionSelectors';
 import {settingsIsShowGeneralCardSelector} from '__selectors/settingsSelectors';
-import {statsTargetsSelector} from '__selectors/statsSelectors';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
 
 import {adviceModalSelector} from '../../selectors/adviceModalSelectors';
 import AdviceModal from '../advice-modal';
+import CardGrid from '../card-grid';
 import GeneralCard from '../general-card';
-import OutputCard from '../output-card';
 
 import {useConnectionAlertView} from './hooks/useConnectionAlertView';
 
@@ -18,7 +17,6 @@ import style from './style.module.scss';
 
 const Page = () => {
     const status = useSelector(connectionStatusSelector);
-    const targets = useSelector(statsTargetsSelector);
     const isShowGeneralCard = useSelector(settingsIsShowGeneralCardSelector);
     const {isVisible: isAdviceModalVisible} = useSelector(adviceModalSelector);
 
@@ -42,14 +40,7 @@ const Page = () => {
             gap="small"
             vertical
         >
-            <div className={style.cards}>
-                {targets.map(target => (
-                    <OutputCard
-                        key={target.key}
-                        target={target}
-                    />
-                ))}
-            </div>
+            <CardGrid/>
 
             {isShowGeneralCard && <GeneralCard/>}
 

@@ -1,3 +1,4 @@
+import type {DraggableSyntheticListeners} from '@dnd-kit/core';
 import {StatisticProps, TagProps} from 'antd';
 import type {ParseKeys} from 'i18next';
 import type {Nullable} from 'infrastructure/common';
@@ -33,6 +34,7 @@ export type OutputCardViewDto = {
     color: string;
     notes: NoteDto[];
     hasReconnectAdvice: boolean;
+    hasDragHandle: boolean;
     platformMark: Nullable<PlatformMarkDto>;
     healthTag: HealthTagDto;
     statusKey: ParseKeys;
@@ -46,6 +48,9 @@ export type OutputCardViewDto = {
 
 interface OwnProps {
     target: StreamTargetDto;
+    isDragging: boolean;
+    listeners: DraggableSyntheticListeners;
+    setActivatorNodeRef: (element: Nullable<HTMLElement>) => void;
 }
 
 export type Props = OwnProps;

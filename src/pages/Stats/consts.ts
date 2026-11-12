@@ -1,8 +1,9 @@
+import type {PointerSensorOptions} from '@dnd-kit/core';
 import type {ParseKeys} from 'i18next';
 
 import {AdviceEnum} from '__types/stats/views';
 
-import {AdviceTextKeysDto} from './types';
+import {AdviceTextKeysDto, CardDragAccessibilityDto} from './types';
 
 const {
     Reconnecting,
@@ -57,5 +58,23 @@ export const ADVICE_TEXTS: Record<AdviceEnum, AdviceTextKeysDto> = {
             'advice.steps.hardwareEncoder',
             'advice.steps.lowerOutput',
         ],
+    },
+};
+
+export const CARD_POINTER_SENSOR_OPTIONS: PointerSensorOptions = {
+    activationConstraint: {
+        distance: 5,
+    },
+};
+
+export const CARD_DRAG_ACCESSIBILITY: CardDragAccessibilityDto = {
+    announcements: {
+        onDragStart: () => undefined,
+        onDragOver: () => undefined,
+        onDragEnd: () => undefined,
+        onDragCancel: () => undefined,
+    },
+    screenReaderInstructions: {
+        draggable: '',
     },
 };

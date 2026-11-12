@@ -1,4 +1,4 @@
-import {GlobalOutlined} from '@ant-design/icons';
+import {GlobalOutlined, UndoOutlined} from '@ant-design/icons';
 import {
     Flex,
     Select,
@@ -9,6 +9,7 @@ import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
 import {commonActions} from '__actions';
+import EnhancedButton from '__components/EnhancedButton';
 import {settingsSelector} from '__selectors/settingsSelectors';
 import {languageService} from '__services/languageService';
 import {obsConnectionService} from '__services/obsConnectionService';
@@ -20,9 +21,11 @@ import {getDockAddress} from './utils/getDockAddress';
 import style from './style.module.scss';
 
 const DisplaySettings = () => {
-    const {isShowGeneralCard, language, isMockEnabled} = useSelector(settingsSelector);
+    const {isShowGeneralCard, language, isMockEnabled, cardOrder} = useSelector(settingsSelector);
 
     const {t} = useTranslation();
+
+    const onResetCardOrder = () => commonActions.settings.setCardOrder([]);
 
     return (
         <Flex
@@ -62,6 +65,32 @@ const DisplaySettings = () => {
                     checked={isShowGeneralCard}
                     onChange={commonActions.settings.setIsShowGeneralCard}
                 />
+            </Flex>
+
+            <Flex
+                align="flex-start"
+                gap={14}
+                vertical
+            >
+                <Flex vertical>
+                    <Typography.Text>
+                        {t('settings.cardOrder')}
+                    </Typography.Text>
+
+                    <Typography.Text type="secondary">
+                        {t('settings.cardOrderHint')}
+                    </Typography.Text>
+                </Flex>
+
+                <EnhancedButton
+                    buttonProps={{
+                        icon: <UndoOutlined/>,
+                        disabled: cardOrder.length === 0,
+                        onClick: onResetCardOrder,
+                    }}
+                >
+                    {t('settings.resetCardOrder')}
+                </EnhancedButton>
             </Flex>
 
             <Flex

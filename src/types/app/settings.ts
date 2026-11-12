@@ -13,6 +13,7 @@ export type SettingsDto = {
     isAutoUpdateEnabled: boolean;
     isJournalEnabled: boolean;
     lastUpdateCheckAt: Nullable<number>;
+    cardOrder: string[];
 };
 
 export type MigratedSettingsDto = {
