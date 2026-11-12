@@ -56,7 +56,11 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 
 ¹ Hardware readings come from the StreamoScope Lua bridge and are available on Windows.
 
+⏳ **Ready before you go live.** The main OBS destination and streaming outputs already exposed by plugins get cards even while offline. Each card keeps its platform, source and place in your saved order, with a short waiting message instead of empty statistics. Start streaming and the same card shows live stats; reconnecting streams keep their statistics visible.
+
 🧲 **Your streams, your order.** Drag a stream card by its header (the dotted handle shows up once there are two cards to sort) and the dock remembers where you put it. Until you do, the main OBS stream comes first. Changed your mind? **Restore default order** in the display settings.
+
+🙈 **Not into OBS health today?** Close the OBS card with the ✕ in its corner. It waits for you in **Settings → Display → OBS card**, and the dock says so on the way out.
 
 🌍 The interface supports **English, Russian, Spanish, German and Brazilian Portuguese**.
 
@@ -115,7 +119,7 @@ The bridge tells the dock where plugin outputs are streaming, reads Windows hard
 
 ## 🚧 Limitations
 
-- **OBS must expose the output.** Plugin-independent does not mean API-independent: if an output plugin doesn't make an output or its statistics available to OBS, StreamoScope cannot invent the missing numbers.
+- **OBS must expose the output.** Plugin-independent does not mean API-independent: if an output plugin doesn't make an output or its statistics available to OBS, StreamoScope cannot invent the missing numbers. A plugin that only creates its output when streaming starts cannot have a waiting card beforehand; the dock does not read private plugin configurations.
 - **Output identity may be ambiguous.** If a plugin reports several streams using indistinguishable output identifiers, OBS might not provide separate statistics for each one. StreamoScope displays what can be reliably distinguished.
 - **Labels are best-effort.** Unrecognized services can appear as **Plugin** rather than a platform name.
 - **Without the bridge, only the basics.** Bitrate, dropped frames and OBS statistics still work, but plugin outputs lose their platform names, hardware readings (Windows only) disappear and updates have to be installed by hand.

@@ -83,6 +83,7 @@ export const de: TranslationDto = {
         autoUpdateHint: 'Die neue Version wird im Hintergrund geladen und läuft beim nächsten Start von OBS. Ausgeschaltet wird nur per Knopf aktualisiert.',
     },
     stats: {
+        waitingForStream: 'Statistiken erscheinen, sobald du auf dieser Plattform streamst.',
         statuses: {
             ok: 'Live',
             warn: 'Mit Verlusten',
@@ -105,7 +106,6 @@ export const de: TranslationDto = {
         mainTagHint: 'Plattform aus $t(obs.settings) → $t(obs.stream)',
         pluginTag: 'Plugin',
         pluginTagHint: 'Plugin-Ausgabe „{{name}}“',
-        dragHint: 'Ziehen, um die Reihenfolge zu ändern',
         crappyPlatform: 'Mistplattform',
         graphTooltip: 'Bitrate der letzten {{minutes}} min',
         graphCollecting: 'Bitrate-Daten werden gesammelt…',
@@ -130,6 +130,9 @@ export const de: TranslationDto = {
         systemMemory: 'Systemspeicher',
         recentLag: ' · +{{count}} pro Min.',
         reset: 'Diagramme zurücksetzen',
+        hide: 'Karte ausblenden',
+        hiddenTitle: 'OBS-Karte ausgeblendet',
+        hiddenText: 'Zurückholen kannst du sie unter $t(pageTitles.settings) → $t(settings.displayTitle) → „$t(settings.generalCard)“.',
         hints: {
             fps: 'Wird orange unter 95 % der in OBS eingestellten Bildrate und rot unter 80 %, wie im Fenster „$t(obs.stats)“',
             lagStart: 'Gezählt ab dem Start des letzten Streams oder, falls seit dem Verbinden des Docks kein Stream lief, ab dem Verbinden.',

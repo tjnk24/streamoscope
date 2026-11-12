@@ -1,4 +1,4 @@
-import {ConfigProvider} from 'antd';
+import {App, ConfigProvider} from 'antd';
 import {useTranslation} from 'react-i18next';
 import {Outlet} from 'react-router';
 
@@ -12,9 +12,11 @@ const CorePage = () => {
 
     return (
         <ConfigProvider locale={ANTD_LOCALES[i18n.language as LanguageEnum]}>
-            <ErrorBoundary>
-                <Outlet/>
-            </ErrorBoundary>
+            <App component={false}>
+                <ErrorBoundary>
+                    <Outlet/>
+                </ErrorBoundary>
+            </App>
         </ConfigProvider>
     );
 };

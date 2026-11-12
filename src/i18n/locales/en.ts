@@ -81,6 +81,7 @@ export const en = {
         autoUpdateHint: 'The new version downloads in the background and starts the next time you launch OBS. When off, only the button updates.',
     },
     stats: {
+        waitingForStream: 'Statistics will appear when you start streaming to this platform.',
         statuses: {
             ok: 'Live',
             warn: 'Losing some',
@@ -103,7 +104,6 @@ export const en = {
         mainTagHint: 'Platform from $t(obs.settings) → $t(obs.stream)',
         pluginTag: 'Plugin',
         pluginTagHint: 'Plugin output “{{name}}”',
-        dragHint: 'Drag to change the order',
         crappyPlatform: 'Crappy platform',
         graphTooltip: 'Bitrate over the last {{minutes}} min',
         graphCollecting: 'Collecting bitrate data…',
@@ -128,6 +128,9 @@ export const en = {
         systemMemory: 'System memory',
         recentLag: ' · +{{count}} per min',
         reset: 'Reset graphs',
+        hide: 'Hide card',
+        hiddenTitle: 'OBS card hidden',
+        hiddenText: 'Bring it back in $t(pageTitles.settings) → $t(settings.displayTitle) → “$t(settings.generalCard)”.',
         hints: {
             fps: 'Turns orange below 95% of the frame rate set in OBS and red below 80%, as in the $t(obs.stats) window',
             lagStart: 'Counted from the latest stream start, or from when the dock connected if nothing has gone live since.',

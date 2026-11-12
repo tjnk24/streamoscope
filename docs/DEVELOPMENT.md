@@ -34,6 +34,12 @@ The development server keeps its files in memory and leaves `build/` alone. Buil
 
 The project uses React 19, antd 6, Redux Toolkit, React Router 8, i18next, CSS modules, webpack and swc. Development conventions are in [`CLAUDE.md`](../CLAUDE.md), `.claude/rules` and `docs/internals` (in Russian).
 
+## Card display checks
+
+The main OBS destination and plugin outputs already exposed by OBS have cards before streaming starts. Offline cards show a waiting message and their source; live and reconnecting outputs show statistics. The same `main` and `plugin:<output name>` keys keep the saved drag order across state changes. Plugins that create outputs only when streaming starts cannot appear earlier. The OBS health card can be hidden with its close button and restored in **Settings → Display → OBS card**. The drag handle and close button have no hover tooltips; the close button keeps its accessible label.
+
+Before committing UI changes, build with `npm run build:prod`, serve `build/` with the `dock-prod` configuration in `.claude/launch.json`, enable mocks in the isolated browser, and check at 300 and 670 px. Leave the user's running OBS alone.
+
 ## Releases and signed updates
 
 To release a version:

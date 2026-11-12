@@ -30,6 +30,7 @@ export const frog: DeepPartial<TranslationDto> = {
         wrongPassword: 'Не то кваквое слово. Проквакайте пароль obs-websocket ещё раз.',
     },
     stats: {
+        waitingForStream: 'Цифры заквакают, когда вы запустите стрим на эту кувшинку.',
         statuses: {
             ok: 'Квакает',
             warn: 'Упускает мух',
@@ -51,7 +52,6 @@ export const frog: DeepPartial<TranslationDto> = {
         mainTagHint: 'Пруд из $t(obs.settings) → $t(obs.stream)',
         pluginTag: 'Кувшинка',
         pluginTagHint: 'Кувшинка плагина «{{name}}»',
-        dragHint: 'Перетащите за лапку, чтобы поменять порядок',
         crappyPlatform: 'Болото гавна',
         graphTooltip: 'Кваканье за последние {{minutes}} мин',
         graphCollecting: 'Ловим мух битрейта…',
@@ -76,6 +76,9 @@ export const frog: DeepPartial<TranslationDto> = {
         systemMemory: 'Память пруда',
         recentLag: ' · +{{count}} мух за мин',
         reset: 'Взбаламутить графики',
+        hide: 'Спрятать в тину',
+        hiddenTitle: 'Болото OBS ушло под воду',
+        hiddenText: 'Вынырнет обратно в $t(pageTitles.settings) → $t(settings.displayTitle) → «$t(settings.generalCard)».',
         hints: {
             fps: 'Оранжевеет, когда болото прыгает медленнее 95% от заданного в OBS, и краснеет ниже 80%, как в окне «$t(obs.stats)»',
             lagStart: 'Считаем с последнего прыжка в эфир, а если с подключения панели в эфир не прыгали, то с подключения.',

@@ -17,8 +17,9 @@ Update this skill in the same change whenever the conversation shows it is outda
 
 ## 2. Preparation
 
-- `npm run lint` and `npm test` pass (the release workflow runs the tests again, a red run only costs time).
-- If the dock looks different: new screenshots for README (`docs/images/stats-wide.png`, shown at 700 px, and `docs/images/stats-narrow.png`, shown at 280 px) from the test stand (`npm run stand -- screenshot`, see `docs/internals/testing.md`), and README text that matches. Check in the browser at 300 and 670 px before the commit.
+- Run `npm test` once: it already includes the full `npm run lint` and unit tests. Do not run lint separately again unless a subsequent change needs it. Keep mandatory commit hooks enabled; the release workflow runs its own checks.
+- If the dock looks different: refresh README screenshots (`docs/images/stats-wide.png`, shown at 700 px, and `docs/images/stats-narrow.png`, shown at 280 px), and update the matching README text. Prefer the test stand (`npm run stand -- screenshot`, see `docs/internals/testing.md`). If the user's OBS is running, use the production build in an isolated browser with mocks instead; do not start the stand or touch the user's OBS just for screenshots. Check the browser at 300 and 670 px before committing.
+- In Codex, use its available browser tools instead of Claude-only preview tools. Resolve this skill directory explicitly instead of relying on `CLAUDE_SKILL_DIR`; keep logs and downloaded verification artifacts in the current chat's scratch directory. Monitor CI with one bounded local process and a log, not repeated model wake-ups.
 - README and `docs/DEVELOPMENT.md` already describe every user-visible change of this release.
 - Raised requirements are in `config/compatibility.json`.
 

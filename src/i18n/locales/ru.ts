@@ -83,6 +83,7 @@ export const ru: TranslationDto = {
         autoUpdateHint: 'Новая версия скачивается в фоне и заработает при следующем запуске OBS. Если выключить, обновиться можно только кнопкой.',
     },
     stats: {
+        waitingForStream: 'Статистика появится, когда вы запустите стрим на эту площадку.',
         statuses: {
             ok: 'В эфире',
             warn: 'Есть потери',
@@ -105,7 +106,6 @@ export const ru: TranslationDto = {
         mainTagHint: 'Площадка из $t(obs.settings) → $t(obs.stream)',
         pluginTag: 'Плагин',
         pluginTagHint: 'Выход плагина «{{name}}»',
-        dragHint: 'Перетащите, чтобы поменять порядок',
         crappyPlatform: 'Платформа гавна',
         graphTooltip: 'Битрейт за последние {{minutes}} мин',
         graphCollecting: 'Собираем данные о битрейте…',
@@ -130,6 +130,9 @@ export const ru: TranslationDto = {
         systemMemory: 'Память системы',
         recentLag: ' · +{{count}} за мин',
         reset: 'Сбросить графики',
+        hide: 'Скрыть карточку',
+        hiddenTitle: 'Карточка OBS скрыта',
+        hiddenText: 'Вернуть её можно в $t(pageTitles.settings) → $t(settings.displayTitle) → «$t(settings.generalCard)».',
         hints: {
             fps: 'Становится оранжевым ниже 95% от частоты кадров, заданной в OBS, и красным ниже 80%, как в окне «$t(obs.stats)»',
             lagStart: 'Считается с начала последнего эфира, а если с подключения панели эфира не было, то с подключения.',

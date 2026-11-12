@@ -3,6 +3,7 @@ import {
     Alert,
     Badge,
     Card,
+    Empty,
     Flex,
     Statistic,
     Tag,
@@ -39,14 +40,13 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
         healthTag,
         statusKey,
         isActive,
+        isWaitingForStream,
         bitrate,
         isBitrateLoading,
         graph,
         now,
         items,
     } = useOutputCardView(target);
-
-    const dragHint = isDragging ? null : t('stats.dragHint');
 
     return (
         <Card
@@ -65,9 +65,7 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
                     {...listeners}
                 >
                     {hasDragHandle && (
-                        <Tooltip title={dragHint}>
-                            <HolderOutlined className={style.handle}/>
-                        </Tooltip>
+                        <HolderOutlined className={style.handle}/>
                     )}
 
                     <Badge color={color}/>
@@ -96,30 +94,38 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
                 </Flex>
             )}
         >
-            <Flex
-                className={style.bitrateRow}
-                align="center"
-                gap="middle"
-            >
-                <Statistic
-                    value={bitrate}
-                    loading={isBitrateLoading}
-                    formatter={value => (isNumber(value) ? formatNumber(value) : value)}
-                    suffix={t('stats.bitrateUnit')}
-                    classNames={{
-                        root: style.bitrate,
-                        content: cn(style.bitrateValue, {[style.inactiveBitrate]: !isActive}),
-                        suffix: style.bitrateUnit,
-                    }}
+            {isWaitingForStream ? (
+                <Empty
+                    className={style.empty}
+                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                    description={t('stats.waitingForStream')}
                 />
+            ) : (
+                <Flex
+                    className={style.bitrateRow}
+                    align="center"
+                    gap="middle"
+                >
+                    <Statistic
+                        value={bitrate}
+                        loading={isBitrateLoading}
+                        formatter={value => (isNumber(value) ? formatNumber(value) : value)}
+                        suffix={t('stats.bitrateUnit')}
+                        classNames={{
+                            root: style.bitrate,
+                            content: cn(style.bitrateValue, {[style.inactiveBitrate]: !isActive}),
+                            suffix: style.bitrateUnit,
+                        }}
+                    />
 
-                <BitrateGraph
-                    points={graph}
-                    now={now}
-                    color={color}
-                    isActive={isActive}
-                />
-            </Flex>
+                    <BitrateGraph
+                        points={graph}
+                        now={now}
+                        color={color}
+                        isActive={isActive}
+                    />
+                </Flex>
+            )}
 
             <StatList items={items}/>
 

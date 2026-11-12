@@ -39,6 +39,7 @@ export type OutputCardViewDto = {
     healthTag: HealthTagDto;
     statusKey: ParseKeys;
     isActive: boolean;
+    isWaitingForStream: boolean;
     bitrate: StatisticProps['value'];
     isBitrateLoading: boolean;
     graph: GraphPointDto[];

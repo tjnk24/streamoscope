@@ -83,6 +83,7 @@ export const es: TranslationDto = {
         autoUpdateHint: 'La versión nueva se descarga en segundo plano y funcionará la próxima vez que abras OBS. Si lo desactivas, solo se actualizará con el botón.',
     },
     stats: {
+        waitingForStream: 'Las estadísticas aparecerán cuando empieces a emitir en esta plataforma.',
         statuses: {
             ok: 'En directo',
             warn: 'Con pérdidas',
@@ -105,7 +106,6 @@ export const es: TranslationDto = {
         mainTagHint: 'Plataforma de $t(obs.settings) → $t(obs.stream)',
         pluginTag: 'Plugin',
         pluginTagHint: 'Salida del plugin «{{name}}»',
-        dragHint: 'Arrastra para cambiar el orden',
         crappyPlatform: 'Plataforma de pena',
         graphTooltip: 'Bitrate de los últimos {{minutes}} min',
         graphCollecting: 'Recopilando datos de bitrate…',
@@ -130,6 +130,9 @@ export const es: TranslationDto = {
         systemMemory: 'Memoria del sistema',
         recentLag: ' · +{{count}} por min',
         reset: 'Reiniciar gráficos',
+        hide: 'Ocultar tarjeta',
+        hiddenTitle: 'Tarjeta de OBS oculta',
+        hiddenText: 'Puedes recuperarla en $t(pageTitles.settings) → $t(settings.displayTitle) → «$t(settings.generalCard)».',
         hints: {
             fps: 'Se vuelve naranja por debajo del 95 % de la frecuencia de fotogramas configurada en OBS y roja por debajo del 80 %, como en la ventana «$t(obs.stats)»',
             lagStart: 'Se cuenta desde el inicio del último directo o, si no ha habido directo desde que se conectó el panel, desde la conexión.',
