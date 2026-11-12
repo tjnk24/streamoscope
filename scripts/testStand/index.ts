@@ -1,4 +1,8 @@
-import {OPEN_SETTINGS_EXPRESSION, USAGE} from './consts.ts';
+import {
+    BROKEN_PART_FLAGS,
+    OPEN_SETTINGS_EXPRESSION,
+    USAGE,
+} from './consts.ts';
 import {captureDock} from './dock/captureDock.ts';
 import {evaluateInDock} from './dock/evaluateInDock.ts';
 import {sendBridgeCommand} from './obs/sendBridgeCommand.ts';
@@ -21,7 +25,7 @@ switch (command) {
         await installCurrentVersion();
         break;
     case 'release':
-        await buildNewerRelease(argument, flag === '--broken');
+        await buildNewerRelease(argument, BROKEN_PART_FLAGS[flag]);
         break;
     case 'start':
         await startStand();

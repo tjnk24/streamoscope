@@ -10,11 +10,12 @@ import {setupStand} from '../setup/setupStand.ts';
 import {checkBackgroundUpdate} from './checks/checkBackgroundUpdate.ts';
 import {checkDockAndStream} from './checks/checkDockAndStream.ts';
 import {checkJournal} from './checks/checkJournal.ts';
-import {checkRollback} from './checks/checkRollback.ts';
 import {checkUpdateButton} from './checks/checkUpdateButton.ts';
+import {checkBrokenLoader} from './checks/rollback/checkBrokenLoader.ts';
+import {checkRollback} from './checks/rollback/checkRollback.ts';
 
 export const runScenario = async () => {
-    const {button, broken, background} = SCENARIO_VERSIONS;
+    const {button, broken, background, brokenLoader} = SCENARIO_VERSIONS;
 
     await stopStand();
 
@@ -30,19 +31,24 @@ export const runScenario = async () => {
         await checkJournal();
 
         console.log(`--- the Update button, version ${button}`);
-        await buildNewerRelease(button, false);
+        await buildNewerRelease(button);
         await restartAll();
         await checkUpdateButton(button);
 
         console.log(`--- a broken dock, version ${broken}`);
-        await buildNewerRelease(broken, true);
+        await buildNewerRelease(broken, 'dock');
         await restartAll();
         await checkRollback(broken, button);
 
         console.log(`--- the background update, version ${background}`);
-        await buildNewerRelease(background, false);
+        await buildNewerRelease(background);
         await restartAll();
         await checkBackgroundUpdate(background);
+
+        console.log(`--- a broken bridge loader, version ${brokenLoader}`);
+        await buildNewerRelease(brokenLoader, 'loader');
+        await restartAll();
+        await checkBrokenLoader(brokenLoader, background);
 
         console.log('ALL PASSED');
     } finally {

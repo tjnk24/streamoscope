@@ -5,18 +5,19 @@ import path from 'node:path';
 import {ensureMinisign} from '../../buildInstaller/ensureMinisign.ts';
 import {COMPATIBILITY_FILE_NAME} from '../../serveTestRelease/consts.ts';
 import {
-    BROKEN_DOCK_PAGE,
+    BROKEN_PART_FILES,
     PROJECT_COPY_DIRECTORY,
     SERVED_DIRECTORY,
     TEST_SECRET_KEY_PATH,
     WINDOWS_TAR,
 } from '../consts.ts';
+import type {BrokenPartType} from '../types/brokenRelease.ts';
 
 import {copyProject} from './copyProject.ts';
 import {packageTestRelease} from './packageTestRelease.ts';
 import {removeProjectCopy} from './removeProjectCopy.ts';
 
-export const buildNewerRelease = async (version: string, isDockBroken: boolean) => {
+export const buildNewerRelease = async (version: string, brokenPart?: BrokenPartType) => {
     copyProject(version);
 
     const packageDirectory = packageTestRelease(PROJECT_COPY_DIRECTORY, version);
@@ -24,8 +25,10 @@ export const buildNewerRelease = async (version: string, isDockBroken: boolean) 
     const archivePath = path.join(SERVED_DIRECTORY, `streamoscope-${version}.zip`);
     const compatibilityPath = path.join(SERVED_DIRECTORY, COMPATIBILITY_FILE_NAME);
 
-    if (isDockBroken) {
-        fs.writeFileSync(path.join(packageDirectory, 'dock', 'index.html'), BROKEN_DOCK_PAGE);
+    if (brokenPart) {
+        const {relativePath, content} = BROKEN_PART_FILES[brokenPart];
+
+        fs.writeFileSync(path.join(packageDirectory, relativePath), content);
     }
 
     fs.rmSync(SERVED_DIRECTORY, {recursive: true, force: true});
@@ -50,5 +53,5 @@ export const buildNewerRelease = async (version: string, isDockBroken: boolean) 
         }
     });
 
-    console.log(`Release ${version}${isDockBroken ? ' with a broken dock' : ''} is in ${SERVED_DIRECTORY}`);
+    console.log(`Release ${version}${brokenPart ? ` with a broken ${brokenPart}` : ''} is in ${SERVED_DIRECTORY}`);
 };

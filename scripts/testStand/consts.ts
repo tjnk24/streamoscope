@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import {ROOT_DIRECTORY} from '../packageRelease/consts.ts';
 
+import type {BrokenFileDto, BrokenPartType} from './types/brokenRelease.ts';
 import type {ScenarioVersionsDto} from './types/ScenarioVersionsDto.ts';
 import type {StandArchiveDto} from './types/StandArchiveDto.ts';
 
@@ -127,6 +128,8 @@ export const HEALTHY_VERSION_PATH = path.join(INSTALL_DIRECTORY, 'healthy-versio
 
 export const HEALTHY_PROCESS_PATH = path.join(INSTALL_DIRECTORY, 'healthy-process.txt');
 
+export const HEALTHY_LOADER_PATH = path.join(INSTALL_DIRECTORY, 'healthy-loader.txt');
+
 export const ROLLED_BACK_VERSION_PATH = path.join(INSTALL_DIRECTORY, 'rolled-back-version.txt');
 
 export const INSTALL_STATE_FILES = [
@@ -162,6 +165,24 @@ export const STAND_REGISTRY_KEY_LINE = '$script:UninstallRegistryKey = \'HKCU:\\
 
 export const BROKEN_DOCK_PAGE = '<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Broken on purpose</title></head><body><script>throw new Error("broken on purpose");</script></body></html>\n';
 
+const BROKEN_LOADER_SOURCE = 'local broken_on_purpose = nil\nbroken_on_purpose()\n';
+
+export const BROKEN_PART_FILES: Record<BrokenPartType, BrokenFileDto> = {
+    dock: {
+        relativePath: path.join('dock', 'index.html'),
+        content: BROKEN_DOCK_PAGE,
+    },
+    loader: {
+        relativePath: 'streamoscope-bridge.lua',
+        content: BROKEN_LOADER_SOURCE,
+    },
+};
+
+export const BROKEN_PART_FLAGS: Record<string, BrokenPartType | undefined> = {
+    '--broken': 'dock',
+    '--broken-loader': 'loader',
+};
+
 export const CURRENT_VERSION_TEMPLATE = 'window.STREAMOSCOPE_VERSION = \'{version}\';\r\n';
 
 export const FIND_STAND_PROCESSES_SCRIPT = `
@@ -177,6 +198,7 @@ export const SCENARIO_VERSIONS: ScenarioVersionsDto = {
     button: '9.0.0',
     broken: '9.0.1',
     background: '9.0.2',
+    brokenLoader: '9.0.3',
 };
 
 export const OBS_HELLO_OP = 0;
@@ -232,7 +254,9 @@ export const USAGE = `Usage: npm run stand -- <command>
 
 setup                         download OBS and the RTMP server, write their settings
 install                       build the current code with the test updater and install it into the stand
-release <version> [--broken]  build a signed newer release for the test server; --broken ships a dock that throws
+release <version> [--broken|--broken-loader]
+                              build a signed newer release for the test server; --broken ships a dock that throws,
+                              --broken-loader a bridge loader that fails while the bridge and the dock are fine
 start                         start the RTMP server, the test release server and OBS
 stop                          close them
 status                        show the versions, the update files, the dock and the stream
