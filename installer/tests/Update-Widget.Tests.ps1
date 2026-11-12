@@ -374,4 +374,19 @@ Describe 'Update-Widget.ps1' {
 
         Invoke-TestEntry -EntryPath $entry -EntryArguments @('-Auto', '-InstallDirectory', "`"$installerDirectory`"", '-StatusPath', "`"$status`"") | Should -Be 0
     }
+
+    It 'finds OBS with the functions in the install folder when its version has none' {
+        $install = Join-Path $TestDrive 'entry-fallback'
+        $versionEntry = Join-Path $install 'versions\0.6.0\updater\Update-Widget.ps1'
+        $status = Join-Path $install 'data\update-status.json'
+        New-Item -ItemType Directory -Path (Join-Path $install 'versions\0.6.0'), (Split-Path -Parent $status) -Force | Out-Null
+        Copy-Item -LiteralPath $updaterDirectory -Destination (Join-Path $install 'versions\0.6.0\updater') -Recurse
+        Set-Content -LiteralPath (Join-Path (Split-Path -Parent $status) 'update-check.stamp') -Value ''
+
+        Invoke-TestEntry -EntryPath $versionEntry -EntryArguments @('-Auto', '-StatusPath', "`"$status`"") | Should -Be 1
+
+        Copy-Item -LiteralPath (Join-Path $installerDirectory 'ConfigureObs') -Destination $install -Recurse
+
+        Invoke-TestEntry -EntryPath $versionEntry -EntryArguments @('-Auto', '-StatusPath', "`"$status`"") | Should -Be 0
+    }
 }

@@ -114,7 +114,8 @@ Updates work the way Chrome does them: the new version lands next to the old one
   streamoscope-bridge.lua     stub, runs the bridge loader of a version
   current-version.js          which version is current
   update-trial.txt            the new version is on trial, see below
-  versions\<version>\         dock, bridge loader, bridge and updater scripts of that version
+  versions\<version>\         dock, bridge loader, bridge, updater and OBS setup scripts of that version
+  configure-obs.ps1           fallback copy of the OBS setup script, comes only with the installer
   updater\minisign.exe        checks signatures, comes only with the installer
 ```
 
@@ -145,6 +146,6 @@ The installer puts application files in `%LOCALAPPDATA%\Programs\streamoscope` i
 
 Close OBS before installation or removal. Removal asks for confirmation first and only then takes the dock and the bridge out of OBS, together with the bridge data in every profile (the `[StreamoScope]` section of `basic.ini`). It leaves OBS WebSocket enabled because another application might rely on it. It deletes the application folder, the journal (`%LOCALAPPDATA%\streamoscope\logs`) with its setting and the updater state; installing or updating leaves the journal in place. The backups and `configure-obs.log` stay, so a removal that went wrong can still be undone and explained. A silent removal (`/VERYSILENT /SUPPRESSMSGBOXES`) with OBS open gets the default answers and quietly cancels itself without touching anything, so close OBS before scripting one.
 
-The uninstaller comes from the last installer that ran: background updates don't replace it, so the installer version decides what removal deletes.
+Since 0.7.0 the uninstaller is thin. It runs `configure-obs.ps1` of the current version, so what removal takes out of OBS and which data it deletes arrive with background updates. Only the uninstaller itself, with its windows and a fallback list of files, comes from the last installer that ran. Installs set up by an older installer keep their old removal until a newer installer runs once.
 
 The Windows executable does **not** currently have an Authenticode signature. Release assets are protected separately with minisign signatures, and the README explains how to verify manual downloads.

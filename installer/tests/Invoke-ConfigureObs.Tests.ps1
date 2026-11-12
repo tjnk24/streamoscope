@@ -1,6 +1,7 @@
 BeforeAll {
     Get-ChildItem -LiteralPath (Join-Path $PSScriptRoot '..\ConfigureObs') -Filter '*.ps1' -Recurse | ForEach-Object { . $_.FullName }
     Get-ChildItem -LiteralPath (Join-Path $PSScriptRoot 'helpers\configure') -Filter '*.ps1' | ForEach-Object { . $_.FullName }
+    . (Join-Path $PSScriptRoot 'helpers\updater\run\Invoke-TestEntry.ps1')
 
     $script:fixtures = Join-Path $PSScriptRoot 'fixtures'
     $script:cyrillicFolder = -join [char[]](0x041F, 0x0440, 0x043E, 0x0433, 0x0440, 0x0430, 0x043C, 0x043C, 0x044B)
@@ -280,5 +281,75 @@ Describe 'Invoke-ConfigureObs' {
             Invoke-ConfigureObs -Mode Install -InstallDirectory $fixture.Install -ObsDirectory $obsDirectory -DataDirectory $fixture.Data | Should -Be ([ConfigureObsResult]::Success)
             @(Get-Docks -Path (Join-Path $obsDirectory 'config\obs-studio\global.ini')).Count | Should -Be 2
         }
+    }
+}
+
+Describe 'removing program data' {
+    It 'removes the journal and the updater state even while OBS is running, and keeps the backups and the log' {
+        Mock Test-ObsRunning { $true }
+        $fixture = New-ObsFixture -Name 'obs-33'
+        New-ProgramData -DataDirectory $fixture.Data
+
+        Invoke-Fixture -Fixture $fixture -Mode RemoveData | Should -Be ([ConfigureObsResult]::Success)
+        (Get-ChildItem -LiteralPath $fixture.Data -Name | Sort-Object) -join ',' | Should -Be 'backups,configure-obs.log'
+        Test-Path -LiteralPath (Join-Path $fixture.Data 'backups\2026-01-01_00-00-00\global.ini') | Should -BeTrue
+    }
+
+    It 'removes the rest and reports a file it could not remove' {
+        $fixture = New-ObsFixture -Name 'obs-33'
+        New-ProgramData -DataDirectory $fixture.Data
+        $lockedJournal = [System.IO.File]::Open((Join-Path $fixture.Data 'journal.txt'), 'Open', 'Read', 'None')
+
+        try {
+            Invoke-Fixture -Fixture $fixture -Mode RemoveData | Should -Be ([ConfigureObsResult]::Failed)
+        } finally {
+            $lockedJournal.Dispose()
+        }
+
+        (Get-ChildItem -LiteralPath $fixture.Data -Name | Sort-Object) -join ',' | Should -Be 'backups,configure-obs.log,journal.txt'
+        Get-Content -LiteralPath (Join-Path $fixture.Data 'configure-obs.log') -Raw | Should -Match 'Could not remove: journal\.txt'
+    }
+
+    It 'succeeds when there is nothing to remove' {
+        $fixture = New-ObsFixture -Name 'obs-33'
+
+        Invoke-Fixture -Fixture $fixture -Mode RemoveData | Should -Be ([ConfigureObsResult]::Success)
+    }
+}
+
+Describe 'configure-obs.ps1 in a version folder' {
+    BeforeDiscovery {
+        $isObsRunning = $null -ne (Get-Process -Name 'obs64', 'obs32' -ErrorAction SilentlyContinue | Select-Object -First 1)
+    }
+
+    BeforeEach {
+        $script:fixture = New-ObsFixture -Name 'obs-33'
+        $script:versionDirectory = Join-Path $script:fixture.Install 'versions\0.7.0'
+        $script:entry = Join-Path $script:versionDirectory 'configure-obs.ps1'
+
+        New-Item -ItemType Directory -Path $script:versionDirectory -Force | Out-Null
+        Copy-Item -LiteralPath (Join-Path $PSScriptRoot '..\configure-obs.ps1') -Destination $script:entry
+        Copy-Item -LiteralPath (Join-Path $PSScriptRoot '..\ConfigureObs') -Destination $script:versionDirectory -Recurse
+    }
+
+    It 'sets up and removes OBS for the install folder it is given, with its own functions' -Skip:$isObsRunning {
+        $arguments = @('-InstallDirectory', "`"$($script:fixture.Install)`"", '-ConfigDirectory', "`"$($script:fixture.Config)`"", '-DataDirectory', "`"$($script:fixture.Data)`"")
+        $manifestPath = Join-Path $script:fixture.Install 'install-manifest.json'
+
+        Invoke-TestEntry -EntryPath $script:entry -EntryArguments (@('-Mode', 'Install') + $arguments) | Should -Be ([int][ConfigureObsResult]::Success)
+        Test-Path -LiteralPath $manifestPath | Should -BeTrue
+        Test-Path -LiteralPath (Join-Path $script:versionDirectory 'install-manifest.json') | Should -BeFalse
+        @(Get-Docks -Path (Join-Path $script:fixture.Config 'user.ini') | Where-Object { $_.url -eq $script:fixture.DockUrl }).Count | Should -Be 1
+
+        Invoke-TestEntry -EntryPath $script:entry -EntryArguments (@('-Mode', 'Uninstall') + $arguments) | Should -Be ([int][ConfigureObsResult]::Success)
+        Test-Path -LiteralPath $manifestPath | Should -BeFalse
+        @(Get-Docks -Path (Join-Path $script:fixture.Config 'user.ini') | Where-Object { $_.url -eq $script:fixture.DockUrl }).Count | Should -Be 0
+    }
+
+    It 'removes the program data' {
+        New-ProgramData -DataDirectory $script:fixture.Data
+
+        Invoke-TestEntry -EntryPath $script:entry -EntryArguments @('-Mode', 'RemoveData', '-InstallDirectory', "`"$($script:fixture.Install)`"", '-DataDirectory', "`"$($script:fixture.Data)`"") | Should -Be ([int][ConfigureObsResult]::Success)
+        (Get-ChildItem -LiteralPath $script:fixture.Data -Name | Sort-Object) -join ',' | Should -Be 'backups,configure-obs.log'
     }
 }

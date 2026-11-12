@@ -30,7 +30,14 @@ $env:PSModulePath = @(
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
 
 Get-ChildItem -LiteralPath (Join-Path $scriptDirectory 'UpdateWidget') -Filter '*.ps1' -Recurse | ForEach-Object { . $_.FullName }
-. (Join-Path $InstallDirectory 'ConfigureObs\paths\Find-ObsDirectory.ps1')
+
+$findObsDirectoryPath = Join-Path (Split-Path -Parent $scriptDirectory) 'ConfigureObs\paths\Find-ObsDirectory.ps1'
+
+if (-not (Test-Path -LiteralPath $findObsDirectoryPath)) {
+    $findObsDirectoryPath = Join-Path $InstallDirectory 'ConfigureObs\paths\Find-ObsDirectory.ps1'
+}
+
+. $findObsDirectoryPath
 
 $updateArguments = @{
     InstallDirectory = $InstallDirectory

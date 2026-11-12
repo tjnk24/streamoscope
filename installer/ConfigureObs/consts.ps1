@@ -8,3 +8,4 @@ $script:DockTitle = 'StreamoScope'
 $script:BridgeProfileSections = @('StreamoScope', 'ObsStatsDock')
 $script:PortableMarkers = @('portable_mode', 'obs_portable_mode', 'portable_mode.txt', 'obs_portable_mode.txt')
 $script:LogHiddenFolderVariables = @('LOCALAPPDATA', 'APPDATA', 'USERPROFILE')
+$script:RemovedDataItems = @('logs', 'journal.txt', 'auto-update.txt', 'update-status.json', 'update-status.json.lock', 'update-check.stamp')

@@ -186,15 +186,63 @@ begin
   Result := ExpandConstant('{localappdata}\streamoscope\configure-obs.log');
 end;
 
+function ReadCurrentVersion: String;
+var
+  Content: AnsiString;
+  Text: String;
+  QuotePosition: Integer;
+  CharacterIndex: Integer;
+begin
+  Result := '';
+
+  if not LoadStringFromFile(ExpandConstant('{app}\current-version.js'), Content) then
+    Exit;
+
+  Text := String(Content);
+  QuotePosition := Pos('''', Text);
+
+  if QuotePosition = 0 then
+    Exit;
+
+  Text := Copy(Text, QuotePosition + 1, Length(Text));
+  QuotePosition := Pos('''', Text);
+
+  if QuotePosition <= 1 then
+    Exit;
+
+  Text := Copy(Text, 1, QuotePosition - 1);
+
+  for CharacterIndex := 1 to Length(Text) do
+    if Pos(Text[CharacterIndex], '0123456789.') = 0 then
+      Exit;
+
+  Result := Text;
+end;
+
+function GetConfigureObsPath: String;
+var
+  Version: String;
+begin
+  Version := ReadCurrentVersion;
+  Result := ExpandConstant('{app}\versions\') + Version + '\configure-obs.ps1';
+
+  if (Version = '') or not FileExists(Result) then
+    Result := ExpandConstant('{app}\configure-obs.ps1');
+end;
+
 function RunConfigureObs(const Mode: String): Integer;
 var
+  ScriptPath: String;
   ResultCode: Integer;
 begin
+  ScriptPath := GetConfigureObsPath;
+
   if not Exec(ExpandConstant('{sys}\WindowsPowerShell\v1.0\powershell.exe'),
-    '-NoProfile -NonInteractive -ExecutionPolicy Bypass -File "' + ExpandConstant('{app}\configure-obs.ps1') + '" -Mode ' + Mode,
+    '-NoProfile -NonInteractive -ExecutionPolicy Bypass -File "' + ScriptPath + '" -Mode ' + Mode + ' -InstallDirectory "' + ExpandConstant('{app}') + '"',
     ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, ResultCode) then
     ResultCode := ResultFailed;
 
+  Log(ScriptPath + ' -Mode ' + Mode + ' exit code: ' + IntToStr(ResultCode));
   Result := ResultCode;
 end;
 
@@ -226,8 +274,6 @@ begin
   else
     ObsSetupNote := CustomMessage('SetupFailed') + #13#10 + GuideUrl + #13#10#13#10 + CustomMessage('Details') + ' ' + GetLogPath;
   end;
-
-  Log('configure-obs.ps1 exit code: ' + IntToStr(Code));
 end;
 
 procedure WriteCurrentVersion;
@@ -287,10 +333,13 @@ begin
 
   Code := RunConfigureObs('Uninstall');
 
-  Log('configure-obs.ps1 exit code: ' + IntToStr(Code));
-
   if (Code <> ResultSuccess) and (Code <> ResultObsConfigNotFound) then
     SuppressibleMsgBox(CustomMessage('UninstallFailed') + #13#10#13#10 + CustomMessage('Details') + ' ' + GetLogPath, mbInformation, MB_OK, IDOK);
+end;
+
+procedure RemoveProgramData;
+begin
+  RunConfigureObs('RemoveData');
 end;
 
 procedure RemoveInstallDirectory;
@@ -307,7 +356,10 @@ procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
   case CurUninstallStep of
     usUninstall:
-      RemoveFromObs;
+      begin
+        RemoveFromObs;
+        RemoveProgramData;
+      end;
     usPostUninstall:
       RemoveInstallDirectory;
   end;

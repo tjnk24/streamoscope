@@ -1,6 +1,6 @@
 function Invoke-ConfigureObs {
     param(
-        [Parameter(Mandatory)][ValidateSet('Install', 'Uninstall', 'Check')][string]$Mode,
+        [Parameter(Mandatory)][ValidateSet('Install', 'Uninstall', 'Check', 'RemoveData')][string]$Mode,
         [Parameter(Mandatory)][string]$InstallDirectory,
         [AllowNull()][AllowEmptyString()][string]$ObsDirectory,
         [AllowNull()][AllowEmptyString()][string]$ConfigDirectory,
@@ -10,6 +10,20 @@ function Invoke-ConfigureObs {
     New-Item -ItemType Directory -Path $DataDirectory -Force | Out-Null
     $script:ConfigureLogPath = Join-Path $DataDirectory 'configure-obs.log'
     Write-ConfigureLog "$Mode from $InstallDirectory"
+
+    if ($Mode -eq 'RemoveData') {
+        $keptItems = @(Remove-ProgramData -DataDirectory $DataDirectory)
+
+        if ($keptItems.Count -gt 0) {
+            Write-ConfigureLog "Could not remove: $($keptItems -join ', ')"
+
+            return [ConfigureObsResult]::Failed
+        }
+
+        Write-ConfigureLog 'Program data removed'
+
+        return [ConfigureObsResult]::Success
+    }
 
     if (Test-ObsRunning) {
         Write-ConfigureLog 'OBS is running'

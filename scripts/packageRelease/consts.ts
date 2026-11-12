@@ -20,6 +20,8 @@ export const BRIDGE_TESTS_DIRECTORY = path.join(BRIDGE_SOURCE_DIRECTORY, 'tests'
 
 export const README_TEMPLATE_PATH = path.join(import.meta.dirname, 'README.template.txt');
 
-export const UPDATER_SOURCE_DIRECTORY = path.join(ROOT_DIRECTORY, 'installer', 'updater');
+export const INSTALLER_DIRECTORY = path.join(ROOT_DIRECTORY, 'installer');
+
+export const UPDATER_SOURCE_DIRECTORY = path.join(INSTALLER_DIRECTORY, 'updater');
 
 export const UPDATER_TARGET_DIRECTORY = path.join(PACKAGE_DIRECTORY, 'updater');
