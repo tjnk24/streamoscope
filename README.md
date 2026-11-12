@@ -29,7 +29,7 @@ Running multiple streams from one OBS instance? You shouldn't have to open a sep
 **No plugin loyalty.** 🤷
 
 <p align="center">
-  <img src="docs/images/stats-wide.png" width="700" alt="StreamoScope wide dock: four simultaneous streams with live bitrate and dropped-frame statistics">
+  <img src="docs/images/stats-wide.png" width="700" alt="StreamoScope wide dock: four simultaneous streams with live bitrate, dropped-frame statistics and red hints on the rows in trouble">
 </p>
 <p align="center"><sub>Four streams, four sets of stats, one less reason to panic. 😌</sub></p>
 
@@ -37,6 +37,7 @@ Running multiple streams from one OBS instance? You shouldn't have to open a sep
 
 - 📺 **All your streams, side by side.** See native OBS and third-party streaming outputs together, even when different plugins started them.
 - 📈 **Live stats per output.** Check bitrate, recent bitrate history, dropped network frames, connection status, uptime and congestion without switching panels.
+- 🆘 **Tells you what to try.** When a stream struggles, a red icon marks the row in trouble, and **What to do?** lists the fixes, naming OBS settings the way your OBS does.
 - 🔌 **No plugin-specific setup.** StreamoScope is a monitor, not another multistream manager.
 - 🧩 **Built into OBS.** A dock that stays where you work and adapts from a narrow column to a wide panel.
 - 🩺 **Bonus: OBS and PC health.** Keep an eye on performance problems beyond your network connection.
@@ -51,14 +52,14 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 | Dropped network frames: total and recent | Encoding and rendering lag since the stream started |
 | Live / unstable / reconnecting status, with a hint on what to try | CPU usage and OBS memory |
 | Uptime and network congestion | GPU usage, encoder load, VRAM and system RAM¹ |
-| Detected platform and output source, when available | Diagnostics, mock mode and update checks |
+| Detected platform and output source, when available | Diagnostics, mock mode, update checks and release notes right in the dock |
 
 ¹ Hardware readings come from the StreamoScope Lua bridge and are available on Windows.
 
 🌍 The interface supports **English, Russian, Spanish, German and Brazilian Portuguese**.
 
 <p align="center">
-  <img src="docs/images/stats-narrow.png" width="280" alt="StreamoScope compact layout showing multiple stream cards and OBS performance">
+  <img src="docs/images/stats-narrow.png" width="280" alt="StreamoScope compact layout showing multiple stream cards, OBS performance and red hints on the rows in trouble">
 </p>
 
 > [!NOTE]
@@ -77,7 +78,7 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 
 🎉 **Done.** Start your streams however you normally do. StreamoScope watches the ones it can see through OBS — no need to select a separate integration for each output plugin.
 
-The installer places files in `%LOCALAPPDATA%\Programs\streamoscope`, configures the dock and Lua bridge, keeps backups in `%LOCALAPPDATA%\streamoscope\backups`, and writes a setup log to `%LOCALAPPDATA%\streamoscope\configure-obs.log`.
+The installer places files in `%LOCALAPPDATA%\Programs\streamoscope`, configures the dock and Lua bridge, keeps backups in `%LOCALAPPDATA%\streamoscope\backups`, and writes a setup log to `%LOCALAPPDATA%\streamoscope\configure-obs.log`. The log hides your Windows user folder, so you can attach it to an issue as it is; it still names your scene collections and profiles.
 
 If OBS has never been launched on your PC, open it once, close it, then rerun the installer. You might need to enable its WebSocket server manually.
 
@@ -85,7 +86,7 @@ If OBS has never been launched on your PC, open it once, close it, then rerun th
 
 🧰 **The installer still has a job:** two tiny files that OBS points at, the dock and bridge loaders, and the uninstaller live outside the updates and only change when you run the installer. Running the latest installer over your install is safe at any time: it keeps your settings and the journal. Since 0.7.0 the uninstaller takes its instructions from the version you have, so it rarely needs that. If a release does need the installer, its release notes say so first thing, and installs from before 0.7.0 get one polite request in the dock settings.
 
-🗑️ **Uninstall:** close OBS and remove **StreamoScope** via **Windows Settings → Apps**. After you confirm, it takes the dock and the bridge script out of OBS, clears the bridge data from every profile and deletes the journal. Backups of the OBS files it changed stay in `%LOCALAPPDATA%\streamoscope\backups`, just in case.
+🗑️ **Uninstall:** close OBS and remove **StreamoScope** via **Windows Settings → Apps**. Nothing changes until you confirm: answer **No** and everything stays put. After **Yes** it takes the dock and the bridge script out of OBS, clears the bridge data from every profile and deletes the application folder, the journal and the updater state. Backups of the OBS files it changed (`%LOCALAPPDATA%\streamoscope\backups`) and `configure-obs.log` stay, just in case.
 
 ### 📦 Manual / portable installation
 
@@ -137,6 +138,7 @@ Use the dock's **gear icon** to change language, show or hide OBS statistics, tr
 | Some platform names are generic | Check the Lua bridge is loaded in the active scene collection |
 | GPU stats are missing | Check the Lua bridge on Windows |
 | Installer didn't configure OBS | See `%LOCALAPPDATA%\streamoscope\configure-obs.log`; rerun with OBS closed |
+| Dock asks to run the installer | Close OBS and run the latest `streamoscope-setup-<version>.exe` over your install; settings and the journal stay |
 
 ### 🩺 Stream problems
 
