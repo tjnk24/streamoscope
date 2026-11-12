@@ -1,6 +1,6 @@
 {
   "name": "streamoscope",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "StreamoScope: live bitrate, dropped frames and stream health inside OBS Studio",
   "main": "src/index.tsx",
   "license": "MIT",
