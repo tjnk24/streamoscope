@@ -50,17 +50,17 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 | --- | --- |
 | Current bitrate and two-minute graph | FPS, highlighted when it drops, and frame time |
 | Dropped network frames: total and recent | Encoding and rendering lag since the stream started |
-| Live / unstable / reconnecting status, with a hint on what to try | CPU usage and OBS memory |
+| Live / losing some / unstable / reconnecting / offline status, with a hint on what to try | CPU usage and OBS memory |
 | Uptime and network congestion | GPU usage, encoder load, VRAM and system RAM¹ |
 | Detected platform and output source, when available | Diagnostics, mock mode, update checks and release notes right in the dock |
 
 ¹ Hardware readings come from the StreamoScope Lua bridge and are available on Windows.
 
-⏳ **Ready before you go live.** The main OBS destination and streaming outputs already exposed by plugins get cards even while offline. Each card keeps its platform, source and place in your saved order, with a short waiting message instead of empty statistics. Start streaming and the same card shows live stats; reconnecting streams keep their statistics visible.
+⏳ **Cards show up before you do.** The main OBS stream and plugin outputs OBS already knows about get their cards while still offline: platform, source and place in your order, plus a short note instead of a wall of zeros. Go live and the same card fills with stats.
 
 🧲 **Your streams, your order.** Drag a stream card by its header (the dotted handle shows up once there are two cards to sort) and the dock remembers where you put it. Until you do, the main OBS stream comes first. Changed your mind? **Restore default order** in the display settings.
 
-🙈 **Not into OBS health today?** Hover over the OBS card to fade in the ✕ in its corner, then click it to hide the card. The cross fades out when you leave; keyboard focus reveals it too. It waits for you in **Settings → Display → OBS card**, and a one-time notification offers **Restore** to bring it back immediately. Once shown, the notification stays out of your way, including after a restart.
+🙈 **Not into OBS health today?** Hover over the OBS card and click the ✕ in its corner. The card waits in **Settings → Display → OBS card (FPS, lags, CPU)**, and the first time you close it the dock offers **Restore**, in case your mouse got ahead of you.
 
 🌍 The interface supports **English, Russian, Spanish, German and Brazilian Portuguese**.
 
@@ -127,7 +127,7 @@ The bridge tells the dock where plugin outputs are streaming, reads Windows hard
 
 ## ⚙️ Settings, privacy and troubleshooting
 
-Use the dock's **gear icon** to change language, show or hide OBS statistics, try mock mode, check for updates and read **What's new** without leaving OBS, turn automatic updates off, turn the journal off or copy diagnostics.
+Use the dock's **gear icon** to change language, show or hide OBS statistics, restore the default card order, try mock mode, check for updates and read **What's new** without leaving OBS, turn automatic updates off, turn the journal off or copy diagnostics.
 
 - To open the dock in a regular browser, copy **Dock address** from the settings and paste it there. Enter the WebSocket password again in the browser; the journal is kept only by the dock inside OBS.
 - The OBS WebSocket connection normally uses `127.0.0.1`.
