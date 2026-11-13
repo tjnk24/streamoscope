@@ -18,7 +18,13 @@ Update this skill in the same change whenever the conversation shows it is outda
 ## 2. Preparation
 
 - Run `npm test` once: it already includes the full `npm run lint` and unit tests. Do not run lint separately again unless a subsequent change needs it. Keep mandatory commit hooks enabled; the release workflow runs its own checks.
-- If the dock looks different: refresh README screenshots (`docs/images/stats-wide.png`, shown at 700 px, and `docs/images/stats-narrow.png`, shown at 280 px), and update the matching README text. Prefer the test stand (`npm run stand -- screenshot`, see `docs/internals/testing.md`). If the user's OBS is running, use the production build in an isolated browser with mocks instead; do not start the stand or touch the user's OBS just for screenshots. Check the browser at 300 and 670 px before committing.
+- If the dock looks different: retake the README screenshots and update the matching README text. Capture sizes are not the display sizes and not the 300/670 px check widths:
+  - `docs/images/stats-wide.png` - viewport 953x482, the main card at **Live for 00:10:25**, shown in README at 700 px;
+  - `docs/images/stats-narrow.png` - viewport 536x881, at **Live for 00:30:11**, shown at 280 px.
+  - How: `npm run build:prod`, serve `build/` with `dock-prod`, headless Edge through CDP with `deviceScaleFactor: 1`. Before loading, put into localStorage `streamoscope.settings` with `isMockEnabled: true`, `language: 'en'`, `hasSeenGeneralCardNotice: true`, `isAutoUpdateEnabled: false`. Hide the mock banner with an injected style `.ant-alert { display: none !important; }`. Do not wait in real time: `Emulation.setVirtualTimePolicy` with `policy: 'advance'` and a budget, read the YouTube **Live for** from the page, then step 1 s until it matches and capture right away. The Twitch **Dropped (frames/min)** row should carry the red icon; the mock is random, retake if it does not.
+  - Check the result: exact size, no banner, full graphs, no personal data. `social-preview.png` keeps everything but the dock picture.
+  - The test stand screenshot (`npm run stand -- screenshot`) is 420x900 and only for checking the stand, not for README. Do not touch the user's OBS for screenshots.
+- Check the browser at 300 and 670 px before committing.
 - In Codex, use its available browser tools instead of Claude-only preview tools. Resolve this skill directory explicitly instead of relying on `CLAUDE_SKILL_DIR`; keep logs and downloaded verification artifacts in the current chat's scratch directory. Monitor CI with one bounded local process and a log, not repeated model wake-ups.
 - README and `docs/DEVELOPMENT.md` already describe every user-visible change of this release.
 - Raised requirements are in `config/compatibility.json`.
