@@ -8,9 +8,11 @@ function Get-JsonMember {
         return $null
     }
 
-    foreach ($member in $Node.Members) {
+    $object = Expand-JsonValue -Node $Node
+
+    foreach ($member in $object.Members) {
         if ($member.Key -ceq $Key) {
-            return $member.Value
+            return Expand-JsonValue -Node $member.Value
         }
     }
 

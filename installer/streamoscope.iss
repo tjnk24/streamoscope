@@ -27,6 +27,7 @@
 #define AppName "StreamoScope"
 #define AppSlug "streamoscope"
 #define AppUrl "https://github.com/tjnk24/streamoscope"
+#define SetupMutexName "streamoscope-setup"
 
 [Setup]
 AppId={{6D39D358-2386-4437-8FE3-CF5511816FD1}
@@ -53,6 +54,7 @@ WizardImageFile=images\wizard-164.png,images\wizard-246.png,images\wizard-328.pn
 WizardSmallImageFile=images\wizard-small-55.png,images\wizard-small-83.png,images\wizard-small-110.png
 UninstallDisplayIcon={app}\streamoscope.ico
 CloseApplications=no
+SetupMutex={#SetupMutexName}
 UninstallDisplayName={#AppName}{#BuildSuffix}
 VersionInfoVersion={#AppVersion}
 VersionInfoProductName={#AppName}
@@ -107,15 +109,25 @@ Source: "ConfigureObs\*.ps1"; DestDir: "{app}\ConfigureObs"; Flags: ignoreversio
 Source: "{#MinisignPath}"; DestDir: "{app}\updater"; Flags: ignoreversion
 Source: "third-party\minisign-LICENSE.txt"; DestDir: "{app}\updater"; Flags: ignoreversion
 
+[Messages]
+en.SetupAppRunningError=StreamoScope is already being installed or removed in another window. Wait for it to finish and try again.%n%nIf you cancel, this setup closes.
+ru.SetupAppRunningError=StreamoScope уже устанавливается или удаляется в другом окне. Дождитесь окончания и повторите попытку.%n%nЕсли отменить, эта установка закроется.
+es.SetupAppRunningError=StreamoScope ya se está instalando o desinstalando en otra ventana. Espere a que termine y vuelva a intentarlo.%n%nSi cancela, este instalador se cerrará.
+de.SetupAppRunningError=StreamoScope wird bereits in einem anderen Fenster installiert oder entfernt. Warten Sie, bis der Vorgang abgeschlossen ist, und versuchen Sie es erneut.%n%nBeim Abbrechen wird dieses Setup beendet.
+ptbr.SetupAppRunningError=O StreamoScope já está sendo instalado ou removido em outra janela. Aguarde a conclusão e tente novamente.%n%nSe cancelar, este instalador será fechado.
+
 [CustomMessages]
 en.ConfiguringObs=Setting up OBS...
 en.ObsRunning=OBS is running. Close OBS and try again.%n%nIf you cancel, setup finishes without setting up OBS.
 en.SetupSkipped=OBS was not set up. Close OBS and run this setup again, or add the dock and the script by hand as described in the guide:
 en.ObsNotStarted=OBS has not been started on this computer yet. Start OBS once, close it and run this setup again.
 en.SetupFailed=OBS could not be set up automatically, and nothing was changed in it. Add the dock and the script by hand as described in the guide:
+en.SetupStopped=Setting up OBS took too long and was stopped. Run this setup again, or add the dock and the script by hand as described in the guide:
+en.ScriptSlow=Changing the OBS settings is taking longer than usual. Keep waiting?%n%nIf not, it will be stopped.
 en.WebSocketNotConfigured=Turn on the WebSocket server: Tools → WebSocket Server Settings → Enable WebSocket server.
 en.FinishedHowTo=Start OBS and open Docks → StreamoScope. On first start the dock asks for the WebSocket password: Tools → WebSocket Server Settings → Show Connect Info.
 en.UninstallObsRunning=OBS is running. Close OBS and try again, so that the dock and the script are removed from OBS too.
+en.UninstallSetupRunning=StreamoScope setup is running. Wait for it to finish and try again.
 en.UninstallFilesOnly=Delete only the files and leave the dock and the script in the OBS settings?
 en.UninstallFailed=The dock and the script could not be removed from OBS automatically. Remove the dock in Docks and the script in Tools → Scripts.
 en.Details=Details:
@@ -125,9 +137,12 @@ ru.ObsRunning=OBS запущен. Закройте OBS и повторите п�
 ru.SetupSkipped=OBS не настроен. Закройте OBS и запустите установку ещё раз или добавьте панель и скрипт вручную по инструкции:
 ru.ObsNotStarted=OBS на этом компьютере ещё ни разу не запускался. Запустите OBS один раз, закройте его и запустите установку ещё раз.
 ru.SetupFailed=Не удалось настроить OBS автоматически, в нём ничего не изменено. Добавьте панель и скрипт вручную по инструкции:
+ru.SetupStopped=Настройка OBS шла слишком долго и была прервана. Запустите установку ещё раз или добавьте панель и скрипт вручную по инструкции:
+ru.ScriptSlow=Изменение настроек OBS идёт дольше обычного. Подождать ещё?%n%nЕсли нет, оно будет прервано.
 ru.WebSocketNotConfigured=Включите сервер WebSocket: Сервис → Настройки сервера WebSocket → Включить сервер WebSocket.
 ru.FinishedHowTo=Запустите OBS и откройте Док-панели → StreamoScope. При первом запуске панель попросит пароль WebSocket: Сервис → Настройки сервера WebSocket → Показать сведения о подключении.
 ru.UninstallObsRunning=OBS запущен. Закройте OBS и повторите попытку, чтобы панель и скрипт убрались и из OBS.
+ru.UninstallSetupRunning=Идёт установка StreamoScope. Дождитесь её окончания и повторите попытку.
 ru.UninstallFilesOnly=Удалить только файлы, а панель и скрипт оставить в настройках OBS?
 ru.UninstallFailed=Не удалось убрать панель и скрипт из OBS автоматически. Удалите панель в меню Док-панели, а скрипт — в Сервис → Скрипты.
 ru.Details=Подробности:
@@ -137,9 +152,12 @@ es.ObsRunning=OBS está abierto. Cierre OBS y vuelva a intentarlo.%n%nSi cancela
 es.SetupSkipped=OBS no se ha configurado. Cierre OBS y vuelva a ejecutar el instalador, o añada el panel y el script a mano según la guía:
 es.ObsNotStarted=OBS aún no se ha abierto en este equipo. Abra OBS una vez, ciérrelo y vuelva a ejecutar el instalador.
 es.SetupFailed=No se pudo configurar OBS automáticamente y no se ha cambiado nada en él. Añada el panel y el script a mano según la guía:
+es.SetupStopped=La configuración de OBS tardó demasiado y se detuvo. Vuelva a ejecutar el instalador, o añada el panel y el script a mano según la guía:
+es.ScriptSlow=La modificación de la configuración de OBS está tardando más de lo habitual. ¿Seguir esperando?%n%nSi no, se detendrá.
 es.WebSocketNotConfigured=Active el servidor WebSocket: Herramientas → Ajustes del servidor WebSocket → Habilitar servidor WebSocket.
 es.FinishedHowTo=Abra OBS y elija Paneles → StreamoScope. La primera vez el panel pedirá la contraseña de WebSocket: Herramientas → Ajustes del servidor WebSocket → Mostrar información de conexión.
 es.UninstallObsRunning=OBS está abierto. Cierre OBS y vuelva a intentarlo para quitar también el panel y el script de OBS.
+es.UninstallSetupRunning=La instalación de StreamoScope está en curso. Espere a que termine y vuelva a intentarlo.
 es.UninstallFilesOnly=¿Eliminar solo los archivos y dejar el panel y el script en la configuración de OBS?
 es.UninstallFailed=No se pudieron quitar el panel y el script de OBS automáticamente. Quite el panel en Paneles y el script en Herramientas → Scripts.
 es.Details=Detalles:
@@ -149,9 +167,12 @@ de.ObsRunning=OBS ist geöffnet. Schließen Sie OBS und versuchen Sie es erneut.
 de.SetupSkipped=OBS wurde nicht eingerichtet. Schließen Sie OBS und starten Sie das Setup erneut, oder fügen Sie Dock und Skript laut Anleitung von Hand hinzu:
 de.ObsNotStarted=OBS wurde auf diesem Computer noch nie gestartet. Starten Sie OBS einmal, schließen Sie es und starten Sie das Setup erneut.
 de.SetupFailed=OBS konnte nicht automatisch eingerichtet werden, es wurde nichts daran geändert. Fügen Sie Dock und Skript laut Anleitung von Hand hinzu:
+de.SetupStopped=Die Einrichtung von OBS hat zu lange gedauert und wurde abgebrochen. Starten Sie das Setup erneut, oder fügen Sie Dock und Skript laut Anleitung von Hand hinzu:
+de.ScriptSlow=Das Ändern der OBS-Einstellungen dauert länger als üblich. Weiter warten?%n%nAndernfalls wird es abgebrochen.
 de.WebSocketNotConfigured=Aktivieren Sie den WebSocket-Server: Werkzeuge → WebSocket-Servereinstellungen → WebSocket-Server aktivieren.
 de.FinishedHowTo=Starten Sie OBS und öffnen Sie Docks → StreamoScope. Beim ersten Start fragt das Dock nach dem WebSocket-Passwort: Werkzeuge → WebSocket-Servereinstellungen → Verbindungsinformationen anzeigen.
 de.UninstallObsRunning=OBS ist geöffnet. Schließen Sie OBS und versuchen Sie es erneut, damit Dock und Skript auch aus OBS entfernt werden.
+de.UninstallSetupRunning=Das Setup von StreamoScope läuft gerade. Warten Sie, bis es abgeschlossen ist, und versuchen Sie es erneut.
 de.UninstallFilesOnly=Nur die Dateien löschen und Dock und Skript in den OBS-Einstellungen lassen?
 de.UninstallFailed=Dock und Skript konnten nicht automatisch aus OBS entfernt werden. Entfernen Sie das Dock unter Docks und das Skript unter Werkzeuge → Skripte.
 de.Details=Details:
@@ -161,9 +182,12 @@ ptbr.ObsRunning=O OBS está aberto. Feche o OBS e tente novamente.%n%nSe cancela
 ptbr.SetupSkipped=O OBS não foi configurado. Feche o OBS e execute o instalador novamente, ou adicione o painel e o script manualmente seguindo o guia:
 ptbr.ObsNotStarted=O OBS ainda não foi aberto neste computador. Abra o OBS uma vez, feche-o e execute o instalador novamente.
 ptbr.SetupFailed=Não foi possível configurar o OBS automaticamente e nada foi alterado nele. Adicione o painel e o script manualmente seguindo o guia:
+ptbr.SetupStopped=A configuração do OBS demorou demais e foi interrompida. Execute o instalador novamente, ou adicione o painel e o script manualmente seguindo o guia:
+ptbr.ScriptSlow=A alteração das configurações do OBS está demorando mais do que o normal. Continuar esperando?%n%nSe não, ela será interrompida.
 ptbr.WebSocketNotConfigured=Ative o servidor WebSocket: Ferramentas → Configurações do servidor WebSocket → Ativar servidor WebSocket.
 ptbr.FinishedHowTo=Abra o OBS e escolha Painéis → StreamoScope. Na primeira vez o painel pedirá a senha do WebSocket: Ferramentas → Configurações do servidor WebSocket → Mostrar informações da conexão.
 ptbr.UninstallObsRunning=O OBS está aberto. Feche o OBS e tente novamente para remover também o painel e o script do OBS.
+ptbr.UninstallSetupRunning=A instalação do StreamoScope está em andamento. Aguarde a conclusão e tente novamente.
 ptbr.UninstallFilesOnly=Excluir apenas os arquivos e deixar o painel e o script nas configurações do OBS?
 ptbr.UninstallFailed=Não foi possível remover o painel e o script do OBS automaticamente. Remova o painel em Painéis e o script em Ferramentas → Scripts.
 ptbr.Details=Detalhes:
@@ -175,11 +199,94 @@ const
   ResultObsRunning = 2;
   ResultObsConfigNotFound = 3;
   ResultSuccessWithoutWebSocket = 10;
+  ResultStopped = -1;
   GuideUrl = '{#AppUrl}#readme';
+  SlowScriptMilliseconds = 180000;
+  WaitStepMilliseconds = 50;
+  TerminateWaitMilliseconds = 5000;
+  StartupInfoSize = 68;
+  StartupUseShowWindow = $1;
+  CreateNoWindow = $8000000;
+  WaitObjectSignaled = 0;
+  WaitTimedOut = 258;
+  PeekMessageRemove = $1;
+
+type
+  TStartupInfo = record
+    Size: Longword;
+    Reserved: Longword;
+    Desktop: Longword;
+    Title: Longword;
+    Left: Longword;
+    Top: Longword;
+    Width: Longword;
+    Height: Longword;
+    ConsoleColumns: Longword;
+    ConsoleRows: Longword;
+    FillAttribute: Longword;
+    Flags: Longword;
+    ShowCommand: Word;
+    ReservedSize: Word;
+    ReservedData: Longword;
+    StandardInput: Longword;
+    StandardOutput: Longword;
+    StandardError: Longword;
+  end;
+
+  TProcessInformation = record
+    ProcessHandle: Longword;
+    ThreadHandle: Longword;
+    ProcessId: Longword;
+    ThreadId: Longword;
+  end;
+
+  TWindowMessage = record
+    Window: Longword;
+    MessageId: Longword;
+    WordParameter: Longword;
+    LongParameter: Longword;
+    MessageTime: Longword;
+    CursorX: Longword;
+    CursorY: Longword;
+    ReservedData: Longword;
+  end;
 
 var
   ObsSetupNote: String;
   ShouldRemoveFromObs: Boolean;
+
+function CreateProcess(ApplicationName, CommandLine: String; ProcessAttributes, ThreadAttributes: Longword; InheritHandles: BOOL; CreationFlags, Environment: Longword; CurrentDirectory: String; var StartupInfo: TStartupInfo; var ProcessInformation: TProcessInformation): BOOL;
+  external 'CreateProcessW@kernel32.dll stdcall';
+
+function WaitForSingleObject(Handle, Milliseconds: Longword): Longword;
+  external 'WaitForSingleObject@kernel32.dll stdcall';
+
+function GetExitCodeProcess(ProcessHandle: Longword; var ExitCode: Longword): BOOL;
+  external 'GetExitCodeProcess@kernel32.dll stdcall';
+
+function TerminateProcess(ProcessHandle, ExitCode: Longword): BOOL;
+  external 'TerminateProcess@kernel32.dll stdcall';
+
+function CloseHandle(Handle: Longword): BOOL;
+  external 'CloseHandle@kernel32.dll stdcall';
+
+function Wow64DisableWow64FsRedirection(var RedirectionState: Longword): BOOL;
+  external 'Wow64DisableWow64FsRedirection@kernel32.dll stdcall';
+
+function Wow64RevertWow64FsRedirection(RedirectionState: Longword): BOOL;
+  external 'Wow64RevertWow64FsRedirection@kernel32.dll stdcall';
+
+function GetTickCount: Longword;
+  external 'GetTickCount@kernel32.dll stdcall';
+
+function PeekMessage(var WindowMessage: TWindowMessage; Window, FirstMessage, LastMessage, RemoveFlags: Longword): BOOL;
+  external 'PeekMessageW@user32.dll stdcall';
+
+function TranslateMessage(var WindowMessage: TWindowMessage): BOOL;
+  external 'TranslateMessage@user32.dll stdcall';
+
+function DispatchMessage(var WindowMessage: TWindowMessage): Longword;
+  external 'DispatchMessageW@user32.dll stdcall';
 
 function GetLogPath: String;
 begin
@@ -230,20 +337,91 @@ begin
     Result := ExpandConstant('{app}\configure-obs.ps1');
 end;
 
+procedure ProcessWindowMessages;
+var
+  WindowMessage: TWindowMessage;
+begin
+  while PeekMessage(WindowMessage, 0, 0, 0, PeekMessageRemove) do
+  begin
+    TranslateMessage(WindowMessage);
+    DispatchMessage(WindowMessage);
+  end;
+end;
+
+function WaitForScript(ProcessHandle: Longword): Integer;
+var
+  WaitStart: Longword;
+  ExitCode: Longword;
+begin
+  WaitStart := GetTickCount;
+
+  while WaitForSingleObject(ProcessHandle, WaitStepMilliseconds) = WaitTimedOut do
+  begin
+    ProcessWindowMessages;
+
+    if GetTickCount - WaitStart < SlowScriptMilliseconds then
+      Continue;
+
+    Log('The script is still running after ' + IntToStr((GetTickCount - WaitStart) div 1000) + ' s');
+
+    if SuppressibleMsgBox(CustomMessage('ScriptSlow'), mbConfirmation, MB_YESNO, IDNO) = IDYES then
+      WaitStart := GetTickCount
+    else if WaitForSingleObject(ProcessHandle, 0) = WaitTimedOut then
+    begin
+      TerminateProcess(ProcessHandle, ResultFailed);
+      WaitForSingleObject(ProcessHandle, TerminateWaitMilliseconds);
+      Log('The script was stopped');
+      Result := ResultStopped;
+      Exit;
+    end;
+  end;
+
+  if GetExitCodeProcess(ProcessHandle, ExitCode) then
+    Result := ExitCode
+  else
+    Result := ResultFailed;
+end;
+
 function RunConfigureObs(const Mode: String): Integer;
 var
   ScriptPath: String;
-  ResultCode: Integer;
+  PowerShellPath: String;
+  CommandLine: String;
+  StartupInfo: TStartupInfo;
+  ProcessInformation: TProcessInformation;
+  RedirectionState: Longword;
+  IsRedirectionDisabled: Boolean;
+  IsStarted: Boolean;
 begin
   ScriptPath := GetConfigureObsPath;
+  PowerShellPath := ExpandConstant('{sys}\WindowsPowerShell\v1.0\powershell.exe');
+  CommandLine := '"' + PowerShellPath + '" -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "' + ScriptPath + '" -Mode ' + Mode + ' -InstallDirectory "' + ExpandConstant('{app}') + '"';
+  StartupInfo.Size := StartupInfoSize;
+  StartupInfo.Flags := StartupUseShowWindow;
+  StartupInfo.ShowCommand := SW_HIDE;
+  Log('Starting ' + ScriptPath + ' -Mode ' + Mode);
 
-  if not Exec(ExpandConstant('{sys}\WindowsPowerShell\v1.0\powershell.exe'),
-    '-NoProfile -NonInteractive -ExecutionPolicy Bypass -File "' + ScriptPath + '" -Mode ' + Mode + ' -InstallDirectory "' + ExpandConstant('{app}') + '"',
-    ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, ResultCode) then
-    ResultCode := ResultFailed;
+  IsRedirectionDisabled := Wow64DisableWow64FsRedirection(RedirectionState);
 
-  Log(ScriptPath + ' -Mode ' + Mode + ' exit code: ' + IntToStr(ResultCode));
-  Result := ResultCode;
+  try
+    IsStarted := CreateProcess(PowerShellPath, CommandLine, 0, 0, False, CreateNoWindow, 0, ExpandConstant('{app}'), StartupInfo, ProcessInformation);
+  finally
+    if IsRedirectionDisabled then
+      Wow64RevertWow64FsRedirection(RedirectionState);
+  end;
+
+  if IsStarted then
+  begin
+    CloseHandle(ProcessInformation.ThreadHandle);
+    Result := WaitForScript(ProcessInformation.ProcessHandle);
+    CloseHandle(ProcessInformation.ProcessHandle);
+  end else
+  begin
+    Log('PowerShell did not start: ' + SysErrorMessage(DLLGetLastError));
+    Result := ResultFailed;
+  end;
+
+  Log(ScriptPath + ' -Mode ' + Mode + ' exit code: ' + IntToStr(Result));
 end;
 
 procedure ConfigureObs;
@@ -271,6 +449,8 @@ begin
       ObsSetupNote := CustomMessage('SetupSkipped') + #13#10 + GuideUrl;
     ResultObsConfigNotFound:
       ObsSetupNote := CustomMessage('ObsNotStarted');
+    ResultStopped:
+      ObsSetupNote := CustomMessage('SetupStopped') + #13#10 + GuideUrl + #13#10#13#10 + CustomMessage('Details') + ' ' + GetLogPath;
   else
     ObsSetupNote := CustomMessage('SetupFailed') + #13#10 + GuideUrl + #13#10#13#10 + CustomMessage('Details') + ' ' + GetLogPath;
   end;
@@ -310,6 +490,15 @@ function InitializeUninstall: Boolean;
 begin
   Result := True;
   ShouldRemoveFromObs := True;
+
+  while CheckForMutexes('{#SetupMutexName}') do
+    if SuppressibleMsgBox(CustomMessage('UninstallSetupRunning'), mbError, MB_RETRYCANCEL, IDCANCEL) <> IDRETRY then
+    begin
+      Result := False;
+      Exit;
+    end;
+
+  CreateMutex('{#SetupMutexName}');
 
   while RunConfigureObs('Check') = ResultObsRunning do
   begin

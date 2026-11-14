@@ -35,10 +35,16 @@ Helpers: `Get-ObsFiles.ps1`, `Get-TreeHashes.ps1`, `Write-CheckResult.ps1`; the 
 3. **Install.** The user runs the setup from Explorer and says when it is done. Then `Test-LiveInstall.ps1 -ExpectedVersion <version>` and `Compare-LiveSnapshot.ps1 -SnapshotDirectory <scratchpad>\live-before-install -Expect Installed`. If the dock itself needs a look, the user opens OBS, checks it and closes OBS again.
 4. **Before uninstall.** OBS closed -> `Save-LiveSnapshot.ps1 -SnapshotDirectory <scratchpad>\live-before-uninstall`.
 5. **Uninstall, No.** The user removes StreamoScope in Windows Settings -> Apps and answers **No**. `Compare-LiveSnapshot.ps1 -SnapshotDirectory <scratchpad>\live-before-uninstall -Expect Unchanged`.
+5a. **One setup at a time** (needs an existing install, so after step 3). The user starts the setup, presses OK in the language dialog and leaves the wizard open; the language dialog comes before Inno checks `SetupMutex`, so two of them can be open at once.
+   - Starting the same setup again: the `SetupAppRunningError` box from `[Messages]` ("StreamoScope is already being installed or removed in another window..."). Cancel, the first wizard stays.
+   - Windows Settings -> Apps -> Uninstall while the wizard is open: `UninstallSetupRunning`. Cancel; `configure-obs.log` gets no `Check` line for this attempt.
+   - The user cancels the wizard. Ask for screenshots of both boxes, and give the steps one at a time: "while the wizard is open" is easy to miss.
 6. **Uninstall, Yes.** Same again, answering **Yes**. `Compare-LiveSnapshot.ps1 -SnapshotDirectory <scratchpad>\live-before-uninstall -Expect Removed`.
 7. **Back to the official version.** Ask before downloading (name, source, size): `gh release download --repo tjnk24/streamoscope --pattern "streamoscope-setup-*.exe*" --dir <scratchpad>\official`, then `minisign -V -p minisign.pub -m <setup>`. Tell the user the path; they run it from Explorer; `Test-LiveInstall.ps1 -ExpectedVersion <latest>`.
 8. **Report.** A short table: stage, failures, what failed. Every FAIL is either a bug (say which file and line of the installer is suspect) or a gap in this skill (fix the skill).
 
 ## If something went wrong
+
+If the user uninstalled with **Yes** before the install was checked and the install logged `Nothing to change`, `live-before-install` still holds the OBS files of the installed state: compare it with `-Expect Removed`, take a new snapshot and install again.
 
 OBS settings can be put back from `live-before-install\obs-studio` or `live-before-uninstall\obs-studio` only with OBS closed and after the user's yes for exactly that copy. The installer's own backups are in `%LOCALAPPDATA%\streamoscope\backups\<date>`. Leftovers of a setup that was started from Claude by mistake are in `%LOCALAPPDATA%\Packages\Claude_*\LocalCache`; remove such an install with its own uninstaller from the same environment.

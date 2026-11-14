@@ -45,7 +45,10 @@ function Get-ObsChanges {
         $collections = @(Get-ChildItem -LiteralPath $Paths.ScenesDirectory -File | Where-Object { $_.Extension -eq '.json' })
     }
 
+    Write-ConfigureLog "Scene collections: $($collections.Count)"
+
     foreach ($collection in $collections) {
+        $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
         $collectionFile = & $readFile $collection.FullName
 
         if ($Mode -eq 'Install') {
@@ -58,6 +61,8 @@ function Get-ObsChanges {
             $collectionFile.Text = $bridge.Text
             $collectionFile.Description += 'bridge script'
         }
+
+        Write-ConfigureLog "Read: $($collection.FullName) ($([math]::Ceiling($collection.Length / 1KB)) KB, $($stopwatch.ElapsedMilliseconds) ms)"
     }
 
     if ($Mode -eq 'Uninstall' -and (Test-Path -LiteralPath $Paths.ProfilesDirectory)) {

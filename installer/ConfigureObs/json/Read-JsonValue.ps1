@@ -28,55 +28,20 @@ function Read-JsonValue {
     }
 
     if ($character -eq '{' -or $character -eq '[') {
-        $isObject = $character -eq '{'
-        $closing = if ($isObject) { '}' } else { ']' }
-        $members = [System.Collections.Generic.List[object]]::new()
-        $items = [System.Collections.Generic.List[object]]::new()
-        $cursor = $Position + 1
-        $cursor += $script:JsonWhitespace.Match($Text, $cursor).Length
+        $kind = if ($character -eq '{') { 'object' } else { 'array' }
+        $container = $script:JsonContainer.Match($Text, $Position)
 
-        if ($cursor -lt $Text.Length -and $Text[$cursor] -eq $closing) {
-            return [pscustomobject]@{Kind = if ($isObject) { 'object' } else { 'array' }; Start = $Position; End = $cursor + 1; Members = $members; Items = $items}
+        if (-not $container.Success) {
+            throw "Invalid JSON $kind at position $Position"
         }
 
-        while ($true) {
-            if ($isObject) {
-                $key = Read-JsonValue -Text $Text -Position $cursor
-
-                if ($key.Kind -ne 'string') {
-                    throw "Expected a key at position $($key.Start)"
-                }
-
-                $cursor = $key.End + $script:JsonWhitespace.Match($Text, $key.End).Length
-
-                if ($cursor -ge $Text.Length -or $Text[$cursor] -ne ':') {
-                    throw "Expected ':' at position $cursor"
-                }
-
-                $value = Read-JsonValue -Text $Text -Position ($cursor + 1)
-                $members.Add([pscustomobject]@{Key = $key.Value; KeyStart = $key.Start; Value = $value})
-            } else {
-                $value = Read-JsonValue -Text $Text -Position $cursor
-                $items.Add($value)
-            }
-
-            $cursor = $value.End + $script:JsonWhitespace.Match($Text, $value.End).Length
-
-            if ($cursor -ge $Text.Length) {
-                throw "Unexpected end of JSON at position $cursor"
-            }
-
-            if ($Text[$cursor] -eq ',') {
-                $cursor += 1
-
-                continue
-            }
-
-            if ($Text[$cursor] -eq $closing) {
-                return [pscustomobject]@{Kind = if ($isObject) { 'object' } else { 'array' }; Start = $Position; End = $cursor + 1; Members = $members; Items = $items}
-            }
-
-            throw "Expected ',' or '$closing' at position $cursor"
+        return [pscustomobject]@{
+            Kind = $kind
+            Start = $Position
+            End = $Position + $container.Length
+            Document = $Text
+            Members = $null
+            Items = $null
         }
     }
 

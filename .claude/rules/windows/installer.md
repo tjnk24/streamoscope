@@ -9,7 +9,7 @@ paths:
 Как устроены установщик и настройка OBS - `docs/internals/installer.md`, читаем перед правкой этих частей.
 
 - **Без прав администратора** (`PrivilegesRequired=lowest`): ставится в `%LOCALAPPDATA%\Programs\streamoscope` без выбора папки, запись «StreamoScope» в «Приложениях» с деинсталлятором - в HKCU. `AppId` не меняем никогда: по нему новая версия ставится поверх старой.
-- **Тексты - `[CustomMessages]` на `en`, `ru`, `es`, `de`, `ptbr`** (языки самого Inno), новая строка - во все сразу.
+- **Тексты - `[CustomMessages]` на `en`, `ru`, `es`, `de`, `ptbr`** (языки самого Inno), новая строка - во все сразу. Свой текст стандартного окна Inno - в `[Messages]` с тем же префиксом языка (`ru.SetupAppRunningError`).
   - Названия меню OBS - дословно из его файлов перевода, как раздел `obs` словарей панели (в немецком OBS «Docks» не переведено).
   - Названий кнопок Windows («Повторить», «Отмена») в текстах нет: их подписывает Windows.
   - `.iss` - UTF-8 с BOM; сообщения - `SuppressibleMsgBox`, чтобы тихая установка (`/VERYSILENT /SUPPRESSMSGBOXES`) не зависала.

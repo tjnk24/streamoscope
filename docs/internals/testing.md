@@ -7,6 +7,7 @@
 | Журнал без OBS | `npm run start:dev` с включёнными моками, файл `.dev-journal/streamoscope.log` |
 | Код моста на Lua, загрузчик, заглушка, откат | `npm run test:bridge`: настоящий LuaJIT из OBS, путь с кириллицей, без самого OBS; судейство пробы загрузчиком 0.6.0 (`harness/loader_0_6_0.lua`) |
 | Настройку OBS и обновлятор | `npm run test:installer` |
+| Запуск скрипта из `[Code]` установщика | тестовый `setup` вне проекта: константы, типы, внешние функции и `ProcessWindowMessages`…`RunConfigureObs` из `streamoscope.iss`, `SlowScriptMilliseconds` - несколько секунд, `InitializeSetup` запускает свой `.ps1` с быстрым, долгим и 64-битным сценарием, пишет коды в файл и возвращает `False`; запуск с `/VERYSILENT /SUPPRESSMSGBOXES` ничего не ставит |
 | Панель в настоящем OBS, поток, обновление и откат | тестовый стенд, `npm run test:stand` |
 
 ## Тестовый стенд

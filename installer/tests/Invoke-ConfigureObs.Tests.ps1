@@ -75,6 +75,13 @@ Describe 'Invoke-ConfigureObs' {
             $docks[1].uuid | Should -Match '^[0-9a-f]{32}$'
         }
 
+        It 'logs every scene collection with its size and time under the process id' {
+            $log = Get-Content -LiteralPath (Join-Path $script:fixture.Data 'configure-obs.log') -Raw
+
+            $log | Should -Match "\[$PID\] Install from .+ \(PowerShell [\d.]+ FullLanguage, Windows [\d.]+\)"
+            $log | Should -Match "\[$PID\] Read: .+Main\.json \(\d+ KB, \d+ ms\)"
+        }
+
         It 'changes only server_enabled in config.json' {
             $path = Join-Path $script:fixture.Config 'plugin_config\obs-websocket\config.json'
 
@@ -201,6 +208,33 @@ Describe 'Invoke-ConfigureObs' {
             Get-Hashes -Directory $fixture.Config | Should -BeExactly $hashes
         }
 
+        It 'changes nothing when OBS is started during the setup' {
+            $script:obsChecks = 0
+
+            Mock Test-ObsRunning {
+                $script:obsChecks += 1
+
+                $script:obsChecks -gt 1
+            }
+
+            $fixture = New-ObsFixture -Name 'obs-30'
+            $hashes = Get-Hashes -Directory $fixture.Config
+
+            Invoke-Fixture -Fixture $fixture | Should -Be ([ConfigureObsResult]::ObsRunning)
+            Get-Hashes -Directory $fixture.Config | Should -BeExactly $hashes
+            Test-Path -LiteralPath (Join-Path $fixture.Install 'install-manifest.json') | Should -BeFalse
+        }
+
+        It 'changes nothing while another setup is still running' {
+            Mock Enter-ConfigureLock { $null }
+            $fixture = New-ObsFixture -Name 'obs-30'
+            $hashes = Get-Hashes -Directory $fixture.Config
+
+            Invoke-Fixture -Fixture $fixture | Should -Be ([ConfigureObsResult]::Failed)
+            Get-Hashes -Directory $fixture.Config | Should -BeExactly $hashes
+            Get-Content -LiteralPath (Join-Path $fixture.Data 'configure-obs.log') -Raw | Should -Match 'Another OBS setup is still running'
+        }
+
         It 'asks to start OBS once when there is no config yet' {
             $fixture = New-ObsFixture -Name $null
 
@@ -314,6 +348,20 @@ Describe 'removing program data' {
         $fixture = New-ObsFixture -Name 'obs-33'
 
         Invoke-Fixture -Fixture $fixture -Mode RemoveData | Should -Be ([ConfigureObsResult]::Success)
+    }
+}
+
+Describe 'Enter-ConfigureLock' {
+    It 'takes over the lock of a setup that was killed' {
+        & "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -NonInteractive -Command "[void][System.Threading.Mutex]::new(`$true, '$script:ConfigureLockName')"
+        $lock = Enter-ConfigureLock
+
+        try {
+            $lock | Should -Not -BeNullOrEmpty
+        } finally {
+            $lock.ReleaseMutex()
+            $lock.Dispose()
+        }
     }
 }
 

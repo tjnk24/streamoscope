@@ -17,6 +17,15 @@ Describe 'Read-JsonDocument' {
         (Get-JsonMember -Node $root -Key 'c').Value | Should -Be 'null'
     }
 
+    It 'reads nested objects and arrays only when they are asked for' {
+        $root = Read-JsonDocument -Text '{"a": {"b": [1, {"c": true}]}, "d": 2}'
+
+        $root.Members[0].Value.Members | Should -BeNullOrEmpty
+        (Get-JsonMember -Node $root -Key 'a').Members.Count | Should -Be 1
+        (Get-JsonMember -Node $root -Key 'a').Members[0].Value.Items | Should -BeNullOrEmpty
+        (Get-JsonMember -Node $root -Key 'a').Members[0].Value.End | Should -Be 28
+    }
+
     It 'unescapes unicode and slashes in strings' {
         $root = Read-JsonDocument -Text '{"name": "Caf\u00e9 \\ \/ \n"}'
 
@@ -32,7 +41,12 @@ Describe 'Read-JsonDocument' {
         @{Text = '{"a": "bad \ escape"}'},
         @{Text = '{"a": "short \u12"}'},
         @{Text = "{`"a`": `"raw`nnewline`"}"},
-        @{Text = "{`"a`": `"raw`ttab`"}"}
+        @{Text = "{`"a`": `"raw`ttab`"}"},
+        @{Text = '{"a": 1]'},
+        @{Text = '{"a": {"b": [1, 2}}'},
+        @{Text = '{"a": {"b": unknown}}'},
+        @{Text = '{"a": [{"b": "bad \ escape"}]}'},
+        @{Text = "{`"a`": [{`"b`": `"raw`nnewline`"}]}"}
     ) {
         param($Text)
 
@@ -88,6 +102,16 @@ Describe 'Add-BridgeScript' {
 
         $result.Changed | Should -BeFalse
         $result.Text | Should -BeExactly $original
+    }
+
+    It 'adds the script to a large collection within seconds and keeps every other byte' {
+        $source = '{"name": "Source", "id": "browser_source", "settings": {"url": "https://example.com/widget", "css": "body { margin: 0px auto; } \"quoted\" [brackets]", "items": [{"pos": {"x": 0.0, "y": -1.5e3}}]}, "filters": [{"name": "Color", "settings": {"opacity": 1.0}}], "hotkeys": {"libobs.mute": []}, "enabled": true, "parent": null}'
+        $original = '{"sources": [' + ((@($source) * 20000) -join ', ') + '], "modules": {"scripts-tool": []}}'
+        $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+        $result = Add-BridgeScript -CollectionText $original -ScriptPath 'C:/obs/bridge.lua'
+
+        $stopwatch.Elapsed.TotalSeconds | Should -BeLessThan 10
+        $result.Text | Should -BeExactly $original.Replace('"scripts-tool": []', '"scripts-tool": [{"path": "C:/obs/bridge.lua", "settings": {}}]')
     }
 
     It 'stores Windows paths with forward slashes and keeps Cyrillic' {

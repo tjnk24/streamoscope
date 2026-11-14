@@ -147,6 +147,7 @@ Use the dock's **gear icon** to change language, show or hide OBS statistics, re
 | Some platform names are generic | Check the Lua bridge is loaded in the active scene collection |
 | GPU stats are missing | Check the Lua bridge on Windows |
 | Installer didn't configure OBS | See `%LOCALAPPDATA%\streamoscope\configure-obs.log`; rerun with OBS closed |
+| Installer takes long at **Setting up OBS...** | It normally takes seconds, even with dozens of scene collections. After three minutes it asks whether to keep waiting; if you stop it, rerun it with OBS closed or set OBS up as in [Manual installation](#-manual--portable-installation) |
 | Dock asks to run the installer | Close OBS and run the latest `streamoscope-setup-<version>.exe` over your install; settings and the journal stay |
 
 ### 🩺 Stream problems

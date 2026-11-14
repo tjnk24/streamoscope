@@ -10,5 +10,5 @@ function Read-JsonDocument {
         throw "Unexpected text after JSON at position $($root.End)"
     }
 
-    return $root
+    return Expand-JsonValue -Node $root
 }
