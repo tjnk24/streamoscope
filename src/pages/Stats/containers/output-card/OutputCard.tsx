@@ -41,6 +41,7 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
         statusKey,
         isActive,
         isWaitingForStream,
+        isBitrateShown,
         bitrate,
         isBitrateLoading,
         graph,
@@ -94,13 +95,15 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
                 </Flex>
             )}
         >
-            {isWaitingForStream ? (
+            {isWaitingForStream && (
                 <Empty
                     className={style.empty}
                     image={Empty.PRESENTED_IMAGE_SIMPLE}
                     description={t('stats.waitingForStream')}
                 />
-            ) : (
+            )}
+
+            {!isWaitingForStream && isBitrateShown && (
                 <Flex
                     className={style.bitrateRow}
                     align="center"
@@ -127,7 +130,7 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
                 </Flex>
             )}
 
-            <StatList items={items}/>
+            {items.length > 0 && <StatList items={items}/>}
 
             {notes.map(({text, type}) => (
                 <Alert

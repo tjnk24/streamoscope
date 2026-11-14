@@ -1,3 +1,12 @@
+export enum OutputStatKeyEnum {
+    Bitrate = 'bitrate',
+    Source = 'source',
+    Timecode = 'timecode',
+    Dropped = 'dropped',
+    Recent = 'recent',
+    Congestion = 'congestion',
+}
+
 export enum GeneralStatKeyEnum {
     Fps = 'fps',
     FrameTime = 'frameTime',

@@ -3,6 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {storageService} from '__services/storageService';
 import {SettingsDto} from '__types/app/settings';
 import {LanguageEnum} from '__types/i18n/language';
+import {GeneralStatKeyEnum, OutputStatKeyEnum} from '__types/stats/statKeys';
 
 import {SETTINGS_SLICE_NAME} from './consts';
 
@@ -41,6 +42,12 @@ const slice = createSlice({
         },
         setCardOrder: (state, {payload}: PayloadAction<string[]>) => {
             state.cardOrder = payload;
+        },
+        setHiddenOutputStats: (state, {payload}: PayloadAction<OutputStatKeyEnum[]>) => {
+            state.hiddenOutputStats = payload;
+        },
+        setHiddenGeneralStats: (state, {payload}: PayloadAction<GeneralStatKeyEnum[]>) => {
+            state.hiddenGeneralStats = payload;
         },
     },
 });

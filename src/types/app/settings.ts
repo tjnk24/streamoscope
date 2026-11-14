@@ -1,6 +1,7 @@
 import type {Nullable} from 'infrastructure/common';
 
 import {LanguageEnum} from '../i18n/language';
+import {GeneralStatKeyEnum, OutputStatKeyEnum} from '../stats/statKeys';
 
 export type StoredSettingsDto = Record<string, unknown>;
 
@@ -16,6 +17,8 @@ export type SettingsDto = {
     lastUpdateCheckAt: Nullable<number>;
     lastNotifiedVersion: Nullable<string>;
     cardOrder: string[];
+    hiddenOutputStats: OutputStatKeyEnum[];
+    hiddenGeneralStats: GeneralStatKeyEnum[];
 };
 
 export type MigratedSettingsDto = {

@@ -1,0 +1,14 @@
+.statOptions {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(6, auto);
+    gap: var(--ant-margin-xs) var(--ant-margin-lg);
+}
+
+/* stylelint-disable-next-line media-feature-range-notation */
+@media (max-width: 575px) {
+    .statOptions {
+        grid-auto-flow: row;
+        grid-template-rows: none;
+    }
+}

@@ -6,11 +6,18 @@ import DisplaySettings from '../display-settings';
 import PasswordSettings from '../password-settings';
 import PortSettings from '../port-settings';
 import UpdateSettings from '../update-settings';
+import VisibilitySettings from '../visibility-settings';
 
 import {useOpenGroups} from './hooks/useOpenGroups';
 import {SettingsGroupEnum} from './types';
 
-const {Display, Updates, Diagnostics, Connection} = SettingsGroupEnum;
+const {
+    Display,
+    Visibility,
+    Updates,
+    Diagnostics,
+    Connection,
+} = SettingsGroupEnum;
 
 const Page = () => {
     const {t} = useTranslation();
@@ -22,6 +29,11 @@ const Page = () => {
             key: Display,
             label: t('settings.displayTitle'),
             children: <DisplaySettings/>,
+        },
+        {
+            key: Visibility,
+            label: t('settings.visibilityTitle'),
+            children: <VisibilitySettings/>,
         },
         {
             key: Updates,

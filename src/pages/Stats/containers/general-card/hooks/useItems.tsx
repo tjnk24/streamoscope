@@ -1,7 +1,9 @@
 import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
+import {settingsHiddenGeneralStatsSelector} from '__selectors/settingsSelectors';
 import {statsSelector} from '__selectors/statsSelectors';
+import {GeneralStatKeyEnum} from '__types/stats/statKeys';
 import {AdviceEnum} from '__types/stats/views';
 
 import LagValue from '../../../components/lag-value';
@@ -10,7 +12,6 @@ import {formatFixed} from '../../../utils/formatFixed';
 import {formatGigabytes} from '../../../utils/formatGigabytes';
 import {formatMemory} from '../../../utils/formatMemory';
 import AdviceIcon from '../../advice-icon';
-import {GeneralStatKeyEnum} from '../types';
 import {getFpsLevel} from '../utils/getFpsLevel';
 
 const {
@@ -28,12 +29,13 @@ const {
 
 const {Rendering: RenderingAdvice, Encoding: EncodingAdvice} = AdviceEnum;
 
-export const useItems = (): StatItemDto[] => {
+export const useItems = (): StatItemDto<GeneralStatKeyEnum>[] => {
     const {view: {general: view}, hardware: {gpu, systemMemory}} = useSelector(statsSelector);
+    const hiddenGeneralStats = useSelector(settingsHiddenGeneralStatsSelector);
 
     const {t} = useTranslation();
 
-    return [
+    const items: StatItemDto<GeneralStatKeyEnum>[] = [
         {
             key: Fps,
             label: t('general.fps'),
@@ -115,4 +117,6 @@ export const useItems = (): StatItemDto[] => {
             }]
             : []),
     ];
+
+    return items.filter(({key}) => !hiddenGeneralStats.includes(key));
 };

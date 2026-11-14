@@ -2,7 +2,9 @@ import {Tag} from 'antd';
 import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
+import {settingsHiddenOutputStatsSelector} from '__selectors/settingsSelectors';
 import {statsSelector} from '__selectors/statsSelectors';
+import {OutputStatKeyEnum} from '__types/stats/statKeys';
 import {AdviceEnum, HealthLevelEnum} from '__types/stats/views';
 import {StreamTargetDto} from '__types/targets';
 import {OFF_OUTPUT_VIEW, RECENT_WINDOW_SEC} from '__utils/consts';
@@ -15,7 +17,7 @@ import {formatTimecode} from '../../../utils/formatTimecode';
 import AdviceIcon from '../../advice-icon';
 import {HEALTH_TAGS, PLATFORM_MARKS} from '../consts';
 import style from '../style.module.scss';
-import {OutputCardViewDto, OutputStatKeyEnum} from '../types';
+import {OutputCardViewDto} from '../types';
 import {getTargetSource} from '../utils/getTargetSource';
 
 const {Off, Warn} = HealthLevelEnum;
@@ -23,6 +25,7 @@ const {Off, Warn} = HealthLevelEnum;
 const {Reconnecting, DroppedFrames, Congestion: CongestionAdvice} = AdviceEnum;
 
 const {
+    Bitrate,
     Source,
     Timecode,
     Dropped,
@@ -32,6 +35,7 @@ const {
 
 export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto => {
     const {view: {outputs, now}, targets} = useSelector(statsSelector);
+    const hiddenOutputStats = useSelector(settingsHiddenOutputStatsSelector);
 
     const {t} = useTranslation();
 
@@ -62,7 +66,7 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
         ? `${formatNumber(recentDropped)} (${formatPercent(recentDropped, recentTotal)})`
         : '0';
 
-    const items: StatItemDto[] = [
+    const items: StatItemDto<OutputStatKeyEnum>[] = [
         {
             key: Source,
             label: t('stats.source'),
@@ -122,7 +126,9 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
         },
     ];
 
-    const visibleItems = isWaitingForStream ? items.filter(({key}) => key === Source) : items;
+    const shownItems = items.filter(({key}) => !hiddenOutputStats.includes(key));
+
+    const visibleItems = isWaitingForStream ? shownItems.filter(({key}) => key === Source) : shownItems;
 
     return {
         title,
@@ -135,6 +141,7 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
         statusKey: isReconnecting ? 'stats.statuses.reconnecting' : `stats.statuses.${level}`,
         isActive,
         isWaitingForStream,
+        isBitrateShown: !hiddenOutputStats.includes(Bitrate),
         bitrate: isActive && kbps !== null ? Math.round(kbps) : '—',
         isBitrateLoading: isActive && kbps === null,
         graph,

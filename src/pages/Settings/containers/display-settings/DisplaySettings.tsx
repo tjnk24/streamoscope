@@ -21,7 +21,7 @@ import {getDockAddress} from './utils/getDockAddress';
 import style from './style.module.scss';
 
 const DisplaySettings = () => {
-    const {isShowGeneralCard, language, isMockEnabled, cardOrder} = useSelector(settingsSelector);
+    const {language, isMockEnabled, cardOrder} = useSelector(settingsSelector);
 
     const {t} = useTranslation();
 
@@ -49,21 +49,6 @@ const DisplaySettings = () => {
                     options={LANGUAGE_OPTIONS}
                     aria-label={t('settings.languageLabel')}
                     onChange={languageService.setLanguage}
-                />
-            </Flex>
-
-            <Flex
-                align="center"
-                justify="space-between"
-                gap={14}
-            >
-                <Typography.Text>
-                    {t('settings.generalCard')}
-                </Typography.Text>
-
-                <Switch
-                    checked={isShowGeneralCard}
-                    onChange={commonActions.settings.setIsShowGeneralCard}
                 />
             </Flex>
 

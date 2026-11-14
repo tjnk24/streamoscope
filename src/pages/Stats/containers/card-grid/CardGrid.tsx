@@ -7,12 +7,14 @@ import {
     useSensors,
 } from '@dnd-kit/core';
 import {rectSortingStrategy, SortableContext} from '@dnd-kit/sortable';
+import cn from 'classnames';
 import {useSelector} from 'react-redux';
 
 import {commonActions} from '__actions';
-import {settingsCardOrderSelector} from '__selectors/settingsSelectors';
+import {settingsCardOrderSelector, settingsHiddenOutputStatsSelector} from '__selectors/settingsSelectors';
 import {statsTargetsSelector} from '__selectors/statsSelectors';
 import {obsConnectionService} from '__services/obsConnectionService';
+import {OutputStatKeyEnum} from '__types/stats/statKeys';
 
 import {CARD_DRAG_ACCESSIBILITY, CARD_POINTER_SENSOR_OPTIONS} from '../../consts';
 import SortableCard from '../sortable-card';
@@ -25,6 +27,7 @@ import style from './style.module.scss';
 const CardGrid = () => {
     const targets = useSelector(statsTargetsSelector);
     const cardOrder = useSelector(settingsCardOrderSelector);
+    const hiddenOutputStats = useSelector(settingsHiddenOutputStatsSelector);
 
     const pointerSensor = useSensor(PointerSensor, CARD_POINTER_SENSOR_OPTIONS);
 
@@ -33,6 +36,8 @@ const CardGrid = () => {
     const sortedTargets = sortTargets(targets, cardOrder);
 
     const cardKeys = sortedTargets.map(({key}) => key);
+
+    const isCompact = hiddenOutputStats.includes(OutputStatKeyEnum.Bitrate);
 
     const onDragEnd = ({active, over}: DragEndEvent) => {
         obsConnectionService.resumeView();
@@ -59,7 +64,7 @@ const CardGrid = () => {
                 items={cardKeys}
                 strategy={rectSortingStrategy}
             >
-                <div className={style.cards}>
+                <div className={cn(style.cards, {[style.compact]: isCompact})}>
                     {sortedTargets.map(target => (
                         <SortableCard
                             key={target.key}

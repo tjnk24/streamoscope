@@ -3,18 +3,11 @@ import {StatisticProps, TagProps} from 'antd';
 import type {ParseKeys} from 'i18next';
 import type {Nullable} from 'infrastructure/common';
 
+import {OutputStatKeyEnum} from '__types/stats/statKeys';
 import {GraphPointDto} from '__types/stats/views';
 import {NoteDto, StreamTargetDto} from '__types/targets';
 
 import {StatItemDto} from '../../components/stat-list';
-
-export enum OutputStatKeyEnum {
-    Source = 'source',
-    Timecode = 'timecode',
-    Dropped = 'dropped',
-    Recent = 'recent',
-    Congestion = 'congestion',
-}
 
 export type TargetSourceDto = {
     text: string;
@@ -40,11 +33,12 @@ export type OutputCardViewDto = {
     statusKey: ParseKeys;
     isActive: boolean;
     isWaitingForStream: boolean;
+    isBitrateShown: boolean;
     bitrate: StatisticProps['value'];
     isBitrateLoading: boolean;
     graph: GraphPointDto[];
     now: number;
-    items: StatItemDto[];
+    items: StatItemDto<OutputStatKeyEnum>[];
 };
 
 interface OwnProps {

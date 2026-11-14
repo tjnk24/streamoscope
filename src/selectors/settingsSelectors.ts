@@ -12,4 +12,8 @@ export const settingsIsMockEnabledSelector = (state: BaseStore) => state.setting
 
 export const settingsCardOrderSelector = (state: BaseStore) => state.settings.cardOrder;
 
+export const settingsHiddenOutputStatsSelector = (state: BaseStore) => state.settings.hiddenOutputStats;
+
+export const settingsHiddenGeneralStatsSelector = (state: BaseStore) => state.settings.hiddenGeneralStats;
+
 export const settingsLastNotifiedVersionSelector = (state: BaseStore) => state.settings.lastNotifiedVersion;

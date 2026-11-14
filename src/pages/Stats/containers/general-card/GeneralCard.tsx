@@ -98,10 +98,12 @@ const GeneralCard = () => {
                 />
             )}
         >
-            <StatList
-                items={items}
-                column={STAT_COLUMNS}
-            />
+            {items.length > 0 && (
+                <StatList
+                    items={items}
+                    column={STAT_COLUMNS}
+                />
+            )}
 
             <Flex
                 className={style.actions}

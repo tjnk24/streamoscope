@@ -5,3 +5,8 @@
     grid-auto-rows: 1fr;
     gap: var(--ant-margin-xs);
 }
+
+.cards.compact {
+    flex: none;
+    grid-auto-rows: auto;
+}

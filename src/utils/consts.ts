@@ -54,6 +54,8 @@ export const DEFAULT_SETTINGS: SettingsDto = {
     lastNotifiedVersion: null,
     isMockEnabled: false,
     cardOrder: [],
+    hiddenOutputStats: [],
+    hiddenGeneralStats: [],
 };
 
 export const OBS_LANGUAGE_PREFIXES: ObsLanguagePrefixDto[] = [
