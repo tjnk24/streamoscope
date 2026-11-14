@@ -1,3 +1,11 @@
 .text {
     font-family: var(--ant-font-family-code);
 }
+
+.address {
+    word-break: break-all;
+
+    code {
+        font-size: var(--ant-font-size-lg);
+    }
+}

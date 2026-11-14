@@ -1,7 +1,6 @@
 import {
     Checkbox,
     Flex,
-    Switch,
     Typography,
 } from 'antd';
 import difference from 'lodash/difference';
@@ -11,6 +10,9 @@ import {useSelector} from 'react-redux';
 import {commonActions} from '__actions';
 import {settingsSelector} from '__selectors/settingsSelectors';
 import {GeneralStatKeyEnum, OutputStatKeyEnum} from '__types/stats/statKeys';
+
+import SwitchField from '../../components/switch-field';
+import {SETTINGS_BLOCK_GAP} from '../../consts';
 
 import {GENERAL_STAT_OPTIONS, OUTPUT_STAT_OPTIONS} from './consts';
 
@@ -39,23 +41,14 @@ const VisibilitySettings = () => {
 
     return (
         <Flex
-            gap={14}
+            gap={SETTINGS_BLOCK_GAP}
             vertical
         >
-            <Flex
-                align="center"
-                justify="space-between"
-                gap={14}
-            >
-                <Typography.Text>
-                    {t('settings.generalCard')}
-                </Typography.Text>
-
-                <Switch
-                    checked={isShowGeneralCard}
-                    onChange={commonActions.settings.setIsShowGeneralCard}
-                />
-            </Flex>
+            <SwitchField
+                label={t('settings.generalCard')}
+                checked={isShowGeneralCard}
+                onChange={commonActions.settings.setIsShowGeneralCard}
+            />
 
             <Flex
                 gap="14px 118px"

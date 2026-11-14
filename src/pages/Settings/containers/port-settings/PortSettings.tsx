@@ -32,7 +32,6 @@ const PortSettings = () => {
 
             <EnhancedButton
                 buttonProps={{
-                    type: 'primary',
                     htmlType: 'submit',
                     onClick: onSubmit,
                 }}

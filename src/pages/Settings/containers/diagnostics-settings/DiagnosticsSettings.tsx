@@ -2,7 +2,6 @@ import {CopyOutlined, FolderOpenOutlined} from '@ant-design/icons';
 import {
     Flex,
     Input,
-    Switch,
     Typography,
 } from 'antd';
 import {TextAreaRef} from 'antd/es/input/TextArea';
@@ -19,11 +18,16 @@ import EnhancedButton from '__components/EnhancedButton';
 import {settingsSelector} from '__selectors/settingsSelectors';
 import {updateSelector} from '__selectors/updateSelectors';
 import {journalService} from '__services/journal/journalService';
+import {obsConnectionService} from '__services/obsConnectionService';
 import {reportService} from '__services/reportService';
 import {CopyResultEnum} from '__types/CopyResultEnum';
 import {isInsideObs} from '__utils/isInsideObs';
 
+import SwitchField from '../../components/switch-field';
+import {SETTINGS_BLOCK_GAP} from '../../consts';
+
 import {JOURNAL_FOLDER_PATH} from './consts';
+import {getDockAddress} from './utils/getDockAddress';
 import {getJournalFolderBlockerKey} from './utils/getJournalFolderBlockerKey';
 
 import style from './style.module.scss';
@@ -57,77 +61,102 @@ const DiagnosticsSettings = () => {
 
     return (
         <Flex
-            gap={14}
+            gap={SETTINGS_BLOCK_GAP}
             vertical
         >
-            <Typography.Text type="secondary">
-                {t('settings.diagnosticsDescription')}
-            </Typography.Text>
+            <Flex
+                gap={14}
+                vertical
+            >
+                <Typography.Text type="secondary">
+                    {t('settings.diagnosticsDescription')}
+                </Typography.Text>
 
-            <div>
-                <EnhancedButton
-                    buttonProps={{
-                        icon: <CopyOutlined/>,
-                        onClick: onCopy,
-                    }}
-                >
-                    {copyResult ? t(`clipboard.${copyResult}`) : t('settings.copyDiagnostics')}
-                </EnhancedButton>
-            </div>
+                <div>
+                    <EnhancedButton
+                        buttonProps={{
+                            icon: <CopyOutlined/>,
+                            onClick: onCopy,
+                        }}
+                    >
+                        {copyResult ? t(`clipboard.${copyResult}`) : t('settings.copyDiagnostics')}
+                    </EnhancedButton>
+                </div>
 
-            {fallbackText && (
-                <Input.TextArea
-                    ref={textRef}
-                    className={style.text}
-                    value={fallbackText}
-                    aria-label={t('settings.diagnosticsTitle')}
-                    autoSize={{minRows: 4, maxRows: 12}}
-                    readOnly
-                />
-            )}
+                {fallbackText && (
+                    <Input.TextArea
+                        ref={textRef}
+                        className={style.text}
+                        value={fallbackText}
+                        aria-label={t('settings.diagnosticsTitle')}
+                        autoSize={{minRows: 4, maxRows: 12}}
+                        readOnly
+                    />
+                )}
+            </Flex>
 
             <Flex
-                align="center"
-                justify="space-between"
                 gap={14}
+                vertical
             >
-                <Flex vertical>
-                    <Typography.Text>
-                        {t('settings.journal')}
-                    </Typography.Text>
-
-                    <Typography.Text type="secondary">
-                        {t('settings.journalHint')}
-                    </Typography.Text>
-                </Flex>
-
-                <Switch
+                <SwitchField
+                    label={t('settings.journal')}
+                    hint={t('settings.journalHint')}
                     checked={isJournalEnabled}
                     onChange={journalService.setEnabled}
                 />
+
+                <div>
+                    <EnhancedButton
+                        buttonProps={{
+                            icon: <FolderOpenOutlined/>,
+                            disabled: folderBlockerKey !== null,
+                            onClick: journalService.openFolder,
+                        }}
+                        tooltipProps={folderBlockerKey ? {title: t(folderBlockerKey)} : undefined}
+                        withSpinner={false}
+                    >
+                        {t('settings.openJournalFolder')}
+                    </EnhancedButton>
+                </div>
+
+                <Typography.Text
+                    type="secondary"
+                    code
+                    copyable
+                >
+                    {JOURNAL_FOLDER_PATH}
+                </Typography.Text>
             </Flex>
 
-            <div>
-                <EnhancedButton
-                    buttonProps={{
-                        icon: <FolderOpenOutlined/>,
-                        disabled: folderBlockerKey !== null,
-                        onClick: journalService.openFolder,
-                    }}
-                    tooltipProps={folderBlockerKey ? {title: t(folderBlockerKey)} : undefined}
-                    withSpinner={false}
-                >
-                    {t('settings.openJournalFolder')}
-                </EnhancedButton>
-            </div>
-
-            <Typography.Text
-                type="secondary"
-                code
-                copyable
+            <Flex
+                gap={14}
+                vertical
             >
-                {JOURNAL_FOLDER_PATH}
-            </Typography.Text>
+                <Flex vertical>
+                    <Typography.Text>
+                        {t('settings.dockAddress')}
+                    </Typography.Text>
+
+                    <Typography.Text type="secondary">
+                        {t('settings.dockAddressHint')}
+                    </Typography.Text>
+                </Flex>
+
+                <Typography.Text
+                    className={style.address}
+                    code
+                    copyable
+                >
+                    {getDockAddress(window.location.href)}
+                </Typography.Text>
+            </Flex>
+
+            <SwitchField
+                label={t('settings.mockMode')}
+                checked={isMockEnabled}
+                onChange={obsConnectionService.setMockEnabled}
+            />
         </Flex>
     );
 };

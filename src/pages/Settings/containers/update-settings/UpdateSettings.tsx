@@ -2,7 +2,6 @@ import {SyncOutlined} from '@ant-design/icons';
 import {
     Flex,
     Spin,
-    Switch,
     Typography,
 } from 'antd';
 import {useTranslation} from 'react-i18next';
@@ -10,6 +9,9 @@ import {useTranslation} from 'react-i18next';
 import EnhancedButton from '__components/EnhancedButton';
 import {releaseNotesService} from '__services/releaseNotesService';
 import {updateService} from '__services/updateService';
+
+import SwitchField from '../../components/switch-field';
+import {SETTINGS_BLOCK_GAP} from '../../consts';
 
 import {useUpdateSettingsView} from './hooks/useUpdateSettingsView';
 
@@ -35,7 +37,7 @@ const UpdateSettings = () => {
 
     return (
         <Flex
-            gap={14}
+            gap={SETTINGS_BLOCK_GAP}
             vertical
         >
             <Flex vertical>
@@ -94,117 +96,108 @@ const UpdateSettings = () => {
             )}
 
             <Flex
-                align="center"
                 gap={14}
-                wrap
+                vertical
             >
-                <EnhancedButton
-                    buttonProps={{
-                        icon: <SyncOutlined/>,
-                        onClick: () => updateService.checkForUpdates(),
-                    }}
-                >
-                    {t('settings.checkUpdates')}
-                </EnhancedButton>
-
-                {checkText && (
-                    <Typography.Text type={isCheckFailed ? 'danger' : 'secondary'}>
-                        {checkText}
-                    </Typography.Text>
-                )}
-
-                {isUpdateShown && latestReleaseUrl !== null && (
-                    <>
-                        {isManual
-                            ? (
-                                <EnhancedButton
-                                    buttonProps={{
-                                        type: 'primary',
-                                        size: 'small',
-                                        onClick: () => updateService.openReleasePage(latestReleaseUrl),
-                                    }}
-                                    withSpinner={false}
-                                >
-                                    {t('update.download')}
-                                </EnhancedButton>
-                            )
-                            : (
-                                <EnhancedButton
-                                    buttonProps={{
-                                        type: 'primary',
-                                        size: 'small',
-                                        onClick: updateService.install,
-                                    }}
-                                    withSpinner={false}
-                                >
-                                    {updateText}
-                                </EnhancedButton>
-                            )}
-
-                        {!isManual && (
-                            <EnhancedButton
-                                buttonProps={{
-                                    type: 'link',
-                                    size: 'small',
-                                    onClick: () => releaseNotesService.openNewer(latestReleaseUrl),
-                                }}
-                                withSpinner={false}
-                            >
-                                {t('update.whatsNew')}
-                            </EnhancedButton>
-                        )}
-                    </>
-                )}
-            </Flex>
-
-            {statusText && (
                 <Flex
                     align="center"
                     gap={14}
+                    wrap
                 >
-                    {isStatusRunning && <Spin size="small"/>}
+                    <EnhancedButton
+                        buttonProps={{
+                            icon: <SyncOutlined/>,
+                            onClick: () => updateService.checkForUpdates(),
+                        }}
+                    >
+                        {t('settings.checkUpdates')}
+                    </EnhancedButton>
 
-                    <Typography.Text type="secondary">
-                        {statusText}
-                    </Typography.Text>
+                    {checkText && (
+                        <Typography.Text type={isCheckFailed ? 'danger' : 'secondary'}>
+                            {checkText}
+                        </Typography.Text>
+                    )}
+
+                    {isUpdateShown && latestReleaseUrl !== null && (
+                        <>
+                            {isManual
+                                ? (
+                                    <EnhancedButton
+                                        buttonProps={{
+                                            type: 'primary',
+                                            size: 'small',
+                                            onClick: () => updateService.openReleasePage(latestReleaseUrl),
+                                        }}
+                                        withSpinner={false}
+                                    >
+                                        {t('update.download')}
+                                    </EnhancedButton>
+                                )
+                                : (
+                                    <EnhancedButton
+                                        buttonProps={{
+                                            type: 'primary',
+                                            size: 'small',
+                                            onClick: updateService.install,
+                                        }}
+                                        withSpinner={false}
+                                    >
+                                        {updateText}
+                                    </EnhancedButton>
+                                )}
+
+                            {!isManual && (
+                                <EnhancedButton
+                                    buttonProps={{
+                                        type: 'link',
+                                        size: 'small',
+                                        onClick: () => releaseNotesService.openNewer(latestReleaseUrl),
+                                    }}
+                                    withSpinner={false}
+                                >
+                                    {t('update.whatsNew')}
+                                </EnhancedButton>
+                            )}
+                        </>
+                    )}
                 </Flex>
-            )}
 
-            {errorText && (
-                <Typography.Text type="danger">
-                    {errorText}
-                </Typography.Text>
-            )}
+                {statusText && (
+                    <Flex
+                        align="center"
+                        gap={14}
+                    >
+                        {isStatusRunning && <Spin size="small"/>}
 
-            {notes.map(note => (
-                <Typography.Text
-                    key={note}
-                    type="secondary"
-                >
-                    {note}
-                </Typography.Text>
-            ))}
+                        <Typography.Text type="secondary">
+                            {statusText}
+                        </Typography.Text>
+                    </Flex>
+                )}
 
-            <Flex
-                align="center"
-                justify="space-between"
-                gap={14}
-            >
-                <Flex vertical>
-                    <Typography.Text>
-                        {t('settings.autoUpdate')}
+                {errorText && (
+                    <Typography.Text type="danger">
+                        {errorText}
                     </Typography.Text>
+                )}
 
-                    <Typography.Text type="secondary">
-                        {t('settings.autoUpdateHint')}
+                {notes.map(note => (
+                    <Typography.Text
+                        key={note}
+                        type="secondary"
+                    >
+                        {note}
                     </Typography.Text>
-                </Flex>
-
-                <Switch
-                    checked={isAutoUpdateEnabled}
-                    onChange={updateService.setAutoUpdateEnabled}
-                />
+                ))}
             </Flex>
+
+            <SwitchField
+                label={t('settings.autoUpdate')}
+                hint={t('settings.autoUpdateHint')}
+                checked={isAutoUpdateEnabled}
+                onChange={updateService.setAutoUpdateEnabled}
+            />
         </Flex>
     );
 };

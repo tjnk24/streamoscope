@@ -60,7 +60,6 @@ const PasswordSettings = () => {
 
             <EnhancedButton
                 buttonProps={{
-                    type: 'primary',
                     htmlType: 'submit',
                     onClick: onSubmit,
                 }}

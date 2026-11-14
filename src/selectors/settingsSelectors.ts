@@ -8,6 +8,8 @@ export const settingsIsShowGeneralCardSelector = (state: BaseStore) => state.set
 
 export const settingsHasSeenGeneralCardNoticeSelector = (state: BaseStore) => state.settings.hasSeenGeneralCardNotice;
 
+export const settingsLanguageSelector = (state: BaseStore) => state.settings.language;
+
 export const settingsIsMockEnabledSelector = (state: BaseStore) => state.settings.isMockEnabled;
 
 export const settingsCardOrderSelector = (state: BaseStore) => state.settings.cardOrder;

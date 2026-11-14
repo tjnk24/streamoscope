@@ -19,5 +19,3 @@ export const LANGUAGE_OPTIONS: NonNullable<SelectProps<LanguageEnum>['options']>
     {value: PtBr, label: 'Português (Brasil)'},
     {value: Frog, label: 'Жабий'},
 ];
-
-export const DOCK_VERSION_FOLDER_PATTERN = /\/versions\/\d+\.\d+\.\d+(?=\/dock\/index\.html$)/;

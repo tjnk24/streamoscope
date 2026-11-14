@@ -64,11 +64,11 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 
 ⏳ **Cards wait for your first stream.** Plugins often introduce their streams to OBS only when they start, so until something goes live in this OBS session the dock shows one short note instead of a half-complete set of empty cards. After that, every stream OBS knows about keeps its card while offline: platform, source and place in your order, plus a short note instead of a wall of zeros. Go live again and the same card fills with stats.
 
-🧲 **Your streams, your order.** Drag a stream card by its header (the dotted handle shows up once there are two cards to sort) and the dock remembers where you put it. Until you do, the main OBS stream comes first. Changed your mind? **Restore default order** in the display settings.
+🧲 **Your streams, your order.** Drag a stream card by its header (the dotted handle shows up once there are two cards to sort) and the dock remembers where you put it. Until you do, the main OBS stream comes first. Changed your mind? Drag them back.
 
-🙈 **Not into OBS health today?** Hover over the OBS card and click the ✕ in its corner. The card waits in **Settings → What to show → OBS card (FPS, lags, CPU)**, and the first time you close it the dock offers **Restore**, in case your mouse got ahead of you.
+🙈 **Not into OBS health today?** Hover over the OBS card and click the ✕ in its corner. The card waits in **Settings → Display → OBS card (FPS, lags, CPU)**, and the first time you close it the dock offers **Restore**, in case your mouse got ahead of you.
 
-✂️ **Only the rows you read.** **Settings → What to show** has a checkbox for every row of the stream cards (the big bitrate number and its graph count as one row) and of the OBS card. Untick what you never look at and the cards shrink to match, down to a bare header with its status, if that's all you need. Rows added in future versions show up ticked.
+✂️ **Only the rows you read.** **Settings → Display** has a checkbox for every row of the stream cards (the big bitrate number and its graph count as one row) and of the OBS card. Untick what you never look at and the cards shrink to match, down to a bare header with its status, if that's all you need. Rows added in future versions show up ticked.
 
 🌍 The interface supports **English, Russian, Spanish, German and Brazilian Portuguese**.
 
@@ -135,7 +135,7 @@ The bridge tells the dock where plugin outputs are streaming, reads Windows hard
 
 ## ⚙️ Settings, privacy and troubleshooting
 
-Use the dock's **gear icon** to change language, choose which rows the cards show, show or hide OBS statistics, restore the default card order, try mock mode, check for updates and read **What's new** without leaving OBS, turn automatic updates off, turn the journal off or copy diagnostics.
+Use the dock's **gear icon** to change language, choose which rows the cards show, show or hide OBS statistics, try mock mode, check for updates and read **What's new** without leaving OBS, turn automatic updates off, turn the journal off or copy diagnostics.
 
 - To open the dock in a regular browser, copy **Dock address** from the settings and paste it there. Enter the WebSocket password again in the browser; the journal is kept only by the dock inside OBS.
 - The OBS WebSocket connection normally uses `127.0.0.1`.

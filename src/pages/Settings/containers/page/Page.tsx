@@ -1,6 +1,7 @@
 import {Collapse, Flex} from 'antd';
 import {useTranslation} from 'react-i18next';
 
+import {SETTINGS_BLOCK_GAP} from '../../consts';
 import DiagnosticsSettings from '../diagnostics-settings';
 import DisplaySettings from '../display-settings';
 import PasswordSettings from '../password-settings';
@@ -11,13 +12,9 @@ import VisibilitySettings from '../visibility-settings';
 import {useOpenGroups} from './hooks/useOpenGroups';
 import {SettingsGroupEnum} from './types';
 
-const {
-    Display,
-    Visibility,
-    Updates,
-    Diagnostics,
-    Connection,
-} = SettingsGroupEnum;
+import style from './style.module.scss';
+
+const {Display, Updates, Diagnostics, Connection} = SettingsGroupEnum;
 
 const Page = () => {
     const {t} = useTranslation();
@@ -28,12 +25,16 @@ const Page = () => {
         {
             key: Display,
             label: t('settings.displayTitle'),
-            children: <DisplaySettings/>,
-        },
-        {
-            key: Visibility,
-            label: t('settings.visibilityTitle'),
-            children: <VisibilitySettings/>,
+            children: (
+                <Flex
+                    gap={SETTINGS_BLOCK_GAP}
+                    vertical
+                >
+                    <DisplaySettings/>
+
+                    <VisibilitySettings/>
+                </Flex>
+            ),
         },
         {
             key: Updates,
@@ -50,7 +51,7 @@ const Page = () => {
             label: t('settings.connectionTitle'),
             children: (
                 <Flex
-                    gap={14}
+                    gap={SETTINGS_BLOCK_GAP}
                     vertical
                 >
                     <PortSettings/>
@@ -72,6 +73,7 @@ const Page = () => {
                     activeKey={openGroups}
                     onChange={() => toggleGroup(group.key)}
                     size="small"
+                    classNames={{body: style.body}}
                     items={[{...group, forceRender: true}]}
                 />
             ))}
