@@ -18,6 +18,9 @@
   <a href="https://github.com/tjnk24/streamoscope/issues">🐞 Report a bug</a>
 </p>
 
+> [!WARNING]
+> 🧪 **Beta.** StreamoScope runs our streams and those of a few brave early adopters, but not every rough edge has been found yet. Spotted one? [Report it](https://github.com/tjnk24/streamoscope/issues) and it gets filed down. The installer backs up every OBS file it touches, just in case.
+
 > [!NOTE]
 > 🤖 Built with a lot of help from AI. A human set the course, tested it in real OBS and argued with the robot along the way. The bugs are a joint venture.
 
