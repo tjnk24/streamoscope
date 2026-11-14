@@ -84,6 +84,7 @@ export const de: TranslationDto = {
     },
     stats: {
         waitingForStream: 'Statistiken erscheinen, sobald du auf dieser Plattform streamst.',
+        waitingForFirstStream: 'Statistiken erscheinen, sobald du deine Streams startest.',
         statuses: {
             ok: 'Live',
             warn: 'Mit Verlusten',

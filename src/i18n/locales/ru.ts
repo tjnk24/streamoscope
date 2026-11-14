@@ -84,6 +84,7 @@ export const ru: TranslationDto = {
     },
     stats: {
         waitingForStream: 'Статистика появится, когда вы запустите стрим на эту площадку.',
+        waitingForFirstStream: 'Статистика появится, как только вы запустите стримы.',
         statuses: {
             ok: 'В эфире',
             warn: 'Есть потери',

@@ -84,6 +84,7 @@ export const ptBr: TranslationDto = {
     },
     stats: {
         waitingForStream: 'As estatísticas aparecerão quando você começar a transmitir para esta plataforma.',
+        waitingForFirstStream: 'As estatísticas aparecerão assim que você começar a transmitir.',
         statuses: {
             ok: 'Ao vivo',
             warn: 'Com perdas',

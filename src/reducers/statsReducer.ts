@@ -8,10 +8,12 @@ export type StatsReducer = {
     targets: StreamTargetDto[];
     view: StatsViewDto;
     hardware: HardwareDto;
+    hasStreamStarted: boolean;
 };
 
 const initialState: StatsReducer = {
     targets: [],
+    hasStreamStarted: false,
     view: {
         outputs: {},
         general: null,
@@ -29,6 +31,9 @@ const slice = createSlice({
     reducers: {
         setTargets: (state, {payload}: PayloadAction<StreamTargetDto[]>) => {
             state.targets = payload;
+        },
+        setStreamStarted: state => {
+            state.hasStreamStarted = true;
         },
         setView: (state, {payload}: PayloadAction<StatsViewDto>) => {
             state.view = payload;

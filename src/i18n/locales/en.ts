@@ -82,6 +82,7 @@ export const en = {
     },
     stats: {
         waitingForStream: 'Statistics will appear when you start streaming to this platform.',
+        waitingForFirstStream: 'Statistics will appear as soon as you start your streams.',
         statuses: {
             ok: 'Live',
             warn: 'Losing some',

@@ -31,6 +31,7 @@ export const frog: DeepPartial<TranslationDto> = {
     },
     stats: {
         waitingForStream: 'Цифры заквакают, когда вы запустите стрим на эту кувшинку.',
+        waitingForFirstStream: 'Цифры заквакают, как только вы запустите стримы.',
         statuses: {
             ok: 'Квакает',
             warn: 'Упускает мух',

@@ -62,7 +62,7 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 
 ¹ Hardware readings come from the StreamoScope Lua bridge and are available on Windows.
 
-⏳ **Cards show up before you do.** The main OBS stream and plugin outputs OBS already knows about get their cards while still offline: platform, source and place in your order, plus a short note instead of a wall of zeros. Go live and the same card fills with stats.
+⏳ **Cards wait for your first stream.** Plugins often introduce their streams to OBS only when they start, so until something goes live in this OBS session the dock shows one short note instead of a half-complete set of empty cards. After that, every stream OBS knows about keeps its card while offline: platform, source and place in your order, plus a short note instead of a wall of zeros. Go live again and the same card fills with stats.
 
 🧲 **Your streams, your order.** Drag a stream card by its header (the dotted handle shows up once there are two cards to sort) and the dock remembers where you put it. Until you do, the main OBS stream comes first. Changed your mind? **Restore default order** in the display settings.
 
@@ -125,7 +125,7 @@ The bridge tells the dock where plugin outputs are streaming, reads Windows hard
 
 ## 🚧 Limitations
 
-- **OBS must expose the output.** Plugin-independent does not mean API-independent: if an output plugin doesn't make an output or its statistics available to OBS, StreamoScope cannot invent the missing numbers. A plugin that only creates its output when streaming starts cannot have a waiting card beforehand; the dock does not read private plugin configurations.
+- **OBS must expose the output.** Plugin-independent does not mean API-independent: if an output plugin doesn't make an output or its statistics available to OBS, StreamoScope cannot invent the missing numbers. A plugin that only creates its output when streaming starts gets its card once that stream starts; the dock does not read private plugin configurations.
 - **Output identity may be ambiguous.** If a plugin reports several streams using indistinguishable output identifiers, OBS might not provide separate statistics for each one. StreamoScope displays what can be reliably distinguished.
 - **Labels are best-effort.** Unrecognized services can appear as **Plugin** rather than a platform name.
 - **Without the bridge, only the basics.** Bitrate, dropped frames and OBS statistics still work, but plugin outputs lose their platform names, hardware readings (Windows only) disappear and updates have to be installed by hand.

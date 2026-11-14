@@ -48,6 +48,7 @@ import {isRequestOfType} from '__utils/requests/isRequestOfType';
 import {ProfileParameterQueue} from '__utils/requests/ProfileParameterQueue';
 import {StatsTracker} from '__utils/stats/StatsTracker';
 import {discoverTargets} from '__utils/targets/discoverTargets';
+import {hasStreamOutput} from '__utils/targets/hasStreamOutput';
 
 import {storageService} from './storageService';
 
@@ -399,6 +400,10 @@ class ObsConnectionService {
 
         if (discovered && !isEqual(discovered, statsSelector(getStore()).targets)) {
             commonActions.stats.setTargets(discovered);
+        }
+
+        if (!statsSelector(getStore()).hasStreamStarted && hasStreamOutput(pairs)) {
+            commonActions.stats.setStreamStarted();
         }
 
         this.updateSceneCollection(getSceneCollection(pairs));
