@@ -5,7 +5,7 @@
 ## Обновления
 
 - **`services/updateService.ts`** - одиночка, `start`/`stop` вместе с `obsConnectionService` в `preload.ts` страницы `Core`.
-- **Ставятся молча, как в Chrome** (решение пользователя): версия скачивается в фоне и работает со следующего запуска OBS, плашек нет. Фоновую установку ведут мост и обновлятор без панели, так что исправление получит и сломанная панель. Сервис нужен карточке настроек.
+- **Ставятся молча, как в Chrome** (решение пользователя): версия скачивается в фоне и работает со следующего запуска OBS, плашек нет. О самом обновлении панель говорит один раз - тостом (ниже). Фоновую установку ведут мост и обновлятор без панели, так что исправление получит и сломанная панель. Сервис нужен карточке настроек.
 - **Проверка**: при `settings.isAutoUpdateEnabled` (по умолчанию да) - при запуске панели и раз в сутки (таймер раз в час смотрит `settings.lastUpdateCheckAt`); она же показывает новую версию для ручной установки. Выключено - в GitHub ходит только ручной `checkForUpdates`.
   - Последний выпуск - `releasesApi.getLatest()` (`api/github/ReleasesApi`), разбирает сервис (`parseRelease`). 404 (выпусков нет) - «новых версий нет», транспорт пишет его в журнал как неудачный запрос.
   - Время проверки пишется только при удачной проверке.
@@ -20,11 +20,15 @@
 
 ## «Что нового»
 
-- **Обе ссылки «Что нового»** (у текущей версии и у «Обновить») открывают модалку по центру `update-settings` -> `release-notes-modal` (решение пользователя: заметки внутри панели). Слайс модалки - `releaseNotesModal` (`{isVisible, mode, url}`), нажатие пишет в журнал `opened the release notes <mode>`.
-- **Загрузка - по схеме из `data.md`**: `onLoad` в `preload.ts` модалки при каждом открытии зовёт `releaseNotesService.handleRequest` -> `releaseNotesLoader({per_page: 30})` (`createLoader` над `ReleaseNotesApi.getList`, `GITHUB_ROUTES.RELEASES.INDEX`) -> слайс запроса `releaseNotes` с ответом GitHub как есть; `onDispose` сбрасывает слайс. Запрос один - 30 последних выпусков.
-- **Разбор - `parsedReleaseNotesSelector`** (`selectors/releaseNotesSelectors.ts`): `parseRelease`, без черновиков, предвыпусков и тегов без версии. Неудачный запрос пишет в журнал общий транспорт.
+- **Модалку открывают три ссылки «Что нового»**: у текущей версии и у «Обновить» в `update-settings` и в тосте после обновления (решение пользователя: заметки внутри панели). Всё общее (решение пользователя: понадобилось нескольким местам - в общие папки): компонент `src/components/ReleaseNotesModal` рисует `MainLayout`, пока `isVisible`; слайс `releaseNotesModal` (`{isVisible, mode, url}`) - в `commonSlices`, тип режима - `__types/update/ReleaseNotesModeEnum`. Открывает `releaseNotesService.openCurrent()` (адрес выпуска текущей версии) или `openNewer(url)`, оба пишут в журнал `opened the release notes <mode>`.
+- **Тост «StreamoScope обновлён до X»** (`main-layout/hooks/useUpdatedToast`, решение пользователя): `message` из `App.useApp()` вверху экрана, `success`, 8 с, ссылка «Что нового?» закрывает тост и открывает заметки текущей версии.
+  - Показывается, когда панель подключилась к OBS и `settings.lastNotifiedVersion` не равна `APP_VERSION`; сразу пишет туда текущую версию, так что для версии тост один, и после перезапуска тоже.
+  - Новая установка тоста не видит: `updateService.start()` до первой проверки записывает текущую версию, если `lastNotifiedVersion` и `lastUpdateCheckAt` пустые. Поле пустое, а проверки уже были - обновление с версии до тоста (0.8.x), тост покажется.
+  - Версию настроек не поднимаем: новое поле со значением по умолчанию миграции не требует, а новая версия настроек при автооткате выбросила бы их у старой панели целиком.
+- **Загрузка - по схеме из `data.md`**: `onLoad` в `preload.ts` модалки при каждом открытии зовёт `releaseNotesService.handleRequest` -> `releaseNotesLoader({per_page: 30})` (`src/loaders`, `createLoader` над `ReleaseNotesApi.getList` из `src/api/github`, `GITHUB_ROUTES.RELEASES.INDEX`) -> общий слайс запроса `releaseNotes` с ответом GitHub как есть; `onDispose` сбрасывает слайс. Запрос один - 30 последних выпусков.
+- **Разбор - `parsedReleaseNotesSelector`** (`src/selectors/releaseNotesSelectors.ts`): `parseRelease`, без черновиков, предвыпусков и тегов без версии. Неудачный запрос пишет в журнал общий транспорт.
 - **`filterReleaseNotes`**: у ссылки текущей версии - её заметки, у «Обновить» - все версии новее установленной, новая сверху (фоновое обновление ставит сразу последнюю, промежуточные иначе прошли бы мимо).
-- **Язык - `getNotesForLanguage`**: после `---` русская часть для русского и жабьего, иначе английская. Markdown рисует `markdown-to-jsx` без сырого HTML, ссылки внутри - через `openReleasePage` (`notes-link`).
+- **Язык - `getNotesForLanguage`**: после `---` русская часть для русского и жабьего, иначе английская. Markdown рисует `markdown-to-jsx` без сырого HTML, ссылки внутри - через `openReleasePage` (`src/components/NotesLink`).
 - **Состояния**: пока идёт - `Skeleton`, ошибка - короткое сообщение, удачно без заметок - «заметок пока нет» (`releaseNotesIsPendingSelector`, `releaseNotesIsFailedSelector`, `releaseNotesIsSuccessSelector`). «Открыть на GitHub» - всегда в подвале, `url` - от нажатой ссылки. «Скачать вручную» ведёт на GitHub.
 
 ## Плашка моста и смена коллекции сцен

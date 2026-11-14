@@ -14,6 +14,7 @@ export type SettingsDto = {
     isAutoUpdateEnabled: boolean;
     isJournalEnabled: boolean;
     lastUpdateCheckAt: Nullable<number>;
+    lastNotifiedVersion: Nullable<string>;
     cardOrder: string[];
 };
 

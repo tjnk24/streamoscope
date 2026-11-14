@@ -11,8 +11,10 @@ import {Outlet, useMatch} from 'react-router';
 
 import EnhancedButton from '__components/EnhancedButton';
 import EnhancedText from '__components/EnhancedText';
+import ReleaseNotesModal from '__components/ReleaseNotesModal';
 import {ROUTES} from '__routes/app';
 import {connectionIsSwitchingCollectionSelector, connectionStatusSelector} from '__selectors/connectionSelectors';
+import {releaseNotesModalSelector} from '__selectors/releaseNotesModalSelectors';
 import {settingsIsMockEnabledSelector} from '__selectors/settingsSelectors';
 import {obsConnectionService} from '__services/obsConnectionService';
 import {routerManager} from '__services/routerManager';
@@ -21,6 +23,7 @@ import BridgeNotice from '../bridge-notice';
 
 import {CONNECTION_BADGES} from './consts';
 import {useHeaderStageView} from './hooks/useHeaderStageView';
+import {useUpdatedToast} from './hooks/useUpdatedToast';
 
 import style from './style.module.scss';
 
@@ -28,10 +31,13 @@ const MainLayout = () => {
     const status = useSelector(connectionStatusSelector);
     const isMockEnabled = useSelector(settingsIsMockEnabledSelector);
     const isSwitchingCollection = useSelector(connectionIsSwitchingCollectionSelector);
+    const {isVisible: isReleaseNotesVisible} = useSelector(releaseNotesModalSelector);
 
     const {t} = useTranslation();
 
     const {stageKey} = useHeaderStageView();
+
+    useUpdatedToast();
 
     const isSettingsPage = Boolean(useMatch(ROUTES.SETTINGS.INDEX));
 
@@ -122,6 +128,8 @@ const MainLayout = () => {
             >
                 <Outlet/>
             </Flex>
+
+            {isReleaseNotesVisible && <ReleaseNotesModal/>}
         </Flex>
     );
 };

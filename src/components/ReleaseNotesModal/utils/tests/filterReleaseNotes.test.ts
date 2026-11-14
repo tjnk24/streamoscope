@@ -4,7 +4,8 @@ import {
     it,
 } from 'vitest';
 
-import {ReleaseNotesModeEnum} from '../../../../types';
+import {ReleaseNotesModeEnum} from '__types/update/ReleaseNotesModeEnum';
+
 import {filterReleaseNotes} from '../filterReleaseNotes';
 
 import {RELEASES} from './consts';

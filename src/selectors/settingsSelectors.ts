@@ -11,3 +11,5 @@ export const settingsHasSeenGeneralCardNoticeSelector = (state: BaseStore) => st
 export const settingsIsMockEnabledSelector = (state: BaseStore) => state.settings.isMockEnabled;
 
 export const settingsCardOrderSelector = (state: BaseStore) => state.settings.cardOrder;
+
+export const settingsLastNotifiedVersionSelector = (state: BaseStore) => state.settings.lastNotifiedVersion;

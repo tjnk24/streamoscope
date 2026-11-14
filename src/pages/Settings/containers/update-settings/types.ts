@@ -26,7 +26,6 @@ export type UpdateSettingsViewDto = {
     isUpdateShown: boolean;
     isManual: boolean;
     updateText: string;
-    currentReleaseUrl: string;
     latestReleaseUrl: Nullable<string>;
     isAutoUpdateEnabled: boolean;
     isInstallerNeeded: boolean;

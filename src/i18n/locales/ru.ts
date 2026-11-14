@@ -189,6 +189,8 @@ export const ru: TranslationDto = {
     update: {
         install: 'Обновить',
         whatsNew: 'Что нового',
+        updated: 'StreamoScope обновлён до {{version}}',
+        whatsNewQuestion: 'Что нового?',
         download: 'Скачать вручную',
         retry: 'Повторить',
         installerNeeded: 'Часть исправлений приходит только с установщиком. Запустите его один раз поверх: настройки, журнал и OBS останутся как есть.',

@@ -1,7 +1,6 @@
 import {ReleaseDto} from '__types/update/release';
+import {ReleaseNotesModeEnum} from '__types/update/ReleaseNotesModeEnum';
 import {compareVersions} from '__utils/update/compareVersions';
-
-import {ReleaseNotesModeEnum} from '../../../types';
 
 export const filterReleaseNotes = (releases: ReleaseDto[], mode: ReleaseNotesModeEnum, currentVersion: string) => (
     mode === ReleaseNotesModeEnum.Current

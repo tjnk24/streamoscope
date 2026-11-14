@@ -96,6 +96,10 @@ export const frog: DeepPartial<TranslationDto> = {
         whatToDo: 'Что квакать?',
         close: 'Квак, понятно',
     },
+    update: {
+        updated: 'StreamoScope сбросил старую кожу: теперь {{version}}',
+        whatsNewQuestion: 'Что наквакали?',
+    },
     releaseNotes: {
         titleCurrent: 'Что нового в пруду {{version}}',
         titleNewer: 'Что нового в свежих прудах',

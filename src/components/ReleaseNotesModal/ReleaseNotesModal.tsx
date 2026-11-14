@@ -8,18 +8,17 @@ import Markdown from 'markdown-to-jsx/react';
 import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
+import {commonActions} from '__actions';
 import EnhancedButton from '__components/EnhancedButton';
-import {updateService} from '__services/updateService';
-
-import {actions} from '../../actions';
-import {releaseNotesModalSelector} from '../../selectors/releaseNotesModalSelectors';
+import {releaseNotesModalSelector} from '__selectors/releaseNotesModalSelectors';
 import {
     parsedReleaseNotesSelector,
     releaseNotesIsFailedSelector,
     releaseNotesIsPendingSelector,
     releaseNotesIsSuccessSelector,
-} from '../../selectors/releaseNotesSelectors';
-import {ReleaseNotesModeEnum} from '../../types';
+} from '__selectors/releaseNotesSelectors';
+import {updateService} from '__services/updateService';
+import {ReleaseNotesModeEnum} from '__types/update/ReleaseNotesModeEnum';
 
 import {MARKDOWN_OPTIONS} from './consts';
 import {filterReleaseNotes} from './utils/filterReleaseNotes';
@@ -42,7 +41,7 @@ const ReleaseNotesModal = () => {
         ? t('releaseNotes.titleCurrent', {version: process.env.APP_VERSION})
         : t('releaseNotes.titleNewer');
 
-    const onClose = () => actions.releaseNotesModal.reset();
+    const onClose = () => commonActions.releaseNotesModal.reset();
 
     const onOpenGitHub = () => {
         url && updateService.openReleasePage(url);

@@ -17,3 +17,7 @@ export const CONNECTION_BADGES: Record<ConnectionStatusEnum, ConnectionBadgeDto>
     [WrongPassword]: {status: 'warning', textKey: 'header.needPassword'},
     [Identified]: {status: 'success', textKey: 'header.connected'},
 };
+
+export const UPDATED_TOAST_KEY = 'updated';
+
+export const UPDATED_TOAST_DURATION_SEC = 8;

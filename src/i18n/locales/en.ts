@@ -187,6 +187,8 @@ export const en = {
     update: {
         install: 'Update',
         whatsNew: 'What\'s new',
+        updated: 'StreamoScope updated to {{version}}',
+        whatsNewQuestion: 'What\'s new?',
         download: 'Download manually',
         retry: 'Try again',
         installerNeeded: 'Some fixes come only with the installer. Run it once over this installation: your settings, the journal and OBS stay as they are.',

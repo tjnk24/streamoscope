@@ -1,9 +1,9 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import type {Nullable} from 'infrastructure/common';
 
-import {ReleaseNotesModeEnum} from '../types';
+import {ReleaseNotesModeEnum} from '__types/update/ReleaseNotesModeEnum';
 
-type ReleaseNotesModalReducer = {
+export type ReleaseNotesModalReducer = {
     isVisible: boolean;
     mode: ReleaseNotesModeEnum;
     url: Nullable<string>;

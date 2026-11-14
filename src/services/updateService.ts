@@ -46,7 +46,13 @@ class UpdateService {
     start = () => {
         this.stop();
 
-        if (settingsSelector(getStore()).isAutoUpdateEnabled) {
+        const {isAutoUpdateEnabled, lastUpdateCheckAt, lastNotifiedVersion} = settingsSelector(getStore());
+
+        if (lastNotifiedVersion === null && lastUpdateCheckAt === null) {
+            commonActions.settings.setLastNotifiedVersion(process.env.APP_VERSION);
+        }
+
+        if (isAutoUpdateEnabled) {
             void this.checkForUpdates();
         }
 

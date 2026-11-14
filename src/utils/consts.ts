@@ -51,6 +51,7 @@ export const DEFAULT_SETTINGS: SettingsDto = {
     isAutoUpdateEnabled: true,
     isJournalEnabled: true,
     lastUpdateCheckAt: null,
+    lastNotifiedVersion: null,
     isMockEnabled: false,
     cardOrder: [],
 };

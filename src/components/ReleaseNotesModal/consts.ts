@@ -1,8 +1,7 @@
 import {MarkdownToJSX} from 'markdown-to-jsx/react';
 
+import NotesLink from '__components/NotesLink';
 import {LanguageEnum} from '__types/i18n/language';
-
-import NotesLink from '../notes-link';
 
 const {Ru, Frog} = LanguageEnum;
 

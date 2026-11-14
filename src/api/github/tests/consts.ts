@@ -1,4 +1,4 @@
-import {GithubReleaseDto} from '__types/update/release';
+import {GithubReleaseDto, GithubReleasesQueryDto} from '__types/update/release';
 
 export const GITHUB_RELEASE: GithubReleaseDto = {
     tag_name: 'v0.7.0',
@@ -10,3 +10,10 @@ export const GITHUB_RELEASE: GithubReleaseDto = {
 };
 
 export const LATEST_RELEASE_URL = 'https://api.github.com/repos/tjnk24/streamoscope/releases/latest';
+
+export const RELEASES_QUERY: GithubReleasesQueryDto = {
+    per_page: 5,
+    page: 2,
+};
+
+export const RELEASES_URL = 'https://api.github.com/repos/tjnk24/streamoscope/releases?per_page=5&page=2';

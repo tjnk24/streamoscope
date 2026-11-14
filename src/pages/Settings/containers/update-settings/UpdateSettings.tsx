@@ -5,27 +5,15 @@ import {
     Switch,
     Typography,
 } from 'antd';
-import type {Nullable} from 'infrastructure/common';
 import {useTranslation} from 'react-i18next';
-import {useSelector} from 'react-redux';
 
 import EnhancedButton from '__components/EnhancedButton';
-import {journalService} from '__services/journal/journalService';
+import {releaseNotesService} from '__services/releaseNotesService';
 import {updateService} from '__services/updateService';
-import {JournalLevelEnum} from '__types/journal';
-
-import {actions} from '../../actions';
-import {releaseNotesModalSelector} from '../../selectors/releaseNotesModalSelectors';
-import {ReleaseNotesModeEnum} from '../../types';
-import ReleaseNotesModal from '../release-notes-modal';
 
 import {useUpdateSettingsView} from './hooks/useUpdateSettingsView';
 
-const {Current, Newer} = ReleaseNotesModeEnum;
-
 const UpdateSettings = () => {
-    const {isVisible: isReleaseNotesVisible} = useSelector(releaseNotesModalSelector);
-
     const {t} = useTranslation();
 
     const {
@@ -39,18 +27,11 @@ const UpdateSettings = () => {
         isUpdateShown,
         isManual,
         updateText,
-        currentReleaseUrl,
         latestReleaseUrl,
         isAutoUpdateEnabled,
         isInstallerNeeded,
         installerUrl,
     } = useUpdateSettingsView();
-
-    const openReleaseNotes = (mode: ReleaseNotesModeEnum, url: Nullable<string>) => {
-        journalService.log(JournalLevelEnum.Info, 'user', `opened the release notes ${mode}`);
-
-        actions.releaseNotesModal.setData({isVisible: true, mode, url});
-    };
 
     return (
         <Flex
@@ -71,7 +52,7 @@ const UpdateSettings = () => {
                         buttonProps={{
                             type: 'link',
                             size: 'small',
-                            onClick: () => openReleaseNotes(Current, currentReleaseUrl),
+                            onClick: releaseNotesService.openCurrent,
                         }}
                         withSpinner={false}
                     >
@@ -165,7 +146,7 @@ const UpdateSettings = () => {
                                 buttonProps={{
                                     type: 'link',
                                     size: 'small',
-                                    onClick: () => openReleaseNotes(Newer, latestReleaseUrl),
+                                    onClick: () => releaseNotesService.openNewer(latestReleaseUrl),
                                 }}
                                 withSpinner={false}
                             >
@@ -224,8 +205,6 @@ const UpdateSettings = () => {
                     onChange={updateService.setAutoUpdateEnabled}
                 />
             </Flex>
-
-            {isReleaseNotesVisible && <ReleaseNotesModal/>}
         </Flex>
     );
 };

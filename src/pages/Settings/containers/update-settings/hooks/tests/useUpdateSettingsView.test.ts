@@ -73,7 +73,6 @@ describe('useUpdateSettingsView', () => {
             isUpdateShown: true,
             isManual: false,
             updateText: 'update.install',
-            currentReleaseUrl: 'https://github.com/tjnk24/streamoscope/releases/tag/v0.1.0',
             latestReleaseUrl: RELEASE.url,
             isAutoUpdateEnabled: true,
             isInstallerNeeded: false,

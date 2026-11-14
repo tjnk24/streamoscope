@@ -41,3 +41,9 @@ export const RELEASE_NOTES_STATE: RequestStateDto<GithubReleaseDto[]> = {
     data: GITHUB_RELEASES,
     error: null,
 };
+
+export const EMPTY_RELEASE_NOTES_STATE: RequestStateDto<GithubReleaseDto[]> = {
+    status: null,
+    data: null,
+    error: null,
+};

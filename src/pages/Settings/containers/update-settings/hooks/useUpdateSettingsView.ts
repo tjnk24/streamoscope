@@ -56,7 +56,6 @@ export const useUpdateSettingsView = (): UpdateSettingsViewDto => {
         isUpdateShown,
         isManual,
         updateText: t(errorKey ? 'update.retry' : 'update.install'),
-        currentReleaseUrl: `${RELEASES_PAGE_URL}/tag/v${currentVersion}`,
         latestReleaseUrl: latest?.url ?? null,
         isAutoUpdateEnabled,
         isInstallerNeeded: isInstallerNeeded(bridge),

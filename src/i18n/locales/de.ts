@@ -189,6 +189,8 @@ export const de: TranslationDto = {
     update: {
         install: 'Aktualisieren',
         whatsNew: 'Was ist neu',
+        updated: 'StreamoScope wurde auf {{version}} aktualisiert',
+        whatsNewQuestion: 'Was ist neu?',
         download: 'Manuell herunterladen',
         retry: 'Erneut versuchen',
         installerNeeded: 'Manche Korrekturen kommen nur mit dem Installer. Führe ihn einmal über diese Installation aus: Einstellungen, Protokoll und OBS bleiben, wie sie sind.',

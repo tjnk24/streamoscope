@@ -13,15 +13,17 @@ paths:
   - `connection` - статус соединения, код последнего закрытия, версия OBS, текущая коллекция сцен;
   - `stats` - найденные выходы и данные карточек;
   - `update` - последний выпуск, состояние проверки, обновлятор и статус от моста, запрос установки `request` (версия и время);
+  - `releaseNotes` - сырой ответ GitHub для «Что нового», `releaseNotesModal` - модалка заметок (её открывают и настройки, и тост после обновления);
   - `@localStorage/settings` - сохраняет в localStorage мидлвара из `store.ts`.
 - **Слайс, нужный одной странице, - в `pages/<Страница>/reducers`** (решение пользователя: в общие - когда понадобится другим).
+- **Понадобилось нескольким местам - переносим целиком в общие папки** (решение пользователя): слайс - `src/reducers` (в `commonSlices`, тип - в `BaseStore`), селекторы - `src/selectors`, лоадер - `src/loaders` (`__loaders/*`), сервис - `src/services`, API - `src/api/<сервис>`, компонент или контейнер - `src/components/<Имя>`, тип - `src/types`; тесты - в `tests/` рядом. В страницу, которой это понадобилось, и в соседние страницы не переносим. Образец - модалка «Что нового» (`src/components/ReleaseNotesModal`).
   - Корневой редьюсер - `rootReducer` (`combineSlices` в `src/reducers/index.ts`), о страницах он не знает.
-  - Страница подключает все свои слайсы одним вызовом в своём `reducers/index.ts` (решение пользователя): `export const injectedSlices = injectSlices({releaseNotesModal: releaseNotesModalSlice, releaseNotes: releaseNotesSlice})`; `utils/redux/injectSlices` вызывает `injectInto(rootReducer)` у каждого.
+  - Страница подключает все свои слайсы одним вызовом в своём `reducers/index.ts` (решение пользователя): `export const injectedSlices = injectSlices({adviceModal: adviceModalSlice})`; `utils/redux/injectSlices` вызывает `injectInto(rootReducer)` у каждого.
   - Тип результата - `InjectedSlicesDto` (`__types/app/slices`) с точными `reducerPath` и `selectSlice`: `ReturnType` от `injectInto` расширяет имя слайса до `string`.
   - Экшены - `export const actions = bindSliceActions(injectedSlices)` в `actions.ts` страницы (`utils/redux/bindSliceActions`: `bindActionCreators` со `store.dispatch`), вызов - `actions.<слайс>.<экшен>`.
   - Селектор слайса - `injectedSlices.<слайс>.selectSlice` в `selectors/<слайс>Selectors.ts` страницы, файл на слайс (решение пользователя); до первого экшена отдаёт начальное состояние.
   - Читают через `useSelector`. Если понадобится вне React (`selectSlice(getStore())`), корневой редьюсер собираем `withLazyLoadedSlices<...>()` с `WithSlice` этого слайса: иначе тип стора о нём не знает.
-- **Модалка - слайс `{isVisible, ...данные}` с `setData` и `reset`**: родитель рендерит её, только пока `isVisible`, закрытие вызывает `reset` (`adviceModal` в `pages/Stats`, `releaseNotesModal` в `pages/Settings`).
+- **Модалка - слайс `{isVisible, ...данные}` с `setData` и `reset`**: родитель рендерит её, только пока `isVisible`, закрытие вызывает `reset` (`adviceModal` в `pages/Stats`, общий `releaseNotesModal` рисует `MainLayout`).
 - **Экшены без алиасов.** Общие - `import {commonActions} from '__actions'` (`src/actions.ts`: `bindSliceActions(commonSlices)`), страницы - `import {actions} from '../../actions'`. `bound as actions` и подобные переименования не пишем.
 
 ## Селекторы
@@ -59,8 +61,8 @@ paths:
   - компонент берёт флаги из селекторов статуса, данные - из селектора разбора.
 - **Компоненты и `preload` зовут методы сервиса и читают слайс**, API и лоадеры напрямую не вызывают.
 - **Раскладка - по тому, кто пользуется** (решение пользователя):
-  - нужное одной странице - в её `api/`, `services/`, `loaders/` (образец - `pages/Settings`: `ReleaseNotesApi`, `releaseNotesService`, `releaseNotesLoader`, слайс `releaseNotes` с сырым ответом, `releaseNotesSelectors`);
-  - нужное нескольким местам или общим сервисам - в `src/api`, `src/services` (`api/github/ReleasesApi.ts` - только `getLatest` для `updateService`);
+  - нужное одной странице - в её `api/`, `services/`, `loaders/`, `reducers/`, `selectors/`;
+  - нужное нескольким местам или общим сервисам - в `src/api`, `src/services`, `src/loaders`, `src/reducers`, `src/selectors` (образец - «Что нового»: `api/github/ReleaseNotesApi`, `releaseNotesService`, `releaseNotesLoader`, слайс `releaseNotes` с сырым ответом, `releaseNotesSelectors`; `api/github/ReleasesApi.ts` - только `getLatest` для `updateService`);
   - папка на сервис: `src/api/<сервис>/{<Что>Api.ts, transport/{<сервис>Transport.ts, consts.ts}}`, в `consts.ts` - базовый адрес и заголовки.
 - **Типы ответа** - из пакета типов сервиса, если он есть (GitHub - `@octokit/openapi-types`: `GithubReleaseDto` - `Pick` нужных полей из `components['schemas']['release']`, чтобы тестовым данным не нужны были все поля), иначе свой DTO в `src/types`.
   - Сырые типы - только в API-классе, слайсе с сырым ответом и селекторе разбора (или в сервисе, который разбирает сам); компоненты получают наши DTO.
