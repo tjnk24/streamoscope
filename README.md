@@ -18,6 +18,9 @@
   <a href="https://github.com/tjnk24/streamoscope/issues">🐞 Report a bug</a>
 </p>
 
+> [!NOTE]
+> 🤖 Built with a lot of help from AI. A human set the course, tested it in real OBS and argued with the robot along the way. The bugs are a joint venture.
+
 ---
 
 ## 🔀 Your streams don't all come from the same place. Your stats should.
