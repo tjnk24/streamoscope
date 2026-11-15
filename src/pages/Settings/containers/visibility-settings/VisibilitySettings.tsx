@@ -8,6 +8,7 @@ import {settingsSelector} from '__selectors/settingsSelectors';
 import {GeneralStatKeyEnum, OutputStatKeyEnum} from '__types/stats/statKeys';
 
 import SwitchField from '../../components/switch-field';
+import {SETTINGS_BLOCK_GAP} from '../../consts';
 
 import {GENERAL_STAT_OPTIONS, OUTPUT_STAT_OPTIONS} from './consts';
 
@@ -39,7 +40,7 @@ const VisibilitySettings = () => {
 
     return (
         <Flex
-            gap="14px 100px"
+            gap={`14px ${SETTINGS_BLOCK_GAP}px`}
             wrap
         >
             <Flex
