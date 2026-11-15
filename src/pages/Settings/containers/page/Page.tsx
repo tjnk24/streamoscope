@@ -14,7 +14,7 @@ import {SettingsGroupEnum} from './types';
 
 import style from './style.module.scss';
 
-const {Display, Updates, Diagnostics, Connection} = SettingsGroupEnum;
+const {Display, Updates, Connection, Diagnostics} = SettingsGroupEnum;
 
 const Page = () => {
     const {t} = useTranslation();
@@ -42,11 +42,6 @@ const Page = () => {
             children: <UpdateSettings/>,
         },
         {
-            key: Diagnostics,
-            label: t('settings.diagnosticsTitle'),
-            children: <DiagnosticsSettings/>,
-        },
-        {
             key: Connection,
             label: t('settings.connectionTitle'),
             children: (
@@ -59,6 +54,11 @@ const Page = () => {
                     <PasswordSettings/>
                 </Flex>
             ),
+        },
+        {
+            key: Diagnostics,
+            label: t('settings.diagnosticsTitle'),
+            children: <DiagnosticsSettings/>,
         },
     ];
 

@@ -49,6 +49,7 @@ export type JournalSnapshotDto = {
     outputs: JournalOutputSnapshotDto[];
     port: number;
     language: Nullable<LanguageEnum>;
+    isShowOutputCards: boolean;
     isShowGeneralCard: boolean;
     isAutoUpdateEnabled: boolean;
 };

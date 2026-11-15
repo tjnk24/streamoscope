@@ -6,7 +6,7 @@ export const settingsPortSelector = (state: BaseStore) => state.settings.port;
 
 export const settingsIsShowGeneralCardSelector = (state: BaseStore) => state.settings.isShowGeneralCard;
 
-export const settingsHasSeenGeneralCardNoticeSelector = (state: BaseStore) => state.settings.hasSeenGeneralCardNotice;
+export const settingsIsShowOutputCardsSelector = (state: BaseStore) => state.settings.isShowOutputCards;
 
 export const settingsLanguageSelector = (state: BaseStore) => state.settings.language;
 

@@ -46,7 +46,7 @@ export const DEFAULT_SETTINGS: SettingsDto = {
     settingsVersion: SETTINGS_VERSION,
     port: DEFAULT_OBS_WEBSOCKET_PORT,
     isShowGeneralCard: true,
-    hasSeenGeneralCardNotice: false,
+    isShowOutputCards: true,
     language: null,
     isAutoUpdateEnabled: true,
     isJournalEnabled: true,

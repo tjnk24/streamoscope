@@ -16,7 +16,13 @@ export const buildJournalSnapshot = (state: BaseStore): JournalSnapshotDto => {
     const {targets, view} = statsSelector(state);
     const {bridge, bridgeMissingChecks, checkStatus} = updateSelector(state);
 
-    const {port, language, isShowGeneralCard, isAutoUpdateEnabled} = settingsSelector(state);
+    const {
+        port,
+        language,
+        isShowOutputCards,
+        isShowGeneralCard,
+        isAutoUpdateEnabled,
+    } = settingsSelector(state);
 
     return {
         status,
@@ -44,6 +50,7 @@ export const buildJournalSnapshot = (state: BaseStore): JournalSnapshotDto => {
         }),
         port,
         language,
+        isShowOutputCards,
         isShowGeneralCard,
         isAutoUpdateEnabled,
     };

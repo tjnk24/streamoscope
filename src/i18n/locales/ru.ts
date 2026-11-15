@@ -51,9 +51,8 @@ export const ru: TranslationDto = {
         passwordRejected: 'OBS не принял пароль, остался прежний',
         passwordNoConnection: 'Нет связи с OBS, пароль не сменён',
         displayTitle: 'Отображение',
-        outputStats: 'Строки карточек площадок',
-        generalStats: 'Строки карточки OBS',
-        generalCard: 'Карточка OBS (FPS, лаги, CPU)',
+        outputCards: 'Карточки площадок',
+        generalCard: 'Карточка OBS',
         mockMode: 'Включить моки (для разработчиков)',
         dockAddress: 'Адрес панели',
         dockAddressHint: 'Чтобы открыть панель в браузере, вставьте туда этот адрес. Пароль там нужно ввести отдельно, журнал там не ведётся.',
@@ -84,6 +83,7 @@ export const ru: TranslationDto = {
     stats: {
         waitingForStream: 'Статистика появится, когда вы запустите стрим на эту площадку.',
         waitingForFirstStream: 'Статистика появится, как только вы запустите стримы.',
+        status: 'Статус',
         statuses: {
             ok: 'В эфире',
             warn: 'Есть потери',
@@ -131,10 +131,6 @@ export const ru: TranslationDto = {
         systemMemory: 'Память системы',
         recentLag: ' · +{{count}} за мин',
         reset: 'Сбросить графики',
-        hide: 'Скрыть карточку',
-        restore: 'Вернуть',
-        hiddenTitle: 'Карточка OBS скрыта',
-        hiddenText: 'Вернуть её можно в $t(pageTitles.settings) → $t(settings.displayTitle) → «$t(settings.generalCard)».',
         hints: {
             fps: 'Становится оранжевым ниже 95% от частоты кадров, заданной в OBS, и красным ниже 80%, как в окне «$t(obs.stats)»',
             lagStart: 'Считается с начала последнего эфира, а если с подключения панели эфира не было, то с подключения.',

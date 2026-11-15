@@ -29,6 +29,7 @@ export type OutputCardViewDto = {
     hasReconnectAdvice: boolean;
     hasDragHandle: boolean;
     platformMark: Nullable<PlatformMarkDto>;
+    isStatusShown: boolean;
     healthTag: HealthTagDto;
     statusKey: ParseKeys;
     isActive: boolean;

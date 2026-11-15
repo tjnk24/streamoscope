@@ -51,9 +51,8 @@ export const de: TranslationDto = {
         passwordRejected: 'OBS hat das Passwort nicht akzeptiert, das alte bleibt',
         passwordNoConnection: 'Keine Verbindung zu OBS, das Passwort wurde nicht geändert',
         displayTitle: 'Anzeige',
-        outputStats: 'Zeilen der Stream-Karten',
-        generalStats: 'Zeilen der OBS-Karte',
-        generalCard: 'OBS-Karte (FPS, Verzögerungen, CPU)',
+        outputCards: 'Stream-Karten',
+        generalCard: 'OBS-Karte',
         mockMode: 'Testdaten aktivieren (für Entwickler)',
         dockAddress: 'Adresse des Docks',
         dockAddressHint: 'Um das Dock im Browser zu öffnen, füge dort diese Adresse ein. Das Passwort wird separat eingegeben, und der Browser führt kein Protokoll.',
@@ -84,6 +83,7 @@ export const de: TranslationDto = {
     stats: {
         waitingForStream: 'Statistiken erscheinen, sobald du auf dieser Plattform streamst.',
         waitingForFirstStream: 'Statistiken erscheinen, sobald du deine Streams startest.',
+        status: 'Status',
         statuses: {
             ok: 'Live',
             warn: 'Mit Verlusten',
@@ -131,10 +131,6 @@ export const de: TranslationDto = {
         systemMemory: 'Systemspeicher',
         recentLag: ' · +{{count}} pro Min.',
         reset: 'Diagramme zurücksetzen',
-        hide: 'Karte ausblenden',
-        restore: 'Wiederherstellen',
-        hiddenTitle: 'OBS-Karte ausgeblendet',
-        hiddenText: 'Zurückholen kannst du sie unter $t(pageTitles.settings) → $t(settings.displayTitle) → „$t(settings.generalCard)“.',
         hints: {
             fps: 'Wird orange unter 95 % der in OBS eingestellten Bildrate und rot unter 80 %, wie im Fenster „$t(obs.stats)“',
             lagStart: 'Gezählt ab dem Start des letzten Streams oder, falls seit dem Verbinden des Docks kein Stream lief, ab dem Verbinden.',

@@ -9,9 +9,14 @@ import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
 import {connectionStatusSelector} from '__selectors/connectionSelectors';
-import {settingsIsShowGeneralCardSelector} from '__selectors/settingsSelectors';
+import {
+    settingsHiddenOutputStatsSelector,
+    settingsIsShowGeneralCardSelector,
+    settingsIsShowOutputCardsSelector,
+} from '__selectors/settingsSelectors';
 import {statsHasStreamStartedSelector} from '__selectors/statsSelectors';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
+import {OutputStatKeyEnum} from '__types/stats/statKeys';
 
 import {adviceModalSelector} from '../../selectors/adviceModalSelectors';
 import AdviceModal from '../advice-modal';
@@ -24,13 +29,17 @@ import style from './style.module.scss';
 
 const Page = () => {
     const status = useSelector(connectionStatusSelector);
+    const isShowOutputCards = useSelector(settingsIsShowOutputCardsSelector);
     const isShowGeneralCard = useSelector(settingsIsShowGeneralCardSelector);
     const {isVisible: isAdviceModalVisible} = useSelector(adviceModalSelector);
     const hasStreamStarted = useSelector(statsHasStreamStartedSelector);
+    const hiddenOutputStats = useSelector(settingsHiddenOutputStatsSelector);
 
     const {t} = useTranslation();
 
     const {isClosed, title, description} = useConnectionAlertView();
+
+    const isOutputCardsShown = isShowOutputCards && Object.values(OutputStatKeyEnum).some(key => !hiddenOutputStats.includes(key));
 
     if (status !== ConnectionStatusEnum.Identified) {
         return (
@@ -50,9 +59,9 @@ const Page = () => {
             gap="small"
             vertical
         >
-            {hasStreamStarted ? (
-                <CardGrid/>
-            ) : (
+            {isOutputCardsShown && hasStreamStarted && <CardGrid/>}
+
+            {isOutputCardsShown && !hasStreamStarted && (
                 <Card
                     size="small"
                     classNames={{

@@ -1,7 +1,7 @@
 .statOptions {
     display: grid;
     grid-auto-flow: column;
-    grid-template-rows: repeat(6, auto);
+    grid-template-rows: repeat(7, auto);
     gap: var(--ant-margin-xs) var(--ant-margin-lg);
 }
 

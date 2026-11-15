@@ -49,9 +49,8 @@ export const en = {
         passwordRejected: 'OBS did not accept the password, the old one is kept',
         passwordNoConnection: 'No connection to OBS, the password was not changed',
         displayTitle: 'Display',
-        outputStats: 'Stream card rows',
-        generalStats: 'OBS card rows',
-        generalCard: 'OBS card (FPS, lags, CPU)',
+        outputCards: 'Stream cards',
+        generalCard: 'OBS card',
         mockMode: 'Enable mocks (for developers)',
         dockAddress: 'Dock address',
         dockAddressHint: 'To open the dock in a browser, paste this address there. The browser needs the password entered separately and does not keep a journal.',
@@ -82,6 +81,7 @@ export const en = {
     stats: {
         waitingForStream: 'Statistics will appear when you start streaming to this platform.',
         waitingForFirstStream: 'Statistics will appear as soon as you start your streams.',
+        status: 'Status',
         statuses: {
             ok: 'Live',
             warn: 'Losing some',
@@ -129,10 +129,6 @@ export const en = {
         systemMemory: 'System memory',
         recentLag: ' · +{{count}} per min',
         reset: 'Reset graphs',
-        hide: 'Hide card',
-        restore: 'Restore',
-        hiddenTitle: 'OBS card hidden',
-        hiddenText: 'Bring it back in $t(pageTitles.settings) → $t(settings.displayTitle) → “$t(settings.generalCard)”.',
         hints: {
             fps: 'Turns orange below 95% of the frame rate set in OBS and red below 80%, as in the $t(obs.stats) window',
             lagStart: 'Counted from the latest stream start, or from when the dock connected if nothing has gone live since.',

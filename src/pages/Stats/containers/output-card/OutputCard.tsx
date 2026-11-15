@@ -37,6 +37,7 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
         hasReconnectAdvice,
         hasDragHandle,
         platformMark,
+        isStatusShown,
         healthTag,
         statusKey,
         isActive,
@@ -86,12 +87,14 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
                 <Flex align="center">
                     {hasReconnectAdvice && <AdviceIcon advice={AdviceEnum.Reconnecting}/>}
 
-                    <Tag
-                        color={healthTag.color}
-                        variant={healthTag.variant}
-                    >
-                        {t(statusKey)}
-                    </Tag>
+                    {isStatusShown && (
+                        <Tag
+                            color={healthTag.color}
+                            variant={healthTag.variant}
+                        >
+                            {t(statusKey)}
+                        </Tag>
+                    )}
                 </Flex>
             )}
         >

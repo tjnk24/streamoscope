@@ -27,6 +27,7 @@ export const SNAPSHOT: JournalSnapshotDto = {
     outputs: [OUTPUT],
     port: 4455,
     language: null,
+    isShowOutputCards: true,
     isShowGeneralCard: true,
     isAutoUpdateEnabled: true,
 };

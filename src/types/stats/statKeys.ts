@@ -1,4 +1,5 @@
 export enum OutputStatKeyEnum {
+    Status = 'status',
     Bitrate = 'bitrate',
     Source = 'source',
     Timecode = 'timecode',

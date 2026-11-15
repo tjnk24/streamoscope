@@ -3,6 +3,7 @@ import {GeneralStatKeyEnum, OutputStatKeyEnum} from '__types/stats/statKeys';
 import {StatOptionDto} from './types';
 
 const {
+    Status,
     Bitrate,
     Source,
     Timecode,
@@ -25,6 +26,7 @@ const {
 } = GeneralStatKeyEnum;
 
 export const OUTPUT_STAT_OPTIONS: StatOptionDto<OutputStatKeyEnum>[] = [
+    {value: Status, labelKey: 'stats.status'},
     {value: Bitrate, labelKey: 'stats.bitrate'},
     {value: Source, labelKey: 'stats.source'},
     {value: Timecode, labelKey: 'stats.onAir'},

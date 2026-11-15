@@ -78,10 +78,6 @@ export const frog: DeepPartial<TranslationDto> = {
         systemMemory: 'Память пруда',
         recentLag: ' · +{{count}} мух за мин',
         reset: 'Взбаламутить графики',
-        hide: 'Спрятать в тину',
-        restore: 'Вернуть',
-        hiddenTitle: 'Болото OBS ушло под воду',
-        hiddenText: 'Вынырнет обратно в $t(pageTitles.settings) → $t(settings.displayTitle) → «$t(settings.generalCard)».',
         hints: {
             fps: 'Оранжевеет, когда болото прыгает медленнее 95% от заданного в OBS, и краснеет ниже 80%, как в окне «$t(obs.stats)»',
             lagStart: 'Считаем с последнего прыжка в эфир, а если с подключения панели в эфир не прыгали, то с подключения.',

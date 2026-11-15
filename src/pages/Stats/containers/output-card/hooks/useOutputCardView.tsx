@@ -25,6 +25,7 @@ const {Off, Warn} = HealthLevelEnum;
 const {Reconnecting, DroppedFrames, Congestion: CongestionAdvice} = AdviceEnum;
 
 const {
+    Status,
     Bitrate,
     Source,
     Timecode,
@@ -138,6 +139,7 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
         hasDragHandle: targets.length > 1,
         platformMark: PLATFORM_MARKS[title] ?? null,
         healthTag: HEALTH_TAGS[isReconnecting ? Warn : level],
+        isStatusShown: !hiddenOutputStats.includes(Status),
         statusKey: isReconnecting ? 'stats.statuses.reconnecting' : `stats.statuses.${level}`,
         isActive,
         isWaitingForStream,

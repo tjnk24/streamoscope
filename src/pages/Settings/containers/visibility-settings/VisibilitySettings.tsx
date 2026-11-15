@@ -1,8 +1,4 @@
-import {
-    Checkbox,
-    Flex,
-    Typography,
-} from 'antd';
+import {Checkbox, Flex} from 'antd';
 import difference from 'lodash/difference';
 import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
@@ -12,14 +8,16 @@ import {settingsSelector} from '__selectors/settingsSelectors';
 import {GeneralStatKeyEnum, OutputStatKeyEnum} from '__types/stats/statKeys';
 
 import SwitchField from '../../components/switch-field';
-import {SETTINGS_BLOCK_GAP} from '../../consts';
 
 import {GENERAL_STAT_OPTIONS, OUTPUT_STAT_OPTIONS} from './consts';
 
 import style from './style.module.scss';
 
 const VisibilitySettings = () => {
-    const {isShowGeneralCard, hiddenOutputStats, hiddenGeneralStats} = useSelector(settingsSelector);
+    const {isShowOutputCards,
+        isShowGeneralCard,
+        hiddenOutputStats,
+        hiddenGeneralStats} = useSelector(settingsSelector);
 
     const {t} = useTranslation();
 
@@ -41,51 +39,47 @@ const VisibilitySettings = () => {
 
     return (
         <Flex
-            gap={SETTINGS_BLOCK_GAP}
-            vertical
+            gap="14px 100px"
+            wrap
         >
-            <SwitchField
-                label={t('settings.generalCard')}
-                checked={isShowGeneralCard}
-                onChange={commonActions.settings.setIsShowGeneralCard}
-            />
-
             <Flex
-                gap="14px 118px"
-                wrap
+                gap={14}
+                vertical
             >
-                <Flex
-                    gap={14}
-                    vertical
-                >
-                    <Typography.Text>
-                        {t('settings.outputStats')}
-                    </Typography.Text>
+                <SwitchField
+                    label={t('settings.outputCards')}
+                    checked={isShowOutputCards}
+                    onChange={commonActions.settings.setIsShowOutputCards}
+                />
 
+                {isShowOutputCards && (
                     <Checkbox.Group<OutputStatKeyEnum>
                         className={style.statOptions}
                         value={difference(outputStatKeys, hiddenOutputStats)}
                         options={outputOptions}
                         onChange={onOutputStatsChange}
                     />
-                </Flex>
+                )}
+            </Flex>
 
-                <Flex
-                    gap={14}
-                    vertical
-                >
-                    <Typography.Text type={isShowGeneralCard ? undefined : 'secondary'}>
-                        {t('settings.generalStats')}
-                    </Typography.Text>
+            <Flex
+                gap={14}
+                vertical
+            >
+                <SwitchField
+                    label={t('settings.generalCard')}
+                    checked={isShowGeneralCard}
+                    onChange={commonActions.settings.setIsShowGeneralCard}
+                />
 
+                {isShowGeneralCard && (
                     <Checkbox.Group<GeneralStatKeyEnum>
                         className={style.statOptions}
                         value={difference(generalStatKeys, hiddenGeneralStats)}
                         options={generalOptions}
-                        disabled={!isShowGeneralCard}
                         onChange={onGeneralStatsChange}
                     />
-                </Flex>
+                )}
             </Flex>
         </Flex>
     );

@@ -19,8 +19,8 @@ const slice = createSlice({
         setIsShowGeneralCard: (state, {payload}: PayloadAction<boolean>) => {
             state.isShowGeneralCard = payload;
         },
-        setHasSeenGeneralCardNotice: (state, {payload}: PayloadAction<boolean>) => {
-            state.hasSeenGeneralCardNotice = payload;
+        setIsShowOutputCards: (state, {payload}: PayloadAction<boolean>) => {
+            state.isShowOutputCards = payload;
         },
         setLanguage: (state, {payload}: PayloadAction<LanguageEnum>) => {
             state.language = payload;

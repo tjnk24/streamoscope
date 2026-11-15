@@ -51,9 +51,8 @@ export const es: TranslationDto = {
         passwordRejected: 'OBS no aceptó la contraseña, se mantiene la anterior',
         passwordNoConnection: 'Sin conexión con OBS, la contraseña no se ha cambiado',
         displayTitle: 'Visualización',
-        outputStats: 'Filas de las tarjetas de transmisiones',
-        generalStats: 'Filas de la tarjeta de OBS',
-        generalCard: 'Tarjeta de OBS (FPS, retrasos, CPU)',
+        outputCards: 'Tarjetas de transmisiones',
+        generalCard: 'Tarjeta de OBS',
         mockMode: 'Activar datos simulados (para desarrolladores)',
         dockAddress: 'Dirección del panel',
         dockAddressHint: 'Para abrir el panel en un navegador, pega allí esta dirección. La contraseña se introduce por separado y el navegador no lleva un registro.',
@@ -84,6 +83,7 @@ export const es: TranslationDto = {
     stats: {
         waitingForStream: 'Las estadísticas aparecerán cuando empieces a emitir en esta plataforma.',
         waitingForFirstStream: 'Las estadísticas aparecerán en cuanto empieces a emitir.',
+        status: 'Estado',
         statuses: {
             ok: 'En directo',
             warn: 'Con pérdidas',
@@ -131,10 +131,6 @@ export const es: TranslationDto = {
         systemMemory: 'Memoria del sistema',
         recentLag: ' · +{{count}} por min',
         reset: 'Reiniciar gráficos',
-        hide: 'Ocultar tarjeta',
-        restore: 'Restaurar',
-        hiddenTitle: 'Tarjeta de OBS oculta',
-        hiddenText: 'Puedes recuperarla en $t(pageTitles.settings) → $t(settings.displayTitle) → «$t(settings.generalCard)».',
         hints: {
             fps: 'Se vuelve naranja por debajo del 95 % de la frecuencia de fotogramas configurada en OBS y roja por debajo del 80 %, como en la ventana «$t(obs.stats)»',
             lagStart: 'Se cuenta desde el inicio del último directo o, si no ha habido directo desde que se conectó el panel, desde la conexión.',

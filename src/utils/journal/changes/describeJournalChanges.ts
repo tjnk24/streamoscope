@@ -130,6 +130,16 @@ export const describeJournalChanges = (previous: JournalSnapshotDto, current: Jo
         entries.push(languageEntry);
     }
 
+    if (previous.isShowOutputCards !== current.isShowOutputCards) {
+        const outputCardsEntry: JournalEntryDto = {
+            level: Info,
+            source: 'user',
+            message: `changed output_cards=${current.isShowOutputCards}`,
+        };
+
+        entries.push(outputCardsEntry);
+    }
+
     if (previous.isShowGeneralCard !== current.isShowGeneralCard) {
         const generalCardEntry: JournalEntryDto = {
             level: Info,

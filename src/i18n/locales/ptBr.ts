@@ -51,9 +51,8 @@ export const ptBr: TranslationDto = {
         passwordRejected: 'O OBS não aceitou a senha, a anterior foi mantida',
         passwordNoConnection: 'Sem conexão com o OBS, a senha não foi alterada',
         displayTitle: 'Exibição',
-        outputStats: 'Linhas dos cartões das transmissões',
-        generalStats: 'Linhas do cartão do OBS',
-        generalCard: 'Cartão do OBS (FPS, atrasos, CPU)',
+        outputCards: 'Cartões das transmissões',
+        generalCard: 'Cartão do OBS',
         mockMode: 'Ativar dados simulados (para desenvolvedores)',
         dockAddress: 'Endereço do painel',
         dockAddressHint: 'Para abrir o painel em um navegador, cole este endereço nele. A senha é digitada separadamente e o navegador não mantém um registro.',
@@ -84,6 +83,7 @@ export const ptBr: TranslationDto = {
     stats: {
         waitingForStream: 'As estatísticas aparecerão quando você começar a transmitir para esta plataforma.',
         waitingForFirstStream: 'As estatísticas aparecerão assim que você começar a transmitir.',
+        status: 'Status',
         statuses: {
             ok: 'Ao vivo',
             warn: 'Com perdas',
@@ -131,10 +131,6 @@ export const ptBr: TranslationDto = {
         systemMemory: 'Memória do sistema',
         recentLag: ' · +{{count}} por min',
         reset: 'Zerar gráficos',
-        hide: 'Ocultar cartão',
-        restore: 'Restaurar',
-        hiddenTitle: 'Cartão do OBS oculto',
-        hiddenText: 'Você pode trazê-lo de volta em $t(pageTitles.settings) → $t(settings.displayTitle) → “$t(settings.generalCard)”.',
         hints: {
             fps: 'Fica laranja abaixo de 95% da taxa de quadros definida no OBS e vermelho abaixo de 80%, como na janela “$t(obs.stats)”',
             lagStart: 'Contado desde o início da última live ou, se não houve live desde que o painel se conectou, desde a conexão.',
