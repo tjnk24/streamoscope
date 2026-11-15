@@ -43,6 +43,7 @@ Show the notes to the user and wait for their edits.
 
 - Commit the notes (and anything from step 2) only when the user asks.
 - `npm version <major|minor|patch>` makes the commit `X.Y.Z` and the tag `vX.Y.Z`.
+- A fix after `npm version` but before the push: commit it and move the still unpushed tag with `git tag -f -a vX.Y.Z -m "X.Y.Z" HEAD`. Keep it annotated: `git push --follow-tags` does not push a lightweight tag. Never move a tag that is already on GitHub.
 - **Push only after an explicit yes from the user for this release**: `git push --follow-tags` (hotfix: `git push --follow-tags -u origin hotfix/X.Y.Z`).
 - `gh run watch` on the `release.yml` run (`gh run list --workflow release.yml --limit 1`). When `build` is green, tell the user that the `publish` job waits for **their** approval on the run page. Never approve it yourself.
 
