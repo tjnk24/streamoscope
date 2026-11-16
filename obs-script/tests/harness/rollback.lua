@@ -20,7 +20,7 @@ if timers[1000] ~= nil then
 end
 
 send('__LATE_COMMAND__')
-timers[3000]()
+timers[1000]()
 
 local payload = store['StreamoScope/PluginOutputs'] or ''
 local rolled_back = string.match(payload, '"rolledBackVersion":"([^"]*)"') or '-'

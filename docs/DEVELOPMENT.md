@@ -89,7 +89,7 @@ The bridge writes `%LOCALAPPDATA%\streamoscope\logs\streamoscope.log`. At 5 MB t
 
 `npm run test:stand` downloads a portable OBS and a local RTMP server (MediaMTX) into `.test-stand`, checks both against pinned SHA-256 hashes, and needs no OBS of your own. It leaves your OBS, scenes and stream keys alone: the portable copy keeps its settings in its own folder and streams only to `127.0.0.1`.
 
-It installs the current code with the real `configure-obs.ps1` into a folder with Cyrillic in its path, then checks in OBS: the login, the health report, a stream with its bitrate in the dock, the **Update** button, a rollback from a broken dock and the background update. It takes about three minutes, opens an OBS window, and stops everything at the end. Windows may ask about the firewall for this OBS; you can decline, since everything goes through `127.0.0.1`.
+It installs the current code with the real `configure-obs.ps1` into a folder with Cyrillic in its path, then checks in OBS: the login, the health report, a stream with its bitrate in the dock, three outputs named `multi-output` with a card and a bitrate each (a stand script imitates obs-multi-rtmp, `npm run stand -- multi on|off` by hand), the **Update** button, a rollback from a broken dock and the background update. It takes about three minutes, opens an OBS window, and stops everything at the end. Windows may ask about the firewall for this OBS; you can decline, since everything goes through `127.0.0.1`.
 
 It reads the dock through the Chromium debugging port, so `npm run stand -- status`, `evaluate` and `screenshot` need neither the mouse nor the screen. The stand takes releases from a local test server: it doesn't replace a look at the real GitHub release or at the real installer.
 

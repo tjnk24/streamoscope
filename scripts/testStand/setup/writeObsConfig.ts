@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import {
+    FAKE_MULTI_RTMP_SCRIPT_PATH,
     OBS_CONFIG_DIRECTORY,
     OBS_PORTABLE_MARKER,
     OBS_VERSION_NUMBER,
@@ -73,12 +74,17 @@ export const writeObsConfig = () => {
         },
     };
 
+    const fakeMultiRtmpScript = {
+        path: FAKE_MULTI_RTMP_SCRIPT_PATH.replaceAll('\\', '/'),
+        settings: {},
+    };
+
     const collection = {
         current_scene: STAND_COLLECTION_NAME,
         current_program_scene: STAND_COLLECTION_NAME,
         name: STAND_COLLECTION_NAME,
         scene_order: [{name: STAND_COLLECTION_NAME}],
-        modules: {'scripts-tool': []},
+        modules: {'scripts-tool': [fakeMultiRtmpScript]},
         sources: [{
             id: 'scene',
             versioned_id: 'scene',

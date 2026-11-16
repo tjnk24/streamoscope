@@ -1,7 +1,10 @@
 import {
+    afterAll,
+    beforeAll,
     describe,
     expect,
     it,
+    vi,
 } from 'vitest';
 
 import {AdviceEnum} from '__types/stats/views';
@@ -9,11 +12,15 @@ import {AdviceEnum} from '__types/stats/views';
 import {StatsTracker} from '../StatsTracker';
 
 import {
+    BRIDGE_NOW_MS,
     FAILED_STATUS_PAIR,
+    FIRST_BRIDGE_PAIR,
     LIVE_PAIR,
     MAIN_TARGET,
+    MEASURED_TARGET,
     OFFLINE_PAIR,
     RECONNECTING_PAIR,
+    SECOND_BRIDGE_PAIR,
     STATS,
     STATS_REQUEST,
     STATS_RESULT,
@@ -21,6 +28,15 @@ import {
 } from './consts';
 
 describe('StatsTracker', () => {
+    beforeAll(() => {
+        vi.useFakeTimers();
+        vi.setSystemTime(BRIDGE_NOW_MS);
+    });
+
+    afterAll(() => {
+        vi.useRealTimers();
+    });
+
     it('counts lag from the panel connection and again from the stream start', () => {
         const tracker = new StatsTracker();
 
@@ -243,5 +259,30 @@ describe('StatsTracker', () => {
         expect(tracker.ingest([MAIN_TARGET], [statsPair, LIVE_PAIR], 0).general?.targetFps).toBeNull();
         expect(tracker.ingest([MAIN_TARGET], [statsPair, LIVE_PAIR, VIDEO_SETTINGS_PAIR], 1000).general?.targetFps).toBeCloseTo(59.94, 2);
         expect(tracker.ingest([MAIN_TARGET], [statsPair, LIVE_PAIR], 2000).general?.targetFps).toBeCloseTo(59.94, 2);
+    });
+
+    it('counts an output of the bridge by the time of its sample and skips a repeated sample', () => {
+        const tracker = new StatsTracker();
+
+        tracker.ingest([MEASURED_TARGET], [FIRST_BRIDGE_PAIR], 0);
+
+        const nextSample = tracker.ingest([MEASURED_TARGET], [SECOND_BRIDGE_PAIR], 1700).outputs[MEASURED_TARGET.key];
+
+        expect(nextSample).toMatchObject({kbps: 4000, timecode: '00:00:11.000', congestion: 0.25});
+
+        const repeatedSample = tracker.ingest([MEASURED_TARGET], [SECOND_BRIDGE_PAIR], 2700).outputs[MEASURED_TARGET.key];
+
+        expect(repeatedSample.graph).toHaveLength(1);
+    });
+
+    it('keeps the card of a bridge output while the bridge does not answer', () => {
+        const tracker = new StatsTracker();
+
+        tracker.ingest([MEASURED_TARGET], [FIRST_BRIDGE_PAIR], 0);
+
+        const nextSample = tracker.ingest([MEASURED_TARGET], [SECOND_BRIDGE_PAIR], 1000).outputs[MEASURED_TARGET.key];
+        const withoutBridge = tracker.ingest([MEASURED_TARGET], [], 2000).outputs[MEASURED_TARGET.key];
+
+        expect(withoutBridge).toBe(nextSample);
     });
 });

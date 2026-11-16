@@ -86,7 +86,7 @@ if marker ~= nil and marker ~= '' then
     record('afterOnCalledWith', wait_marker())
 end
 
-timers[3000]()
+timers[1000]()
 script_unload()
 
 return table.concat(results, '\n')

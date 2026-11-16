@@ -37,4 +37,15 @@ describe('getJournalTargetLabel', () => {
 
         expect(getJournalTargetLabel(twitchTarget)).toBe('Twitch');
     });
+
+    it('adds the fingerprint of the output so that outputs of the same name differ', () => {
+        const measuredTarget = {
+            ...TARGET,
+            origin: OutputOriginEnum.Plugin,
+            outputName: 'multi-output',
+            outputId: 'a3f91c07',
+        };
+
+        expect(getJournalTargetLabel(measuredTarget)).toBe('multi-output@a3f91c07');
+    });
 });

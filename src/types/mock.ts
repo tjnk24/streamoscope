@@ -7,6 +7,7 @@ export type MockOutputStateDto = {
 
 export type MockTargetDto = {
     outputName: string;
+    outputId: string;
     server: string;
     minKbps: number;
     maxKbps: number;

@@ -24,3 +24,13 @@ export type ObsMessageDto = {
     op: number;
     d: ObsMessageDataDto;
 };
+
+type BridgeOutputDto = {
+    name: string;
+    id?: string;
+    stats?: Record<string, unknown>;
+};
+
+export type BridgeDataDto = {
+    outputs: BridgeOutputDto[];
+};

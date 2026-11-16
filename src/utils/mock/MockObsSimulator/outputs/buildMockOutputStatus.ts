@@ -1,7 +1,6 @@
 import {MockOutputStateDto} from '__types/mock';
 import {ObsOutputStatusDto} from '__types/obs/responses';
-
-import {formatMockTimecode} from './formatMockTimecode';
+import {formatOutputTimecode} from '__utils/stats/formatOutputTimecode';
 
 export const buildMockOutputStatus = (
     output: MockOutputStateDto,
@@ -14,7 +13,7 @@ export const buildMockOutputStatus = (
     return {
         outputActive: true,
         outputReconnecting: isReconnecting,
-        outputTimecode: formatMockTimecode(seconds),
+        outputTimecode: formatOutputTimecode(seconds),
         outputDuration: Math.round(seconds * 1000),
         outputCongestion: congestion,
         outputBytes: output.bytes,

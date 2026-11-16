@@ -1,4 +1,4 @@
-export const formatMockTimecode = (seconds: number) => {
+export const formatOutputTimecode = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor(seconds / 60) % 60;
     const restSeconds = seconds % 60;

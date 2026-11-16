@@ -3,6 +3,7 @@ import path from 'node:path';
 import {ROOT_DIRECTORY} from '../packageRelease/consts.ts';
 
 import type {BrokenFileDto, BrokenPartType} from './types/brokenRelease.ts';
+import type {FakeMultiRtmpSettingsDto} from './types/rtmp.ts';
 import type {ScenarioVersionsDto} from './types/ScenarioVersionsDto.ts';
 import type {StandArchiveDto} from './types/StandArchiveDto.ts';
 
@@ -98,6 +99,36 @@ export const MEDIAMTX_CONFIG = [
 
 export const STAND_RTMP_SERVER = 'rtmp://127.0.0.1:1935/stand';
 
+export const FAKE_MULTI_RTMP_SCRIPT_PATH = path.join(ROOT_DIRECTORY, 'scripts', 'testStand', 'obs', 'fake-multi-rtmp.lua');
+
+export const FAKE_MULTI_RTMP_PARAMETER: Record<string, string> = {
+    parameterCategory: 'StreamoScopeStand',
+    parameterName: 'FakeMultiRtmp',
+};
+
+export const FAKE_MULTI_RTMP_KEY_PREFIX = 'stand-multi-key-';
+
+export const FAKE_MULTI_RTMP_PATH_PREFIX = 'multi/';
+
+export const FAKE_MULTI_RTMP_SETTINGS: FakeMultiRtmpSettingsDto = {
+    server: 'rtmp://127.0.0.1:1935/multi',
+    keyPrefix: FAKE_MULTI_RTMP_KEY_PREFIX,
+    targets: [
+        {bitrate: 400},
+        {bitrate: 800},
+        {bitrate: 1200},
+    ],
+};
+
+export const PLUGIN_BITRATE_TOLERANCE = 0.35;
+
+export const BRIDGE_PARAMETER: Record<string, string> = {
+    parameterCategory: 'StreamoScope',
+    parameterName: 'PluginOutputs',
+};
+
+export const OUTPUT_FINGERPRINT_PATTERN = /^[0-9a-f]{8}$/;
+
 const STAND_USER_DIRECTORY = path.join(STAND_DIRECTORY, 'Иван Петров');
 
 export const LOCAL_APP_DATA_DIRECTORY = path.join(STAND_USER_DIRECTORY, 'Local');
@@ -113,6 +144,8 @@ export const JOURNAL_FORBIDDEN_TEXTS = ['rtmp://', '127.0.0.1:1935', 'Users\\', 
 export const JOURNAL_SILENCE_MS = 3000;
 
 export const JOURNAL_STATS_PATTERN = /STAT\s+\S+\s+kbps_avg=[1-9]\d*/;
+
+export const JOURNAL_OUTPUT_ID_STATS_PATTERN = /STAT\s+multi-output@([0-9a-f]{8})\s+kbps_avg=[1-9]/g;
 
 export const JOURNAL_OBS_STATS_PATTERN = /STAT\s+OBS\s+fps=\d+\.\d frame_ms=\d+\.\d render_lag=\d+ encoder_lag=\d+ cpu=\d+\.\d% memory_mb=[1-9]/;
 
@@ -219,6 +252,10 @@ export const DOCK_OFFLINE_TEXT = 'Offline';
 
 export const LIVE_BITRATE_PATTERN = /Live\s+[1-9]\d*\s+kbps/;
 
+export const DOCK_SAME_NAME_WARNING_TEXT = 'stats for one of them only';
+
+export const CARD_BITRATES_EXPRESSION = '[...document.querySelectorAll(".ant-statistic-content-value")].map(value => Number(value.innerText.replace(/\\D/g, ""))).filter(Boolean)';
+
 export const OPEN_SETTINGS_EXPRESSION = 'location.hash = "#/settings"';
 
 export const OPEN_UPDATES_GROUP_EXPRESSION = '[...document.querySelectorAll(".ant-collapse-header")].find(header => header.innerText.includes("Updates"))?.click()';
@@ -261,6 +298,7 @@ start                         start the RTMP server, the test release server and
 stop                          close them
 status                        show the versions, the update files, the dock and the stream
 stream <on|off>               start or stop the stream to the local RTMP server
+multi <on|off>                start or stop three outputs named multi-output with their own bitrates (an imitation of obs-multi-rtmp)
 update <version>              send the bridge install:<version>
 open-settings                 open the settings page of the dock
 evaluate <expression>         run an expression in the dock and print the result

@@ -23,11 +23,14 @@ local function describe_update(updater)
 end
 
 local function build_payload(sources)
+    local outputs_read, outputs, sampled_at_ms = pcall(targets.read, sources.stream_outputs)
+
     return {
         bridgeVersion = consts.BRIDGE_VERSION,
         updated = os.time(),
+        sampledAtMs = outputs_read and sampled_at_ms or nil,
         sceneCollection = obs.obs_frontend_get_current_scene_collection(),
-        outputs = json.array(sample_safely(targets.read, sources.stream_outputs) or {}),
+        outputs = json.array(outputs_read and outputs or {}),
         gpu = sources.gpu ~= nil and sample_safely(sources.gpu.sample, sources.gpu) or nil,
         systemMemory = sample_safely(system_memory.sample),
         update = sources.updater ~= nil and sample_safely(describe_update, sources.updater) or nil,

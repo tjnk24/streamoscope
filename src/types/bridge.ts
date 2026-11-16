@@ -2,9 +2,28 @@ import type {Nullable} from 'infrastructure/common';
 
 import {BridgeUpdateDto} from './update/bridgeUpdate';
 
-type BridgeOutputDto = {
+export type BridgeOutputStatsDto = {
+    isActive: boolean;
+    totalBytes: number;
+    totalFrames: number;
+    droppedFrames: number;
+    durationMs: number;
+    congestion: number;
+    isReconnecting: boolean;
+};
+
+export type BridgeOutputDto = {
     name: string;
     server: string;
+    id?: string;
+    stats?: BridgeOutputStatsDto;
+};
+
+export type MeasuredBridgeOutputDto = {
+    name: string;
+    server: string;
+    id: string;
+    stats: BridgeOutputStatsDto;
 };
 
 type GpuStatsDto = {
@@ -28,6 +47,7 @@ export type HardwareDto = {
 export type BridgeDataDto = {
     bridgeVersion?: number;
     updated: number;
+    sampledAtMs?: number;
     sceneCollection?: string;
     outputs: BridgeOutputDto[];
     gpu?: GpuStatsDto;

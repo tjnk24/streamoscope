@@ -69,14 +69,22 @@ class ReportService {
         ];
     };
 
-    private describeTarget = ({origin, outputName, pluginName, platform}: StreamTargetDto) => {
+    private describeTarget = ({
+        origin,
+        outputName,
+        outputId,
+        pluginName,
+        platform,
+    }: StreamTargetDto) => {
         const title = platform.isKnown ? platform.title : JOURNAL_OTHER_TARGET_LABEL;
 
         if (origin === OutputOriginEnum.Main) {
             return `- ${title}: main output`;
         }
 
-        return `- ${title}: plugin output "${outputName}"${pluginName ? ` (${pluginName})` : ''}`;
+        const outputLabel = outputId ? `${outputName}@${outputId}` : outputName;
+
+        return `- ${title}: plugin output "${outputLabel}"${pluginName ? ` (${pluginName})` : ''}`;
     };
 }
 

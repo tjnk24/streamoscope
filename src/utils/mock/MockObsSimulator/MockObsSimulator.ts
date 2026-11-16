@@ -14,11 +14,13 @@ import {
     MOCK_SCENE_COLLECTION,
     MOCK_SYSTEM_MEMORY,
     MOCK_TWITCH_DELAY_SEC,
+    MOCK_TWITCH_OUTPUT_ID,
     MOCK_TWITCH_OUTPUT_NAME,
     MOCK_TWITCH_SERVER,
     OBS_OUTPUT_NOT_FOUND_CODE,
     OBS_UNKNOWN_REQUEST_CODE,
 } from './consts';
+import {buildMockBridgeOutput} from './outputs/buildMockBridgeOutput';
 import {buildMockOutputListItem} from './outputs/buildMockOutputListItem';
 import {buildMockOutputStatus} from './outputs/buildMockOutputStatus';
 import {createMockOutput} from './outputs/createMockOutput';
@@ -49,7 +51,7 @@ export class MockObsSimulator {
 
     private twitchOutput: Nullable<MockOutputStateDto> = null;
 
-    private readonly extraOutputs = new Map(MOCK_EXTRA_TARGETS.map(({outputName}) => [outputName, createMockOutput(this.startedAt)]));
+    private readonly extraOutputs = new Map(MOCK_EXTRA_TARGETS.map(({outputId}) => [outputId, createMockOutput(this.startedAt)]));
 
     private renderTotalFrames = 0;
 
@@ -76,6 +78,8 @@ export class MockObsSimulator {
 
     private isTwitchDropping = (runningSeconds: number) => runningSeconds % 30 >= 10 && runningSeconds % 30 < 14;
 
+    private getTwitchCongestion = (runningSeconds: number) => (this.isTwitchDropping(runningSeconds) ? 0.3 : 0.01);
+
     private getFps = (runningSeconds: number) => {
         const phase = runningSeconds % 90;
 
@@ -101,8 +105,8 @@ export class MockObsSimulator {
             growMockOutput(this.twitchOutput, elapsedSeconds, randomBetween(5800, 6200), twitchDroppedFrames);
         }
 
-        MOCK_EXTRA_TARGETS.forEach(({outputName, minKbps, maxKbps}) => {
-            const output = this.extraOutputs.get(outputName);
+        MOCK_EXTRA_TARGETS.forEach(({outputId, minKbps, maxKbps}) => {
+            const output = this.extraOutputs.get(outputId);
 
             output && growMockOutput(output, elapsedSeconds, randomBetween(minKbps, maxKbps), 0);
         });
@@ -169,7 +173,7 @@ export class MockObsSimulator {
             }
 
             case GetProfileParameter:
-                return successResult(requestType, {parameterValue: JSON.stringify(this.buildBridgeData())});
+                return successResult(requestType, {parameterValue: JSON.stringify(this.buildBridgeData(now, runningSeconds))});
 
             case GetVideoSettings:
                 return successResult(requestType, {fpsNumerator: MOCK_FPS, fpsDenominator: 1});
@@ -198,30 +202,49 @@ export class MockObsSimulator {
     };
 
     private answerOutputStatus = (requestType: string, outputName: string, now: number, runningSeconds: number) => {
-        const extraOutput = this.extraOutputs.get(outputName);
+        if (outputName === MOCK_TWITCH_OUTPUT_NAME && this.twitchOutput) {
+            const twitchCongestion = this.getTwitchCongestion(runningSeconds);
+            const twitchStatus = buildMockOutputStatus(this.twitchOutput, now, twitchCongestion, this.isTwitchReconnecting(runningSeconds));
+
+            return successResult(requestType, twitchStatus);
+        }
+
+        const extraTarget = MOCK_EXTRA_TARGETS.find(target => target.outputName === outputName);
+        const extraOutput = extraTarget && this.extraOutputs.get(extraTarget.outputId);
 
         if (extraOutput) {
             return successResult(requestType, buildMockOutputStatus(extraOutput, now, randomBetween(0.01, 0.05), false));
         }
 
-        if (outputName === MOCK_TWITCH_OUTPUT_NAME && this.twitchOutput) {
-            const congestion = this.isTwitchDropping(runningSeconds) ? 0.3 : 0.01;
-
-            return successResult(requestType, buildMockOutputStatus(this.twitchOutput, now, congestion, this.isTwitchReconnecting(runningSeconds)));
-        }
-
         return failureResult(requestType, OBS_OUTPUT_NOT_FOUND_CODE);
     };
 
-    private buildBridgeData = (): BridgeDataDto => ({
-        bridgeVersion: 2,
+    private buildBridgeOutputs = (now: number, runningSeconds: number) => {
+        const extraOutputs = MOCK_EXTRA_TARGETS.flatMap(({outputName, outputId, server}) => {
+            const output = this.extraOutputs.get(outputId);
+            const target = {name: outputName, server, id: outputId};
+
+            return output ? [buildMockBridgeOutput(target, output, now, randomBetween(0.01, 0.05), false)] : [];
+        });
+
+        if (!this.twitchOutput) {
+            return extraOutputs;
+        }
+
+        const twitchTarget = {name: MOCK_TWITCH_OUTPUT_NAME, server: MOCK_TWITCH_SERVER, id: MOCK_TWITCH_OUTPUT_ID};
+        const twitchCongestion = this.getTwitchCongestion(runningSeconds);
+        const twitchOutput = buildMockBridgeOutput(twitchTarget, this.twitchOutput, now, twitchCongestion, this.isTwitchReconnecting(runningSeconds));
+
+        return [twitchOutput, ...extraOutputs];
+    };
+
+    private buildBridgeData = (now: number, runningSeconds: number): BridgeDataDto => ({
+        bridgeVersion: 7,
         updated: Math.floor(Date.now() / 1000),
+        sampledAtMs: Math.floor(now),
         update: {available: true, status: null},
         sceneCollection: MOCK_SCENE_COLLECTION,
-        outputs: [
-            ...(this.twitchOutput ? [{name: MOCK_TWITCH_OUTPUT_NAME, server: MOCK_TWITCH_SERVER}] : []),
-            ...MOCK_EXTRA_TARGETS.map(({outputName, server}) => ({name: outputName, server})),
-        ],
+        outputs: this.buildBridgeOutputs(now, runningSeconds),
         gpu: {
             ...MOCK_GPU,
             usage: randomBetween(40, 60),

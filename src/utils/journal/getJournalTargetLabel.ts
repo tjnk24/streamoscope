@@ -1,10 +1,9 @@
 import {OutputOriginEnum, StreamTargetDto} from '__types/targets';
 import {JOURNAL_MAIN_TARGET_LABEL, JOURNAL_OTHER_TARGET_LABEL} from '__utils/consts';
 
-export const getJournalTargetLabel = ({origin, outputName, platform}: StreamTargetDto) => {
-    if (platform.isKnown) {
-        return platform.title;
-    }
+export const getJournalTargetLabel = ({origin, outputName, outputId, platform}: StreamTargetDto) => {
+    const fallbackLabel = origin === OutputOriginEnum.Main ? JOURNAL_MAIN_TARGET_LABEL : outputName ?? JOURNAL_OTHER_TARGET_LABEL;
+    const label = platform.isKnown ? platform.title : fallbackLabel;
 
-    return origin === OutputOriginEnum.Main ? JOURNAL_MAIN_TARGET_LABEL : outputName ?? JOURNAL_OTHER_TARGET_LABEL;
+    return outputId ? `${label}@${outputId}` : label;
 };

@@ -64,6 +64,7 @@ stub_outputs[2] = {name = 'multi-output', server = 'rtmp://secret.example.com/ap
 stub_outputs[3] = {name = 'multi-output', server = 'rtmp://secret.example.com/app', is_active = true, total_bytes = 0, dropped = 0, total_frames = 0, congestion = 0, is_reconnecting = true}
 stub_outputs[4] = {name = 'my output', server = 'rtmp://secret.example.com/app', is_active = true, total_bytes = 0, dropped = 0, total_frames = 0, congestion = 0, is_reconnecting = false}
 stub_outputs[5] = {name = 'stopped', server = 'rtmp://secret.example.com/app', is_active = false, total_bytes = 0, dropped = 0, total_frames = 0, congestion = 0, is_reconnecting = false}
+stub_outputs[6] = {name = 'multi-output', server = 'rtmp://secret.example.com/app', id = 'a3f91c07', is_active = true, total_bytes = 0, dropped = 0, total_frames = 0, congestion = 0, is_reconnecting = false}
 
 fake_now = fake_now + 10
 timers[250]()
@@ -74,6 +75,7 @@ timers[250]()
 
 record('outputStats', journal_has('STAT  adv_stream kbps_avg=8000 dropped=2 frames=100 congestion=25% reconnecting=false'))
 record('sameNameOutput', journal_has('STAT  multi-output#2 kbps_avg=0 dropped=0 frames=0 congestion=0% reconnecting=true'))
+record('outputIdLabel', journal_has('STAT  multi-output@a3f91c07 kbps_avg='))
 record('unsafeNameCleaned', journal_has('STAT  my_output kbps_avg='))
 record('inactiveSkipped', not journal_has('stopped kbps_avg'))
 record('serverHidden', not journal_has('secret.example.com'))
@@ -83,6 +85,7 @@ stub_outputs[2] = nil
 stub_outputs[3] = nil
 stub_outputs[4] = nil
 stub_outputs[5] = nil
+stub_outputs[6] = nil
 
 local size_after_stream = text_file.size(journal_path)
 
@@ -91,12 +94,12 @@ timers[250]()
 record('silentWithoutStream', text_file.size(journal_path) == size_after_stream)
 
 text_file.write(data_directory .. '\\update-status.json', '{"version":"2.0.0","stage":"failed","percent":0,"error":"signature","updated":1}')
-timers[3000]()
+timers[1000]()
 record('updateFailure', journal_has('stage=failed version=2.0.0 error=signature'))
 
 local size_before_repeat = text_file.size(journal_path)
 
-timers[3000]()
+timers[1000]()
 record('updateLoggedOnce', text_file.size(journal_path) == size_before_repeat)
 
 send_command('off')

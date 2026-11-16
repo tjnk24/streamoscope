@@ -22,7 +22,7 @@ export const buildRequests = (targets: StreamTargetDto[], withDiscovery: boolean
         {requestType: GetProfileParameter, requestData: BRIDGE_PARAMETER},
         {requestType: GetSceneCollectionList},
         ...targets
-            .filter(({outputName}) => outputName !== null)
+            .filter(({outputName, outputId}) => outputName !== null && outputId === null)
             .map(({outputName}) => ({
                 requestType: GetOutputStatus,
                 requestData: {outputName},

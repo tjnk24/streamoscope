@@ -4,6 +4,7 @@ export const TARGET: StreamTargetDto = {
     key: 'main',
     origin: OutputOriginEnum.Main,
     outputName: null,
+    outputId: null,
     pluginName: null,
     platform: {
         title: 'live.example.com',

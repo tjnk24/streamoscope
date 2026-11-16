@@ -74,12 +74,14 @@ function script_description()
     local icon = string.format(consts.DESCRIPTION_ICON_HTML, script_path())
 
     if string.sub(obs.obs_get_locale(), 1, 2) == 'ru' then
-        return icon .. 'Сообщает панели StreamoScope, на какую площадку стримят выходы плагинов (obs-multi-rtmp и любые другие), ' ..
-            'загрузку видеокарты и занятую память системы. Передаёт только адрес сервера без пути и ключа.'
+        return icon .. 'Сообщает панели StreamoScope, на какую площадку стримят выходы плагинов (obs-multi-rtmp и любые другие) ' ..
+            'и статистику каждого из них, загрузку видеокарты и занятую память системы. Передаёт только адрес сервера без пути и ключа ' ..
+            'и короткий отпечаток, по которому панель узнаёт выход, а ключ не восстановить.'
     end
 
-    return icon .. 'Tells the StreamoScope dock which platform plugin outputs stream to (obs-multi-rtmp and any other), ' ..
-        'the GPU load and the system memory in use. Only the server address is passed, without the path or the key.'
+    return icon .. 'Tells the StreamoScope dock which platform plugin outputs stream to (obs-multi-rtmp and any other) ' ..
+        'and the statistics of each, the GPU load and the system memory in use. Only the server address is passed, without the path ' ..
+        'or the key, plus a short fingerprint that lets the dock recognise the output and cannot be turned back into the key.'
 end
 
 function script_load(_settings)

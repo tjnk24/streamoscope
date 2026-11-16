@@ -17,30 +17,52 @@ local function server_origin(url)
     return scheme .. string.gsub(authority, consts.SERVER_USERINFO_PATTERN, '')
 end
 
+local function describe_stats(output)
+    if output.total_bytes == nil then
+        return nil
+    end
+
+    return {
+        isActive = output.is_active,
+        totalBytes = output.total_bytes,
+        totalFrames = output.total_frames,
+        droppedFrames = output.dropped,
+        durationMs = output.duration_ms,
+        congestion = output.congestion,
+        isReconnecting = output.is_reconnecting,
+    }
+end
+
 local function read_outputs(stream_outputs)
     if stream_outputs ~= nil then
-        local enumerated, found = pcall(stream_outputs.read, stream_outputs)
+        local enumerated, found, sampled_at_ms = pcall(stream_outputs.read, stream_outputs)
 
         if enumerated and found ~= nil then
-            return found
+            return found, sampled_at_ms
         end
     end
 
-    return named_outputs.read()
+    return named_outputs.read(), nil
 end
 
 function targets.read(stream_outputs)
     local result = {}
+    local outputs, sampled_at_ms = read_outputs(stream_outputs)
 
-    for _index, output in ipairs(read_outputs(stream_outputs)) do
+    for _index, output in ipairs(outputs) do
         local server = server_origin(output.server)
 
         if server ~= nil then
-            result[#result + 1] = {name = output.name, server = server}
+            result[#result + 1] = {
+                name = output.name,
+                server = server,
+                id = output.id,
+                stats = describe_stats(output),
+            }
         end
     end
 
-    return result
+    return result, sampled_at_ms
 end
 
 return targets

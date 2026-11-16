@@ -14,3 +14,9 @@ $script:UpdaterStub = @'
 param([string]$Version, [switch]$Auto)
 [System.IO.File]::WriteAllText($env:MARKER_FILE, "version=$Version auto=$Auto")
 '@
+$script:FingerprintSalt = 'streamoscope:'
+$script:FingerprintBytes = 4
+$script:MachineGuidKey = 'SOFTWARE\Microsoft\Cryptography'
+$script:MachineGuidValue = 'MachineGuid'
+$script:OutputWithStats = '{"id":"a3f91c07","name":"multi-output","server":"rtmp://live.example.com","stats":{"congestion":0.5,"droppedFrames":3,"durationMs":10000,"isActive":true,"isReconnecting":false,"totalBytes":1250000,"totalFrames":600}}'
+$script:FallbackOutput = '{"name":"fallback-output","server":"rtmp://fallback.example.com"}'

@@ -57,6 +57,7 @@ Describe 'Journal of the bridge' {
     It 'writes the statistics of active outputs without the panel' {
         $script:Results.outputStats | Should -Be 'true'
         $script:Results.sameNameOutput | Should -Be 'true'
+        $script:Results.outputIdLabel | Should -Be 'true'
         $script:Results.unsafeNameCleaned | Should -Be 'true'
         $script:Results.inactiveSkipped | Should -Be 'true'
     }

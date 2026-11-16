@@ -25,6 +25,7 @@ export type StreamTargetDto = {
     key: string;
     origin: OutputOriginEnum;
     outputName: string | null;
+    outputId: string | null;
     pluginName: string | null;
     platform: PlatformDto;
     notes: NoteDto[];

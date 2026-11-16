@@ -7,6 +7,7 @@ import {captureDock} from './dock/captureDock.ts';
 import {evaluateInDock} from './dock/evaluateInDock.ts';
 import {sendBridgeCommand} from './obs/sendBridgeCommand.ts';
 import {sendObsRequest} from './obs/sendObsRequest.ts';
+import {setFakeMultiRtmp} from './obs/setFakeMultiRtmp.ts';
 import {buildNewerRelease} from './packaging/buildNewerRelease.ts';
 import {installCurrentVersion} from './packaging/installCurrentVersion.ts';
 import {printStatus} from './printStatus.ts';
@@ -38,6 +39,9 @@ switch (command) {
         break;
     case 'stream':
         await sendObsRequest(argument === 'off' ? 'StopStream' : 'StartStream');
+        break;
+    case 'multi':
+        await setFakeMultiRtmp(argument !== 'off');
         break;
     case 'update':
         await sendBridgeCommand(`install:${argument}`);

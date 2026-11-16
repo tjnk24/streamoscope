@@ -11,6 +11,7 @@ import {checkBackgroundUpdate} from './checks/checkBackgroundUpdate.ts';
 import {checkDockAndStream} from './checks/checkDockAndStream.ts';
 import {checkJournal} from './checks/checkJournal.ts';
 import {checkUpdateButton} from './checks/checkUpdateButton.ts';
+import {checkPluginOutputs} from './checks/pluginOutputs/checkPluginOutputs.ts';
 import {checkBrokenLoader} from './checks/rollback/checkBrokenLoader.ts';
 import {checkRollback} from './checks/rollback/checkRollback.ts';
 
@@ -29,6 +30,9 @@ export const runScenario = async () => {
 
         console.log('--- the journal');
         await checkJournal();
+
+        console.log('--- three plugin outputs named multi-output');
+        await checkPluginOutputs();
 
         console.log(`--- the Update button, version ${button}`);
         await buildNewerRelease(button);

@@ -1,3 +1,8 @@
+import {
+    BridgeDataDto,
+    BridgeOutputDto,
+    BridgeOutputStatsDto,
+} from '__types/bridge';
 import {RequestResultPairDto} from '__types/obs/requests';
 import {ObsOutputListItemDto} from '__types/obs/responses';
 
@@ -102,6 +107,115 @@ export const PLUGIN_STREAM_PAIR: RequestResultPairDto = {
         requestStatus: SUCCESS_STATUS,
         responseData: {
             outputs: [VIRTUAL_CAMERA_OUTPUT, PLUGIN_STREAM_OUTPUT],
+        },
+    },
+};
+
+const BRIDGE_UPDATED_AT = 1800000000;
+
+export const BRIDGE_NOW_MS = (BRIDGE_UPDATED_AT + 1) * 1000;
+
+const OUTPUT_STATS: BridgeOutputStatsDto = {
+    isActive: true,
+    totalBytes: 1250000,
+    totalFrames: 600,
+    droppedFrames: 0,
+    durationMs: 10000,
+    congestion: 0,
+    isReconnecting: false,
+};
+
+const TWITCH_OUTPUT: BridgeOutputDto = {
+    name: 'multi-output',
+    server: 'rtmp://live.twitch.tv',
+    id: 'b7c20e11',
+    stats: OUTPUT_STATS,
+};
+
+const SECOND_TWITCH_OUTPUT: BridgeOutputDto = {
+    ...TWITCH_OUTPUT,
+    id: '0f6d93aa',
+};
+
+const GOODGAME_OUTPUT: BridgeOutputDto = {
+    ...TWITCH_OUTPUT,
+    server: 'rtmp://msk.goodgame.ru:1940',
+    id: 'a3f91c07',
+};
+
+const BRIDGE_DATA: BridgeDataDto = {
+    bridgeVersion: 7,
+    updated: BRIDGE_UPDATED_AT,
+    sampledAtMs: 5000,
+    outputs: [TWITCH_OUTPUT, GOODGAME_OUTPUT, SECOND_TWITCH_OUTPUT],
+};
+
+const OLD_BRIDGE_DATA: BridgeDataDto = {
+    bridgeVersion: 6,
+    updated: BRIDGE_UPDATED_AT,
+    outputs: [{name: 'multi-output', server: 'rtmp://live.twitch.tv'}],
+};
+
+const SHORT_BRIDGE_DATA: BridgeDataDto = {
+    ...BRIDGE_DATA,
+    outputs: [TWITCH_OUTPUT, GOODGAME_OUTPUT],
+};
+
+export const SERVICE_PAIR: RequestResultPairDto = {
+    request: {requestType: 'GetStreamServiceSettings'},
+    result: {
+        requestType: 'GetStreamServiceSettings',
+        requestStatus: SUCCESS_STATUS,
+        responseData: {
+            streamServiceType: 'rtmp_common',
+            streamServiceSettings: {
+                service: 'VK Video Live',
+                server: 'rtmp://rtmp.vkvideo.ru',
+            },
+        },
+    },
+};
+
+export const THREE_PLUGIN_OUTPUTS_PAIR: RequestResultPairDto = {
+    request: OUTPUT_LIST_REQUEST,
+    result: {
+        requestType: 'GetOutputList',
+        requestStatus: SUCCESS_STATUS,
+        responseData: {
+            outputs: [MAIN_STREAM_OUTPUT, PLUGIN_STREAM_OUTPUT, PLUGIN_STREAM_OUTPUT, PLUGIN_STREAM_OUTPUT],
+        },
+    },
+};
+
+export const MEASURED_BRIDGE_PAIR: RequestResultPairDto = {
+    request: {requestType: 'GetProfileParameter'},
+    result: {
+        requestType: 'GetProfileParameter',
+        requestStatus: SUCCESS_STATUS,
+        responseData: {
+            parameterValue: JSON.stringify(BRIDGE_DATA),
+        },
+    },
+};
+
+export const OLD_BRIDGE_PAIR: RequestResultPairDto = {
+    request: {requestType: 'GetProfileParameter'},
+    result: {
+        requestType: 'GetProfileParameter',
+        requestStatus: SUCCESS_STATUS,
+        responseData: {
+            parameterValue: JSON.stringify(OLD_BRIDGE_DATA),
+        },
+    },
+};
+
+export const SHORT_BRIDGE_PAIR: RequestResultPairDto = {
+    request: {requestType: 'GetProfileParameter'},
+    result: {
+        requestType: 'GetProfileParameter',
+        requestStatus: SUCCESS_STATUS,
+        responseData: {
+            parameterValue: JSON.stringify(SHORT_BRIDGE_DATA),
         },
     },
 };

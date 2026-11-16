@@ -1,3 +1,4 @@
+import {BridgeDataDto, BridgeOutputStatsDto} from '__types/bridge';
 import {RequestResultPairDto} from '__types/obs/requests';
 import {ObsOutputStatusDto, ObsStatsDto} from '__types/obs/responses';
 import {LagViewDto} from '__types/stats/views';
@@ -14,6 +15,7 @@ export const MAIN_TARGET: StreamTargetDto = {
     key: 'main',
     origin: OutputOriginEnum.Main,
     outputName: null,
+    outputId: null,
     pluginName: null,
     platform: {
         title: 'YouTube',
@@ -116,5 +118,79 @@ export const VIDEO_SETTINGS_PAIR: RequestResultPairDto = {
             fpsNumerator: 60000,
             fpsDenominator: 1001,
         },
+    },
+};
+
+export const MEASURED_TARGET: StreamTargetDto = {
+    ...MAIN_TARGET,
+    key: 'plugin:b7c20e11',
+    origin: OutputOriginEnum.Plugin,
+    outputName: 'multi-output',
+    outputId: 'b7c20e11',
+};
+
+const BRIDGE_UPDATED_AT = 1800000000;
+
+export const BRIDGE_NOW_MS = (BRIDGE_UPDATED_AT + 1) * 1000;
+
+const BRIDGE_OUTPUT_STATS: BridgeOutputStatsDto = {
+    isActive: true,
+    totalBytes: 0,
+    totalFrames: 600,
+    droppedFrames: 0,
+    durationMs: 10000,
+    congestion: 0.25,
+    isReconnecting: false,
+};
+
+const FIRST_BRIDGE_DATA: BridgeDataDto = {
+    bridgeVersion: 7,
+    updated: BRIDGE_UPDATED_AT,
+    sampledAtMs: 5000,
+    outputs: [
+        {
+            name: 'multi-output',
+            server: 'rtmp://live.twitch.tv',
+            id: 'b7c20e11',
+            stats: BRIDGE_OUTPUT_STATS,
+        },
+    ],
+};
+
+const SECOND_BRIDGE_DATA: BridgeDataDto = {
+    ...FIRST_BRIDGE_DATA,
+    sampledAtMs: 6000,
+    outputs: [
+        {
+            name: 'multi-output',
+            server: 'rtmp://live.twitch.tv',
+            id: 'b7c20e11',
+            stats: {
+                ...BRIDGE_OUTPUT_STATS,
+                totalBytes: 500000,
+                totalFrames: 660,
+                durationMs: 11000,
+            },
+        },
+    ],
+};
+
+const BRIDGE_REQUEST = {requestType: 'GetProfileParameter'};
+
+export const FIRST_BRIDGE_PAIR: RequestResultPairDto = {
+    request: BRIDGE_REQUEST,
+    result: {
+        requestType: 'GetProfileParameter',
+        requestStatus: SUCCESS_STATUS,
+        responseData: {parameterValue: JSON.stringify(FIRST_BRIDGE_DATA)},
+    },
+};
+
+export const SECOND_BRIDGE_PAIR: RequestResultPairDto = {
+    request: BRIDGE_REQUEST,
+    result: {
+        requestType: 'GetProfileParameter',
+        requestStatus: SUCCESS_STATUS,
+        responseData: {parameterValue: JSON.stringify(SECOND_BRIDGE_DATA)},
     },
 };

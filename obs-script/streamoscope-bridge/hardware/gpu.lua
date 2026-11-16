@@ -152,6 +152,33 @@ local function round_percent(value)
     return math.floor(math.min(value, consts.MAX_PERCENT) * 10 + 0.5) / 10
 end
 
+local function read_sample(self)
+    if self.query == nil or self.pdh.PdhCollectQueryData(self.query[0]) ~= 0 then
+        return nil
+    end
+
+    local adapters = read_adapter_loads(self)
+
+    read_adapter_memory(self, adapters, self.counters.dedicated, 'dedicated')
+    read_adapter_memory(self, adapters, self.counters.shared, 'shared')
+
+    local busiest = find_busiest_adapter(self, adapters)
+
+    if busiest == nil then
+        return nil
+    end
+
+    local is_shared_memory = busiest.dedicated < consts.DEDICATED_MEMORY_MIN_BYTES
+
+    return {
+        name = busiest.name or json.null,
+        usage = round_percent(busiest.usage),
+        encoder = round_percent(busiest.encoder),
+        memoryInBytes = math.floor(is_shared_memory and busiest.shared or busiest.dedicated),
+        isSharedMemory = is_shared_memory,
+    }
+end
+
 function Gpu.new()
     local self = setmetatable({adapter_names = {}}, Gpu)
 
@@ -188,30 +215,14 @@ function Gpu:close()
 end
 
 function Gpu:sample()
-    if self.query == nil or self.pdh.PdhCollectQueryData(self.query[0]) ~= 0 then
-        return nil
+    local now = os.time()
+
+    if self.sampled_at == nil or now - self.sampled_at >= consts.GPU_SAMPLE_INTERVAL_SEC then
+        self.sampled_at = now
+        self.last_sample = read_sample(self)
     end
 
-    local adapters = read_adapter_loads(self)
-
-    read_adapter_memory(self, adapters, self.counters.dedicated, 'dedicated')
-    read_adapter_memory(self, adapters, self.counters.shared, 'shared')
-
-    local busiest = find_busiest_adapter(self, adapters)
-
-    if busiest == nil then
-        return nil
-    end
-
-    local is_shared_memory = busiest.dedicated < consts.DEDICATED_MEMORY_MIN_BYTES
-
-    return {
-        name = busiest.name or json.null,
-        usage = round_percent(busiest.usage),
-        encoder = round_percent(busiest.encoder),
-        memoryInBytes = math.floor(is_shared_memory and busiest.shared or busiest.dedicated),
-        isSharedMemory = is_shared_memory,
-    }
+    return self.last_sample
 end
 
 return Gpu

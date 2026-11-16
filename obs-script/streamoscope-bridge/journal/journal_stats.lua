@@ -46,6 +46,16 @@ local function describe_bitrate(self, label, output, elapsed_seconds)
     return string.format(consts.JOURNAL_BITRATE_TEMPLATE, sent_bytes * consts.BITS_PER_BYTE / consts.BITS_PER_KILOBIT / elapsed_seconds)
 end
 
+local function label_output(output, name, name_counts)
+    if output.id ~= nil then
+        return string.format(consts.JOURNAL_OUTPUT_ID_TEMPLATE, name, output.id)
+    end
+
+    name_counts[name] = (name_counts[name] or 0) + 1
+
+    return name_counts[name] > 1 and (name .. '#' .. name_counts[name]) or name
+end
+
 local function describe_outputs(self, outputs, elapsed_seconds)
     local lines = {}
     local name_counts = {}
@@ -54,10 +64,7 @@ local function describe_outputs(self, outputs, elapsed_seconds)
     for _index, output in ipairs(outputs) do
         if output.is_active then
             local name = string.gsub(output.name, consts.JOURNAL_LABEL_UNSAFE_PATTERN, '_')
-
-            name_counts[name] = (name_counts[name] or 0) + 1
-
-            local label = name_counts[name] > 1 and (name .. '#' .. name_counts[name]) or name
+            local label = label_output(output, name, name_counts)
 
             lines[#lines + 1] = {
                 source = label,

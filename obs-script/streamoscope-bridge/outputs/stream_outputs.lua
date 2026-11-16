@@ -1,6 +1,7 @@
 local ffi = require('ffi')
 
 local consts = require('streamoscope-bridge.consts')
+local OutputFingerprint = require('streamoscope-bridge.outputs.output_fingerprint')
 
 local StreamOutputs = {}
 
@@ -21,6 +22,9 @@ local function define_types()
         int obs_output_get_total_frames(const void *output);
         float obs_output_get_congestion(void *output);
         bool obs_output_reconnecting(const void *output);
+        void *obs_output_video(const void *output);
+        uint64_t video_output_get_frame_time(const void *video);
+        uint64_t os_gettime_ns(void);
     ]])
 end
 
@@ -45,6 +49,58 @@ local function read_service_server(self, service)
     return result
 end
 
+local function take_text(pointer)
+    if pointer ~= nil and pointer[0] ~= 0 then
+        return pointer
+    end
+
+    return nil
+end
+
+local function read_secret(self, service, settings, info_type, setting_name)
+    local from_service = take_text(self.libobs.obs_service_get_connect_info(service, info_type))
+
+    if from_service ~= nil or settings == nil then
+        return from_service or ''
+    end
+
+    return take_text(self.libobs.obs_data_get_string(settings, setting_name)) or ''
+end
+
+local function fingerprint_service(self, service, server)
+    if self.fingerprint == nil then
+        return nil
+    end
+
+    local settings = self.libobs.obs_service_get_settings(service)
+
+    local parts = {
+        server or '',
+        read_secret(self, service, settings, consts.STREAM_KEY_INFO, 'key'),
+        read_secret(self, service, settings, consts.BEARER_TOKEN_INFO, 'bearer_token'),
+    }
+
+    local fingerprint = self.fingerprint:compute(parts)
+
+    if settings ~= nil then
+        self.libobs.obs_data_release(settings)
+    end
+
+    return fingerprint
+end
+
+local function read_duration_ms(self, output, total_frames)
+    local video = self.libobs.obs_output_video(output)
+
+    if video == nil then
+        return 0
+    end
+
+    local frame_time_ns = tonumber(self.libobs.video_output_get_frame_time(video))
+
+    return math.floor(total_frames * frame_time_ns / consts.NANOSECONDS_PER_MILLISECOND)
+end
+
 local function visit_output(self, output)
     local service = self.libobs.obs_output_get_service(output)
 
@@ -55,13 +111,18 @@ local function visit_output(self, output)
     local name = self.libobs.obs_output_get_name(output)
 
     if name ~= nil then
+        local server = read_service_server(self, service)
+        local total_frames = self.libobs.obs_output_get_total_frames(output)
+
         self.found[#self.found + 1] = {
             name = ffi.string(name),
-            server = read_service_server(self, service),
+            server = server,
+            id = fingerprint_service(self, service, server),
             is_active = self.libobs.obs_output_active(output),
             total_bytes = tonumber(self.libobs.obs_output_get_total_bytes(output)),
             dropped = self.libobs.obs_output_get_frames_dropped(output),
-            total_frames = self.libobs.obs_output_get_total_frames(output),
+            total_frames = total_frames,
+            duration_ms = read_duration_ms(self, output, total_frames),
             congestion = self.libobs.obs_output_get_congestion(output),
             is_reconnecting = self.libobs.obs_output_reconnecting(output),
         }
@@ -79,7 +140,10 @@ function StreamOutputs.new()
         return self
     end
 
+    local fingerprint_created, fingerprint = pcall(OutputFingerprint.new)
+
     self.libobs = libobs
+    self.fingerprint = fingerprint_created and fingerprint or nil
     self.visit = ffi.cast('bool (*)(void *, void *)', function(_param, output)
         visit_output(self, output)
 
@@ -94,7 +158,12 @@ function StreamOutputs:close()
         self.visit:free()
     end
 
+    if self.fingerprint ~= nil then
+        self.fingerprint:close()
+    end
+
     self.visit = nil
+    self.fingerprint = nil
 end
 
 function StreamOutputs:read()
@@ -105,7 +174,7 @@ function StreamOutputs:read()
     self.found = {}
     self.libobs.obs_enum_outputs(self.visit, nil)
 
-    return self.found
+    return self.found, math.floor(tonumber(self.libobs.os_gettime_ns()) / consts.NANOSECONDS_PER_MILLISECOND)
 end
 
 return StreamOutputs

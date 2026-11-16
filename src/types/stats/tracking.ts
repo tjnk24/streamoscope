@@ -3,6 +3,8 @@ import type {Nullable} from 'infrastructure/common';
 import type {AdviceTracker} from '__utils/stats/AdviceTracker';
 import type {RecentCounter} from '__utils/stats/RecentCounter';
 
+import {ObsOutputStatusDto} from '../obs/responses';
+
 import {GraphPointDto, OutputViewDto} from './views';
 
 type OutputBytesSampleDto = {
@@ -19,6 +21,11 @@ export type RecentSampleDto = {
 export type LagStartDto = {
     skipped: number;
     total: number;
+};
+
+export type OutputSampleDto = {
+    status: Nullable<ObsOutputStatusDto>;
+    time: number;
 };
 
 export type OutputStateDto = {

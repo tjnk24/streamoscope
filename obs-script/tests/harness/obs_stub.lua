@@ -1,6 +1,8 @@
 local store = {}
 local stub_outputs = {}
+local stub_sampled_at_ms = 5000
 local timers = {}
+local timer_callbacks = {}
 local event_callbacks = {}
 local fake_now = 1000000
 local real_time = os.time
@@ -36,10 +38,28 @@ obslua = {
     obs_get_output_by_name = function() return nil end,
     obs_frontend_get_current_scene_collection = function() return 'Main scenes' end,
     obs_frontend_add_event_callback = function(callback) event_callbacks[#event_callbacks + 1] = callback end,
-    timer_add = function(callback, interval) timers[interval] = callback end,
+    timer_add = function(callback, interval)
+        timer_callbacks[interval] = timer_callbacks[interval] or {}
+        table.insert(timer_callbacks[interval], callback)
+
+        timers[interval] = function()
+            local callbacks = {unpack(timer_callbacks[interval] or {})}
+
+            for _index, known in ipairs(callbacks) do
+                known()
+            end
+        end
+    end,
     timer_remove = function(callback)
-        for interval, known in pairs(timers) do
-            if known == callback then
+        for interval, callbacks in pairs(timer_callbacks) do
+            for callback_index = #callbacks, 1, -1 do
+                if callbacks[callback_index] == callback then
+                    table.remove(callbacks, callback_index)
+                end
+            end
+
+            if #callbacks == 0 then
+                timer_callbacks[interval] = nil
                 timers[interval] = nil
             end
         end
@@ -54,7 +74,7 @@ end
 
 package.loaded['streamoscope-bridge.outputs.stream_outputs'] = {
     new = function()
-        return {close = function() end, read = function() return stub_outputs end}
+        return {close = function() end, read = function() return stub_outputs, stub_sampled_at_ms end}
     end,
 }
 

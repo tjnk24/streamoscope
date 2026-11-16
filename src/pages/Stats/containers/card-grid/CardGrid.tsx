@@ -19,6 +19,7 @@ import {OutputStatKeyEnum} from '__types/stats/statKeys';
 import {CARD_DRAG_ACCESSIBILITY, CARD_POINTER_SENSOR_OPTIONS} from '../../consts';
 import SortableCard from '../sortable-card';
 
+import {expandLegacyCardKeys} from './utils/expandLegacyCardKeys';
 import {moveCardKey} from './utils/moveCardKey';
 import {sortTargets} from './utils/sortTargets';
 
@@ -33,7 +34,9 @@ const CardGrid = () => {
 
     const sensors = useSensors(pointerSensor);
 
-    const sortedTargets = sortTargets(targets, cardOrder);
+    const expandedCardOrder = expandLegacyCardKeys(cardOrder, targets);
+
+    const sortedTargets = sortTargets(targets, expandedCardOrder);
 
     const cardKeys = sortedTargets.map(({key}) => key);
 
@@ -46,7 +49,7 @@ const CardGrid = () => {
             return;
         }
 
-        const newOrder = moveCardKey(cardOrder, cardKeys, String(active.id), String(over.id));
+        const newOrder = moveCardKey(expandedCardOrder, cardKeys, String(active.id), String(over.id));
 
         commonActions.settings.setCardOrder(newOrder);
     };
