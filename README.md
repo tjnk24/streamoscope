@@ -127,7 +127,7 @@ The bridge tells the dock where plugin outputs are streaming, reads Windows hard
 
 - **OBS must expose the output.** Plugin-independent does not mean API-independent: if an output plugin doesn't make an output or its statistics available to OBS, StreamoScope cannot invent the missing numbers. A plugin that only creates its output when streaming starts gets its card once that stream starts; the dock does not read private plugin configurations.
 - **Output identity may be ambiguous.** If a plugin reports several streams using indistinguishable output identifiers, OBS might not provide separate statistics for each one. StreamoScope displays what can be reliably distinguished.
-- **Labels are best-effort.** Unrecognized services can appear as **Plugin** rather than a platform name.
+- **Labels are best-effort.** The dock knows 27 platforms by name and colour: YouTube, Twitch, Kick, TikTok, Instagram, Facebook, X, Rumble, Steam, Trovo, W.TV, Rutube, VK Video Live, VK Video, OK, Boosty, GoodGame, Telegram, CHZZK, SOOP, Bilibili, niconico, Nimo TV, Picarto, Piczel.tv, Mixcloud and Vaughn Live. Any other destination still gets its card, titled with the service name or server host, and unrecognized plugin outputs can appear as **Plugin**.
 - **Without the bridge, only the basics.** Bitrate, dropped frames and OBS statistics still work, but plugin outputs lose their platform names, hardware readings (Windows only) disappear and updates have to be installed by hand.
 - **Manual installs update manually.** Automatic updates work only in the installed version: replace the files yourself.
 
