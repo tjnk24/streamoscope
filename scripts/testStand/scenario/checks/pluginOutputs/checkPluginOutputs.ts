@@ -5,8 +5,9 @@ import {
     BRIDGE_PARAMETER,
     CARD_BITRATES_EXPRESSION,
     DOCK_SAME_NAME_WARNING_TEXT,
+    FAKE_MULTI_RTMP_CONFIG,
+    FAKE_MULTI_RTMP_ENABLED_TARGETS,
     FAKE_MULTI_RTMP_KEY_PREFIX,
-    FAKE_MULTI_RTMP_SETTINGS,
     JOURNAL_OUTPUT_ID_STATS_PATTERN,
     JOURNAL_PATH,
     OUTPUT_FINGERPRINT_PATTERN,
@@ -25,7 +26,9 @@ import {checkStep} from '../checkStep.ts';
 import {countReadyPluginPaths} from './countReadyPluginPaths.ts';
 
 export const checkPluginOutputs = async () => {
-    const expectedBitrates = FAKE_MULTI_RTMP_SETTINGS.targets.map(({bitrate}) => bitrate);
+    const bitrates = new Map(FAKE_MULTI_RTMP_CONFIG.video_configs.map(({id, param}) => [id, param.bitrate]));
+    const targetBitrates = FAKE_MULTI_RTMP_ENABLED_TARGETS.map(target => bitrates.get(target['video-config']) ?? 0);
+    const expectedBitrates = sortBy(targetBitrates);
 
     await setFakeMultiRtmp(true);
 
@@ -47,10 +50,16 @@ export const checkPluginOutputs = async () => {
 
     const {parameterValue} = await sendObsRequest('GetProfileParameter', BRIDGE_PARAMETER);
     const bridgeText = String(parameterValue);
-    const {outputs: bridgeOutputs} = JSON.parse(bridgeText) as BridgeDataDto;
+    const {outputs: bridgeOutputs, configuredTargets = []} = JSON.parse(bridgeText) as BridgeDataDto;
     const pluginIds = bridgeOutputs.filter(({name, stats}) => name === 'multi-output' && stats).map(({id}) => id ?? '');
+    const configuredIds = configuredTargets.map(({id}) => id);
 
     checkStep('the bridge passes a fingerprint of each output', uniq(pluginIds).filter(id => OUTPUT_FINGERPRINT_PATTERN.test(id)).length, expectedBitrates.length);
+    checkStep('each output has the fingerprint of its target known before the start', sortBy(pluginIds).join(','), sortBy(configuredIds).join(','));
+
+    const dockText = await getDockText();
+
+    checkStep('the cards of the started targets keep their names', FAKE_MULTI_RTMP_ENABLED_TARGETS.every(({name}) => dockText.includes(name)), true);
     checkStep('the bridge passes no stream key', bridgeText.includes(FAKE_MULTI_RTMP_KEY_PREFIX), false);
 
     await waitFor('the statistics of each output in the journal', () => {

@@ -7,10 +7,13 @@ import {ObsRequestDto, ObsRequestResultDto} from '__types/obs/requests';
 import {OBS_RPC_VERSION} from '__utils/consts';
 
 import {
+    MOCK_CONFIGURED_TARGETS,
     MOCK_EXTRA_TARGETS,
+    MOCK_FIRST_STREAM_DELAY_SEC,
     MOCK_FPS,
     MOCK_GPU,
     MOCK_MAIN_OUTPUT_NAME,
+    MOCK_OFF_STREAM_STATUS,
     MOCK_SCENE_COLLECTION,
     MOCK_SYSTEM_MEMORY,
     MOCK_TWITCH_DELAY_SEC,
@@ -47,11 +50,11 @@ export class MockObsSimulator {
 
     private lastTickAt = this.startedAt;
 
-    private readonly mainOutput = createMockOutput(this.startedAt);
+    private mainOutput: Nullable<MockOutputStateDto> = null;
 
     private twitchOutput: Nullable<MockOutputStateDto> = null;
 
-    private readonly extraOutputs = new Map(MOCK_EXTRA_TARGETS.map(({outputId}) => [outputId, createMockOutput(this.startedAt)]));
+    private readonly extraOutputs = new Map<string, MockOutputStateDto>();
 
     private renderTotalFrames = 0;
 
@@ -64,24 +67,24 @@ export class MockObsSimulator {
     answer = (requests: ObsRequestDto[]): ObsRequestResultDto[] => {
         const now = performance.now();
         const elapsedSeconds = (now - this.lastTickAt) / 1000;
-        const runningSeconds = (now - this.startedAt) / 1000;
+        const streamSeconds = ((now - this.startedAt) / 1000) - MOCK_FIRST_STREAM_DELAY_SEC;
 
         this.lastTickAt = now;
-        this.advance(now, elapsedSeconds, runningSeconds);
+        this.advance(now, elapsedSeconds, streamSeconds);
 
-        return requests.map(request => this.answerRequest(request, now, runningSeconds));
+        return requests.map(request => this.answerRequest(request, now, streamSeconds));
     };
 
-    private isMainDipping = (runningSeconds: number) => runningSeconds % 40 >= 20 && runningSeconds % 40 < 26;
+    private isMainDipping = (streamSeconds: number) => streamSeconds % 40 >= 20 && streamSeconds % 40 < 26;
 
-    private isTwitchReconnecting = (runningSeconds: number) => runningSeconds % 60 >= 50 && runningSeconds % 60 < 55;
+    private isTwitchReconnecting = (streamSeconds: number) => streamSeconds % 60 >= 50 && streamSeconds % 60 < 55;
 
-    private isTwitchDropping = (runningSeconds: number) => runningSeconds % 30 >= 10 && runningSeconds % 30 < 14;
+    private isTwitchDropping = (streamSeconds: number) => streamSeconds % 30 >= 10 && streamSeconds % 30 < 14;
 
-    private getTwitchCongestion = (runningSeconds: number) => (this.isTwitchDropping(runningSeconds) ? 0.3 : 0.01);
+    private getTwitchCongestion = (streamSeconds: number) => (this.isTwitchDropping(streamSeconds) ? 0.3 : 0.01);
 
-    private getFps = (runningSeconds: number) => {
-        const phase = runningSeconds % 90;
+    private getFps = (streamSeconds: number) => {
+        const phase = streamSeconds % 90;
 
         if (phase >= 70 && phase < 74) {
             return 55;
@@ -90,17 +93,29 @@ export class MockObsSimulator {
         return phase >= 74 && phase < 78 ? 45 : MOCK_FPS;
     };
 
-    private advance = (now: number, elapsedSeconds: number, runningSeconds: number) => {
-        const mainKbps = this.isMainDipping(runningSeconds) ? 6500 : randomBetween(17700, 18300);
+    private advance = (now: number, elapsedSeconds: number, streamSeconds: number) => {
+        this.renderTotalFrames += Math.round(MOCK_FPS * elapsedSeconds);
+        this.renderSkippedFrames += Math.round((MOCK_FPS - this.getFps(streamSeconds)) * elapsedSeconds);
+
+        if (streamSeconds < 0) {
+            return;
+        }
+
+        if (!this.mainOutput) {
+            this.mainOutput = createMockOutput(now);
+            MOCK_EXTRA_TARGETS.forEach(({outputId}) => this.extraOutputs.set(outputId, createMockOutput(now)));
+        }
+
+        const mainKbps = this.isMainDipping(streamSeconds) ? 6500 : randomBetween(17700, 18300);
 
         growMockOutput(this.mainOutput, elapsedSeconds, mainKbps, 0);
 
-        if (runningSeconds >= MOCK_TWITCH_DELAY_SEC && !this.twitchOutput) {
+        if (streamSeconds >= MOCK_TWITCH_DELAY_SEC && !this.twitchOutput) {
             this.twitchOutput = createMockOutput(now);
         }
 
-        if (this.twitchOutput && !this.isTwitchReconnecting(runningSeconds)) {
-            const twitchDroppedFrames = this.isTwitchDropping(runningSeconds) ? 5 : 0;
+        if (this.twitchOutput && !this.isTwitchReconnecting(streamSeconds)) {
+            const twitchDroppedFrames = this.isTwitchDropping(streamSeconds) ? 5 : 0;
 
             growMockOutput(this.twitchOutput, elapsedSeconds, randomBetween(5800, 6200), twitchDroppedFrames);
         }
@@ -111,22 +126,20 @@ export class MockObsSimulator {
             output && growMockOutput(output, elapsedSeconds, randomBetween(minKbps, maxKbps), 0);
         });
 
-        this.renderTotalFrames += Math.round(MOCK_FPS * elapsedSeconds);
-        this.renderSkippedFrames += Math.round((MOCK_FPS - this.getFps(runningSeconds)) * elapsedSeconds);
         this.encoderTotalFrames += Math.round(MOCK_FPS * elapsedSeconds);
 
-        if (runningSeconds % 45 < 2) {
+        if (streamSeconds % 45 < 2) {
             this.encoderSkippedFrames += Math.round(10 * elapsedSeconds);
         }
     };
 
-    private answerRequest = (request: ObsRequestDto, now: number, runningSeconds: number): ObsRequestResultDto => {
+    private answerRequest = (request: ObsRequestDto, now: number, streamSeconds: number): ObsRequestResultDto => {
         const {requestType} = request;
 
         switch (requestType) {
             case GetStats: {
                 const stats = {
-                    activeFps: this.getFps(runningSeconds),
+                    activeFps: this.getFps(streamSeconds),
                     averageFrameRenderTime: randomBetween(0.8, 1.1),
                     cpuUsage: randomBetween(3, 6),
                     memoryUsage: 480,
@@ -141,15 +154,15 @@ export class MockObsSimulator {
             }
 
             case GetStreamStatus: {
-                const congestion = this.isMainDipping(runningSeconds) ? 0.6 : 0.02;
+                const congestion = this.isMainDipping(streamSeconds) ? 0.6 : 0.02;
 
-                const streamStatus = buildMockOutputStatus(this.mainOutput, now, congestion, false);
+                const streamStatus = this.mainOutput ? buildMockOutputStatus(this.mainOutput, now, congestion, false) : MOCK_OFF_STREAM_STATUS;
 
                 return successResult(requestType, streamStatus);
             }
 
             case GetOutputStatus:
-                return this.answerOutputStatus(requestType, String(request.requestData?.outputName), now, runningSeconds);
+                return this.answerOutputStatus(requestType, String(request.requestData?.outputName), now, streamSeconds);
 
             case GetStreamServiceSettings: {
                 const serviceSettings = {
@@ -162,18 +175,22 @@ export class MockObsSimulator {
 
             case GetOutputList: {
                 const twitchOutputs = this.twitchOutput
-                    ? [buildMockOutputListItem(MOCK_TWITCH_OUTPUT_NAME, !this.isTwitchReconnecting(runningSeconds))]
+                    ? [buildMockOutputListItem(MOCK_TWITCH_OUTPUT_NAME, !this.isTwitchReconnecting(streamSeconds))]
                     : [];
 
-                const extraOutputs = MOCK_EXTRA_TARGETS.map(({outputName}) => buildMockOutputListItem(outputName, true));
+                const extraOutputs = MOCK_EXTRA_TARGETS
+                    .filter(({outputId}) => this.extraOutputs.has(outputId))
+                    .map(({outputName}) => buildMockOutputListItem(outputName, true));
 
-                const outputs = [buildMockOutputListItem(MOCK_MAIN_OUTPUT_NAME, true), ...twitchOutputs, ...extraOutputs];
+                const mainOutputs = this.mainOutput ? [buildMockOutputListItem(MOCK_MAIN_OUTPUT_NAME, true)] : [];
+
+                const outputs = [...mainOutputs, ...twitchOutputs, ...extraOutputs];
 
                 return successResult(requestType, {outputs});
             }
 
             case GetProfileParameter:
-                return successResult(requestType, {parameterValue: JSON.stringify(this.buildBridgeData(now, runningSeconds))});
+                return successResult(requestType, {parameterValue: JSON.stringify(this.buildBridgeData(now, streamSeconds))});
 
             case GetVideoSettings:
                 return successResult(requestType, {fpsNumerator: MOCK_FPS, fpsDenominator: 1});
@@ -201,10 +218,10 @@ export class MockObsSimulator {
         }
     };
 
-    private answerOutputStatus = (requestType: string, outputName: string, now: number, runningSeconds: number) => {
+    private answerOutputStatus = (requestType: string, outputName: string, now: number, streamSeconds: number) => {
         if (outputName === MOCK_TWITCH_OUTPUT_NAME && this.twitchOutput) {
-            const twitchCongestion = this.getTwitchCongestion(runningSeconds);
-            const twitchStatus = buildMockOutputStatus(this.twitchOutput, now, twitchCongestion, this.isTwitchReconnecting(runningSeconds));
+            const twitchCongestion = this.getTwitchCongestion(streamSeconds);
+            const twitchStatus = buildMockOutputStatus(this.twitchOutput, now, twitchCongestion, this.isTwitchReconnecting(streamSeconds));
 
             return successResult(requestType, twitchStatus);
         }
@@ -219,7 +236,7 @@ export class MockObsSimulator {
         return failureResult(requestType, OBS_OUTPUT_NOT_FOUND_CODE);
     };
 
-    private buildBridgeOutputs = (now: number, runningSeconds: number) => {
+    private buildBridgeOutputs = (now: number, streamSeconds: number) => {
         const extraOutputs = MOCK_EXTRA_TARGETS.flatMap(({outputName, outputId, server}) => {
             const output = this.extraOutputs.get(outputId);
             const target = {name: outputName, server, id: outputId};
@@ -232,19 +249,20 @@ export class MockObsSimulator {
         }
 
         const twitchTarget = {name: MOCK_TWITCH_OUTPUT_NAME, server: MOCK_TWITCH_SERVER, id: MOCK_TWITCH_OUTPUT_ID};
-        const twitchCongestion = this.getTwitchCongestion(runningSeconds);
-        const twitchOutput = buildMockBridgeOutput(twitchTarget, this.twitchOutput, now, twitchCongestion, this.isTwitchReconnecting(runningSeconds));
+        const twitchCongestion = this.getTwitchCongestion(streamSeconds);
+        const twitchOutput = buildMockBridgeOutput(twitchTarget, this.twitchOutput, now, twitchCongestion, this.isTwitchReconnecting(streamSeconds));
 
         return [twitchOutput, ...extraOutputs];
     };
 
-    private buildBridgeData = (now: number, runningSeconds: number): BridgeDataDto => ({
-        bridgeVersion: 7,
+    private buildBridgeData = (now: number, streamSeconds: number): BridgeDataDto => ({
+        bridgeVersion: 8,
         updated: Math.floor(Date.now() / 1000),
         sampledAtMs: Math.floor(now),
         update: {available: true, status: null},
         sceneCollection: MOCK_SCENE_COLLECTION,
-        outputs: this.buildBridgeOutputs(now, runningSeconds),
+        outputs: this.buildBridgeOutputs(now, streamSeconds),
+        configuredTargets: MOCK_CONFIGURED_TARGETS,
         gpu: {
             ...MOCK_GPU,
             usage: randomBetween(40, 60),

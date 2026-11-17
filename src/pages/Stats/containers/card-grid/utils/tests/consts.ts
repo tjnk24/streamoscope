@@ -8,6 +8,7 @@ const MAIN_TARGET: StreamTargetDto = {
     outputName: null,
     outputId: null,
     pluginName: null,
+    targetTitle: null,
     platform: {
         title: 'YouTube',
         color: '#ff0000',
@@ -22,6 +23,7 @@ const MULTI_RTMP_TARGET: StreamTargetDto = {
     outputName: 'multi-output',
     outputId: null,
     pluginName: 'multi-rtmp',
+    targetTitle: null,
     platform: {
         title: 'Twitch',
         color: '#9146ff',
@@ -36,6 +38,7 @@ const OTHER_PLUGIN_TARGET: StreamTargetDto = {
     outputName: 'other-output',
     outputId: null,
     pluginName: null,
+    targetTitle: null,
     platform: {
         title: 'Unknown platform',
         color: '#8c8c8c',

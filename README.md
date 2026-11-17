@@ -35,7 +35,7 @@ Running multiple streams from one OBS instance? You shouldn't have to open a sep
 **No plugin loyalty.** 🤷
 
 <p align="center">
-  <img src="docs/images/stats-wide.png" width="700" alt="StreamoScope wide dock: four simultaneous streams with live bitrate, dropped-frame statistics and red hints on the rows in trouble">
+  <img src="docs/images/stats-wide.png" width="700" alt="StreamoScope wide dock: five simultaneous streams, obs-multi-rtmp targets signed with their names, with live bitrate, dropped-frame statistics and red hints on the rows in trouble">
 </p>
 <p align="center"><sub>Four streams, four sets of stats, one less reason to panic. 😌</sub></p>
 
@@ -62,7 +62,7 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 
 ¹ Hardware readings come from the StreamoScope Lua bridge and are available on Windows.
 
-⏳ **Cards wait for your first stream.** Plugins often introduce their streams to OBS only when they start, so until something goes live in this OBS session the dock shows one short note instead of a half-complete set of empty cards. After that, every stream OBS knows about keeps its card while offline: platform, source and place in your order, plus a short note instead of a wall of zeros. Go live again and the same card fills with stats.
+⏳ **Cards wait for your first stream.** Plugins often introduce their streams to OBS only when they start, so until something goes live in this OBS session the dock shows one short note instead of a half-complete set of empty cards. obs-multi-rtmp is the exception: the bridge reads its targets from the profile, so their cards are there from the start, empty and signed with the names you gave them, and the first start fills them. Targets switched off in the plugin get no card. After that, every stream OBS knows about keeps its card while offline: platform, source and place in your order, plus a short note instead of a wall of zeros. Go live again and the same card fills with stats.
 
 🧲 **Your streams, your order.** Drag a stream card by its header (the dotted handle shows up once there are two cards to sort) and the dock remembers where you put it. Until you do, the main OBS stream comes first. Changed your mind? Drag them back.
 
@@ -121,7 +121,7 @@ StreamoScope has two parts: the dock, which reads output statistics through OBS'
 
 The bridge tells the dock where plugin outputs are streaming and how each of them is doing, reads Windows hardware metrics and starts the background updates. The per-output numbers matter when a plugin gives all its outputs one name: obs-multi-rtmp calls every target `multi-output`, and WebSocket can only ask about an output by name, so it would answer for one of them. The bridge walks through all outputs instead, and every target gets its own card. The installer sets it up for you; the dock shows a notice whenever the bridge isn't loaded in the current scene collection. Missing metadata doesn't necessarily mean a stream isn't being monitored: some outputs may simply be labeled **Plugin**.
 
-🔒 For platform detection, the bridge passes only the protocol and host of each server, never stream keys or URL paths. To tell outputs of the same name apart and keep their cards in place, it works out a short fingerprint from the server address and the stream key right inside OBS and passes only that. Nothing is sent anywhere: the key stays in OBS, and the fingerprint can't be turned back into it. For the curious: HMAC-SHA256 cut to 8 characters, keyed with the ID Windows already keeps for this computer, so the same key gives a different fingerprint on any other machine.
+🔒 For platform detection, the bridge passes only the protocol and host of each server, never stream keys or URL paths. To tell outputs of the same name apart and keep their cards in place, it works out a short fingerprint from the server address and the stream key right inside OBS and passes only that. For obs-multi-rtmp targets that haven't started yet, it does the same with the server and key from the plugin's own settings in your profile. Nothing is sent anywhere: the key stays in OBS, and the fingerprint can't be turned back into it. For the curious: HMAC-SHA256 cut to 8 characters, keyed with the ID Windows already keeps for this computer, so the same key gives a different fingerprint on any other machine.
 
 ## 🚧 Limitations
 

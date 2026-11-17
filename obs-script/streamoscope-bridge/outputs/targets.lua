@@ -65,4 +65,27 @@ function targets.read(stream_outputs)
     return result, sampled_at_ms
 end
 
+function targets.read_configured(multi_rtmp_targets)
+    local result = {}
+
+    if multi_rtmp_targets == nil then
+        return result
+    end
+
+    for _index, target in ipairs(multi_rtmp_targets:read()) do
+        local server = server_origin(target.server)
+
+        if server ~= nil then
+            result[#result + 1] = {
+                id = target.id,
+                name = consts.MULTI_RTMP_OUTPUT_NAME,
+                server = server,
+                title = target.title,
+            }
+        end
+    end
+
+    return result
+end
+
 return targets

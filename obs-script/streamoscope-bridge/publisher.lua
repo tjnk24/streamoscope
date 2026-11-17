@@ -24,6 +24,7 @@ end
 
 local function build_payload(sources)
     local outputs_read, outputs, sampled_at_ms = pcall(targets.read, sources.stream_outputs)
+    local configured_read, configured_targets = pcall(targets.read_configured, sources.multi_rtmp_targets)
 
     return {
         bridgeVersion = consts.BRIDGE_VERSION,
@@ -31,6 +32,7 @@ local function build_payload(sources)
         sampledAtMs = outputs_read and sampled_at_ms or nil,
         sceneCollection = obs.obs_frontend_get_current_scene_collection(),
         outputs = json.array(outputs_read and outputs or {}),
+        configuredTargets = json.array(configured_read and configured_targets or {}),
         gpu = sources.gpu ~= nil and sample_safely(sources.gpu.sample, sources.gpu) or nil,
         systemMemory = sample_safely(system_memory.sample),
         update = sources.updater ~= nil and sample_safely(describe_update, sources.updater) or nil,

@@ -10,8 +10,9 @@ import {useSelector} from 'react-redux';
 
 import {connectionStatusSelector} from '__selectors/connectionSelectors';
 import {settingsIsShowGeneralCardSelector, settingsIsShowOutputCardsSelector} from '__selectors/settingsSelectors';
-import {statsHasStreamStartedSelector} from '__selectors/statsSelectors';
+import {statsHasStreamStartedSelector, statsTargetsSelector} from '__selectors/statsSelectors';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
+import {OutputOriginEnum} from '__types/targets';
 
 import {adviceModalSelector} from '../../selectors/adviceModalSelectors';
 import AdviceModal from '../advice-modal';
@@ -28,10 +29,13 @@ const Page = () => {
     const isShowGeneralCard = useSelector(settingsIsShowGeneralCardSelector);
     const {isVisible: isAdviceModalVisible} = useSelector(adviceModalSelector);
     const hasStreamStarted = useSelector(statsHasStreamStartedSelector);
+    const targets = useSelector(statsTargetsSelector);
 
     const {t} = useTranslation();
 
     const {isClosed, title, description} = useConnectionAlertView();
+
+    const isCardGridShown = hasStreamStarted || targets.some(({origin}) => origin === OutputOriginEnum.Plugin);
 
     if (status !== ConnectionStatusEnum.Identified) {
         return (
@@ -51,9 +55,9 @@ const Page = () => {
             gap="small"
             vertical
         >
-            {isShowOutputCards && hasStreamStarted && <CardGrid/>}
+            {isShowOutputCards && isCardGridShown && <CardGrid/>}
 
-            {isShowOutputCards && !hasStreamStarted && (
+            {isShowOutputCards && !isCardGridShown && (
                 <Card
                     size="small"
                     classNames={{

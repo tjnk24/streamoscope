@@ -6,6 +6,7 @@ export const TARGET: StreamTargetDto = {
     outputName: null,
     outputId: null,
     pluginName: null,
+    targetTitle: null,
     platform: {
         title: 'live.example.com',
         color: '#000',

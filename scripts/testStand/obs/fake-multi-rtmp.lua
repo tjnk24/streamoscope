@@ -1,4 +1,8 @@
 local obs = obslua
+local ffi = require('ffi')
+
+pcall(ffi.cdef, 'char *obs_frontend_get_current_profile_path(void);')
+pcall(ffi.cdef, 'void bfree(void *pointer);')
 
 local COMMAND_SECTION = 'StreamoScopeStand'
 local COMMAND_NAME = 'FakeMultiRtmp'
@@ -7,6 +11,8 @@ local COMMAND_INTERVAL_MS = 250
 local OUTPUT_NAME = 'multi-output'
 local SERVICE_NAME = 'multi-output-service'
 local AUDIO_BITRATE = 64
+local DEFAULT_BITRATE = 400
+local CONFIG_FILE = 'obs-multi-rtmp.json'
 
 local targets = {}
 
@@ -80,26 +86,55 @@ local function start_target(server, key, bitrate)
     targets[#targets + 1] = target
 end
 
-local function start_targets(command)
-    local settings = obs.obs_data_create_from_json(command)
+local function read_bitrates(config)
+    local bitrates = {}
+    local video_configs = obs.obs_data_get_array(config, 'video_configs')
 
-    if settings == nil then
+    for config_index = 0, obs.obs_data_array_count(video_configs) - 1 do
+        local video_config = obs.obs_data_array_item(video_configs, config_index)
+        local param = obs.obs_data_get_obj(video_config, 'param')
+
+        bitrates[obs.obs_data_get_string(video_config, 'id')] = obs.obs_data_get_int(param, 'bitrate')
+        obs.obs_data_release(param)
+        obs.obs_data_release(video_config)
+    end
+
+    obs.obs_data_array_release(video_configs)
+
+    return bitrates
+end
+
+local function start_targets()
+    local profile_pointer = ffi.load('obs-frontend-api').obs_frontend_get_current_profile_path()
+    local profile_path = ffi.string(profile_pointer)
+
+    ffi.load('obs').bfree(profile_pointer)
+
+    local config_path = string.gsub(profile_path, '[\\/]+$', '') .. '/' .. CONFIG_FILE
+    local config = obs.obs_data_create_from_json_file(config_path)
+
+    if config == nil then
         return
     end
 
-    local server = obs.obs_data_get_string(settings, 'server')
-    local key_prefix = obs.obs_data_get_string(settings, 'keyPrefix')
-    local target_list = obs.obs_data_get_array(settings, 'targets')
+    local bitrates = read_bitrates(config)
+    local target_list = obs.obs_data_get_array(config, 'targets')
 
     for target_index = 0, obs.obs_data_array_count(target_list) - 1 do
         local target_settings = obs.obs_data_array_item(target_list, target_index)
+        local service_settings = obs.obs_data_get_obj(target_settings, 'service-param')
+        local bitrate = bitrates[obs.obs_data_get_string(target_settings, 'video-config')] or DEFAULT_BITRATE
 
-        start_target(server, key_prefix .. target_index, obs.obs_data_get_int(target_settings, 'bitrate'))
+        if obs.obs_data_get_bool(target_settings, 'enabled') then
+            start_target(obs.obs_data_get_string(service_settings, 'server'), obs.obs_data_get_string(service_settings, 'key'), bitrate)
+        end
+
+        obs.obs_data_release(service_settings)
         obs.obs_data_release(target_settings)
     end
 
     obs.obs_data_array_release(target_list)
-    obs.obs_data_release(settings)
+    obs.obs_data_release(config)
 end
 
 local function handle_command()
@@ -114,12 +149,12 @@ local function handle_command()
     release_targets()
 
     if command ~= COMMAND_OFF then
-        start_targets(command)
+        start_targets()
     end
 end
 
 function script_description()
-    return 'StreamoScope test stand: imitates obs-multi-rtmp with several outputs named multi-output.'
+    return 'StreamoScope test stand: imitates obs-multi-rtmp: starts an output named multi-output for each enabled target of obs-multi-rtmp.json in the profile.'
 end
 
 function script_load(_settings)

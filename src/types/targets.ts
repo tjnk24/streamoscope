@@ -27,6 +27,7 @@ export type StreamTargetDto = {
     outputName: string | null;
     outputId: string | null;
     pluginName: string | null;
+    targetTitle: string | null;
     platform: PlatformDto;
     notes: NoteDto[];
 };

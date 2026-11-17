@@ -26,6 +26,13 @@ export type MeasuredBridgeOutputDto = {
     stats: BridgeOutputStatsDto;
 };
 
+export type BridgeConfiguredTargetDto = {
+    id: string;
+    name: string;
+    server: string;
+    title?: string;
+};
+
 type GpuStatsDto = {
     name?: Nullable<string>;
     usage: number;
@@ -50,6 +57,7 @@ export type BridgeDataDto = {
     sampledAtMs?: number;
     sceneCollection?: string;
     outputs: BridgeOutputDto[];
+    configuredTargets?: BridgeConfiguredTargetDto[];
     gpu?: GpuStatsDto;
     systemMemory?: SystemMemoryDto;
     update?: BridgeUpdateDto;

@@ -40,7 +40,7 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
 
     const {t} = useTranslation();
 
-    const {platform: {title, color}, notes} = target;
+    const {platform: {title, color}, targetTitle, notes} = target;
 
     const {
         isActive,
@@ -133,6 +133,7 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
 
     return {
         title,
+        targetTitle: targetTitle && targetTitle.toLowerCase() !== title.toLowerCase() ? targetTitle : null,
         color,
         notes,
         hasReconnectAdvice: advices.includes(Reconnecting),

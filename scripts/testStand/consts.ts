@@ -3,7 +3,7 @@ import path from 'node:path';
 import {ROOT_DIRECTORY} from '../packageRelease/consts.ts';
 
 import type {BrokenFileDto, BrokenPartType} from './types/brokenRelease.ts';
-import type {FakeMultiRtmpSettingsDto} from './types/rtmp.ts';
+import type {FakeMultiRtmpConfigDto} from './types/rtmp.ts';
 import type {ScenarioVersionsDto} from './types/ScenarioVersionsDto.ts';
 import type {StandArchiveDto} from './types/StandArchiveDto.ts';
 
@@ -110,15 +110,62 @@ export const FAKE_MULTI_RTMP_KEY_PREFIX = 'stand-multi-key-';
 
 export const FAKE_MULTI_RTMP_PATH_PREFIX = 'multi/';
 
-export const FAKE_MULTI_RTMP_SETTINGS: FakeMultiRtmpSettingsDto = {
-    server: 'rtmp://127.0.0.1:1935/multi',
-    keyPrefix: FAKE_MULTI_RTMP_KEY_PREFIX,
+const FAKE_MULTI_RTMP_SERVER = 'rtmp://127.0.0.1:1935/multi';
+
+export const FAKE_MULTI_RTMP_CONFIG_PATH = path.join(OBS_CONFIG_DIRECTORY, 'basic', 'profiles', STAND_COLLECTION_NAME, 'obs-multi-rtmp.json');
+
+export const FAKE_MULTI_RTMP_CONFIG: FakeMultiRtmpConfigDto = {
     targets: [
-        {bitrate: 400},
-        {bitrate: 800},
-        {bitrate: 1200},
+        {
+            'id': '1',
+            'name': 'Stand low',
+            'enabled': true,
+            'protocol': 'RTMP',
+            'service-param': {server: FAKE_MULTI_RTMP_SERVER, key: `${FAKE_MULTI_RTMP_KEY_PREFIX}0`},
+            'video-config': 'video-400',
+        },
+        {
+            'id': '2',
+            'name': 'Stand middle',
+            'enabled': true,
+            'protocol': 'RTMP',
+            'service-param': {server: FAKE_MULTI_RTMP_SERVER, key: `${FAKE_MULTI_RTMP_KEY_PREFIX}1`},
+            'video-config': 'video-800',
+        },
+        {
+            'id': '3',
+            'name': 'Stand high',
+            'enabled': true,
+            'protocol': 'RTMP',
+            'service-param': {server: FAKE_MULTI_RTMP_SERVER, key: `${FAKE_MULTI_RTMP_KEY_PREFIX}2`},
+            'video-config': 'video-1200',
+        },
+        {
+            'id': '4',
+            'name': 'Stand switched off',
+            'enabled': false,
+            'protocol': 'RTMP',
+            'service-param': {server: FAKE_MULTI_RTMP_SERVER, key: `${FAKE_MULTI_RTMP_KEY_PREFIX}3`},
+            'video-config': 'video-400',
+        },
+    ],
+    video_configs: [
+        {
+            id: 'video-400',
+            param: {bitrate: 400},
+        },
+        {
+            id: 'video-800',
+            param: {bitrate: 800},
+        },
+        {
+            id: 'video-1200',
+            param: {bitrate: 1200},
+        },
     ],
 };
+
+export const FAKE_MULTI_RTMP_ENABLED_TARGETS = FAKE_MULTI_RTMP_CONFIG.targets.filter(({enabled}) => enabled);
 
 export const PLUGIN_BITRATE_TOLERANCE = 0.35;
 
@@ -255,6 +302,10 @@ export const DOCK_OFFLINE_TEXT = 'Offline';
 export const LIVE_BITRATE_PATTERN = /Live\s+[1-9]\d*\s+kbps/;
 
 export const DOCK_SAME_NAME_WARNING_TEXT = 'stats for one of them only';
+
+export const DOCK_WAITING_FOR_FIRST_STREAM_TEXT = 'Statistics will appear as soon as you start your streams.';
+
+export const DOCK_WAITING_FOR_STREAM_TEXT = 'Statistics will appear when you start streaming to this platform.';
 
 export const CARD_BITRATES_EXPRESSION = '[...document.querySelectorAll(".ant-statistic-content-value")].map(value => Number(value.innerText.replace(/\\D/g, ""))).filter(Boolean)';
 

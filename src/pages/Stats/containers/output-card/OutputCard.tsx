@@ -32,6 +32,7 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
 
     const {
         title,
+        targetTitle,
         color,
         notes,
         hasReconnectAdvice,
@@ -72,7 +73,7 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
 
                     <Badge color={color}/>
 
-                    <EnhancedText>
+                    <EnhancedText className={cn({[style.platformTitle]: targetTitle})}>
                         {title}
                     </EnhancedText>
 
@@ -80,6 +81,15 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
                         <Tooltip title={t(platformMark.hintKey)}>
                             <span>{platformMark.emoji}</span>
                         </Tooltip>
+                    )}
+
+                    {targetTitle && (
+                        <EnhancedText
+                            className={style.targetTitle}
+                            type="secondary"
+                        >
+                            {targetTitle}
+                        </EnhancedText>
                     )}
                 </Flex>
             )}

@@ -22,6 +22,14 @@
     cursor: grabbing;
 }
 
+.platformTitle {
+    flex: none;
+}
+
+.targetTitle {
+    font-weight: normal;
+}
+
 .handle {
     color: var(--ant-color-text-quaternary);
     transition: color var(--ant-motion-duration-mid);

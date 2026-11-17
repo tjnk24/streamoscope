@@ -28,6 +28,7 @@ export const buildNamedTarget = (outputName: string, count: number, bridgeServer
         outputName,
         outputId: null,
         pluginName: PLUGIN_OUTPUT_NAMES[outputName] || null,
+        targetTitle: null,
         platform: detectPlatform(null, bridgeServer, t('stats.unknownPlatform')),
         notes,
     };

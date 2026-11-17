@@ -11,10 +11,16 @@ import {discoverTargets} from '../discoverTargets';
 
 import {
     BRIDGE_NOW_MS,
+    CONFIGURED_BRIDGE_PAIR,
     MEASURED_BRIDGE_PAIR,
+    OFFLINE_OUTPUTS_PAIR,
     OLD_BRIDGE_PAIR,
+    PLUGIN_STREAM_PAIR,
     SERVICE_PAIR,
     SHORT_BRIDGE_PAIR,
+    SHORT_CONFIGURED_BRIDGE_PAIR,
+    STARTED_BRIDGE_PAIR,
+    STARTED_PLUGINS_PAIR,
     THREE_PLUGIN_OUTPUTS_PAIR,
 } from './consts';
 
@@ -68,6 +74,48 @@ describe('discoverTargets', () => {
 
     it('keeps one card with the warning when the bridge sees fewer outputs than OBS', () => {
         const targets = discoverTargets([SERVICE_PAIR, THREE_PLUGIN_OUTPUTS_PAIR, SHORT_BRIDGE_PAIR]);
+
+        expect(targets?.map(({key}) => key)).toEqual(['main', 'plugin:multi-output']);
+    });
+
+    it('gives the targets the bridge knows a card before they start', () => {
+        const targets = discoverTargets([SERVICE_PAIR, OFFLINE_OUTPUTS_PAIR, CONFIGURED_BRIDGE_PAIR]);
+
+        const plugins = targets
+            ?.slice(1)
+            .map(({key, outputId, targetTitle, platform}) => ({key, outputId, targetTitle, title: platform.title}));
+
+        expect(plugins).toEqual([
+            {
+                key: 'plugin:a3f91c07',
+                outputId: 'a3f91c07',
+                targetTitle: null,
+                title: 'GoodGame',
+            },
+            {
+                key: 'plugin:b7c20e11',
+                outputId: 'b7c20e11',
+                targetTitle: 'Main channel',
+                title: 'Twitch',
+            },
+        ]);
+    });
+
+    it('fills the card of a target from its started output', () => {
+        const targets = discoverTargets([SERVICE_PAIR, PLUGIN_STREAM_PAIR, SHORT_CONFIGURED_BRIDGE_PAIR]);
+
+        expect(targets?.map(({key}) => key)).toEqual(['main', 'plugin:a3f91c07', 'plugin:b7c20e11']);
+        expect(targets?.[2].targetTitle).toBe('Main channel');
+    });
+
+    it('adds outputs of other plugins after they start', () => {
+        const targets = discoverTargets([SERVICE_PAIR, STARTED_PLUGINS_PAIR, STARTED_BRIDGE_PAIR]);
+
+        expect(targets?.map(({key}) => key)).toEqual(['main', 'plugin:e27b6a90', 'plugin:a3f91c07', 'plugin:b7c20e11']);
+    });
+
+    it('keeps one card by name without the waiting targets when the bridge sees fewer outputs than OBS', () => {
+        const targets = discoverTargets([SERVICE_PAIR, THREE_PLUGIN_OUTPUTS_PAIR, SHORT_CONFIGURED_BRIDGE_PAIR]);
 
         expect(targets?.map(({key}) => key)).toEqual(['main', 'plugin:multi-output']);
     });

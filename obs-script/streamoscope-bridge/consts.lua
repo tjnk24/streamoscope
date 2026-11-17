@@ -1,7 +1,7 @@
 local ffi = require('ffi')
 
 return {
-    BRIDGE_VERSION = 7,
+    BRIDGE_VERSION = 8,
     STUB_MODULE = 'streamoscope-bridge.stub',
     PARAMETER_SECTION = 'StreamoScope',
     DESCRIPTION_ICON_HTML = '<p><img src="file:///%sstreamoscope-bridge/icon.png" width="64" height="64"></p>',
@@ -77,6 +77,19 @@ return {
     GPU_SAMPLE_INTERVAL_SEC = 3,
     COMMAND_INTERVAL_MS = 250,
     FALLBACK_OUTPUT_NAMES = {'multi-output'},
+    MULTI_RTMP_OUTPUT_NAME = 'multi-output',
+    MULTI_RTMP_MODULE_NAME = 'obs-multi-rtmp',
+    MULTI_RTMP_CONFIG_FILE = 'obs-multi-rtmp.json',
+    MULTI_RTMP_REFRESH_SEC = 5,
+    MULTI_RTMP_UNREADABLE_TEMPLATE = 'obs-multi-rtmp settings not understood plugin=%s',
+    MULTI_RTMP_UNKNOWN_VERSION = 'unknown',
+    PATH_TRAILING_SEPARATOR_PATTERN = '[\\/]+$',
+    FILE_VERSION_ROOT_BLOCK = '\\',
+    FILE_VERSION_HIGH_FIELD_INDEX = 2,
+    FILE_VERSION_LOW_FIELD_INDEX = 3,
+    FILE_VERSION_PART_BITS = 16,
+    FILE_VERSION_PART_MASK = 0xFFFF,
+    FILE_VERSION_TEMPLATE = '%d.%d.%d.%d',
     SERVER_URL_INFO = 0,
     STREAM_KEY_INFO = 2,
     BEARER_TOKEN_INFO = 10,

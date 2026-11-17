@@ -12,6 +12,7 @@ import {checkDockAndStream} from './checks/checkDockAndStream.ts';
 import {checkJournal} from './checks/checkJournal.ts';
 import {checkUpdateButton} from './checks/checkUpdateButton.ts';
 import {checkPluginOutputs} from './checks/pluginOutputs/checkPluginOutputs.ts';
+import {checkWaitingTargets} from './checks/pluginOutputs/checkWaitingTargets.ts';
 import {checkBrokenLoader} from './checks/rollback/checkBrokenLoader.ts';
 import {checkRollback} from './checks/rollback/checkRollback.ts';
 
@@ -26,6 +27,10 @@ export const runScenario = async () => {
 
         console.log(`--- the installed version ${VERSION} in OBS`);
         await startStand();
+
+        console.log('--- obs-multi-rtmp targets before the first stream');
+        await checkWaitingTargets();
+
         await checkDockAndStream();
 
         console.log('--- the journal');

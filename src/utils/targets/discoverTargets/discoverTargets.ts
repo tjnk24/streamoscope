@@ -1,6 +1,8 @@
 import {t} from 'i18next';
 import countBy from 'lodash/countBy';
 import groupBy from 'lodash/groupBy';
+import isString from 'lodash/isString';
+import uniq from 'lodash/uniq';
 
 import {ObsRequestTypeEnum} from '__types/obs/ObsRequestTypeEnum';
 import {RequestResultPairDto} from '__types/obs/requests';
@@ -10,6 +12,7 @@ import {
     ObsStreamServiceDto,
 } from '__types/obs/responses';
 import {OutputOriginEnum, StreamTargetDto} from '__types/targets';
+import {getConfiguredTargets} from '__utils/bridge/getConfiguredTargets';
 import {getMeasuredOutputs} from '__utils/bridge/getMeasuredOutputs';
 import {parseBridgeData} from '__utils/bridge/parseBridgeData';
 import {MAIN_OUTPUT_NAMES, MAIN_TARGET_KEY} from '__utils/consts';
@@ -18,7 +21,7 @@ import {isRequestOfType} from '__utils/requests/isRequestOfType';
 
 import {detectPlatform} from '../detectPlatform';
 
-import {buildMeasuredTargets} from './buildMeasuredTargets';
+import {buildIdentifiedTargets} from './buildIdentifiedTargets';
 import {buildNamedTarget} from './buildNamedTarget';
 
 const {GetStreamServiceSettings, GetOutputList, GetProfileParameter} = ObsRequestTypeEnum;
@@ -35,6 +38,9 @@ export const discoverTargets = (pairs: RequestResultPairDto[]): StreamTargetDto[
     const bridgeData = parseBridgeData(findResultData<ObsProfileParameterDto>(pairs, isRequestOfType(GetProfileParameter)));
     const bridgeServers = bridgeData && new Map(bridgeData.outputs.map(({name, server}) => [name, server]));
     const measuredOutputs = groupBy(getMeasuredOutputs(bridgeData), 'name');
+    const configuredTargets = getConfiguredTargets(bridgeData);
+    const configuredOutputs = groupBy(configuredTargets, 'name');
+    const titles = new Map(configuredTargets.map(({id, title}) => [id, isString(title) ? title.trim() : '']));
 
     const {service: serviceName, server} = service.streamServiceSettings || {};
 
@@ -44,6 +50,7 @@ export const discoverTargets = (pairs: RequestResultPairDto[]): StreamTargetDto[
         outputName: null,
         outputId: null,
         pluginName: null,
+        targetTitle: null,
         platform: detectPlatform(serviceName ?? null, server ?? null, t('stats.mainFallbackTitle')),
         notes: [],
     };
@@ -54,12 +61,20 @@ export const discoverTargets = (pairs: RequestResultPairDto[]): StreamTargetDto[
 
     const counts = countBy(pluginOutputNames);
 
-    const plugins = Object.keys(counts).sort().flatMap(outputName => {
-        const measured = measuredOutputs[outputName] ?? [];
+    const outputNames = uniq([...Object.keys(counts), ...Object.keys(configuredOutputs)]).sort();
 
-        return measured.length === counts[outputName]
-            ? buildMeasuredTargets(measured)
-            : [buildNamedTarget(outputName, counts[outputName], bridgeServers?.get(outputName) ?? null)];
+    const plugins = outputNames.flatMap(outputName => {
+        const measured = measuredOutputs[outputName] ?? [];
+        const count = counts[outputName] ?? 0;
+
+        if (measured.length !== count) {
+            return [buildNamedTarget(outputName, count, bridgeServers?.get(outputName) ?? null)];
+        }
+
+        const measuredIds = new Set(measured.map(({id}) => id));
+        const waiting = (configuredOutputs[outputName] ?? []).filter(({id}) => !measuredIds.has(id));
+
+        return buildIdentifiedTargets([...measured, ...waiting], titles);
     });
 
     return [main, ...plugins];

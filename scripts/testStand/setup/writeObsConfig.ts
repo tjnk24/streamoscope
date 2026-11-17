@@ -3,6 +3,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import {
+    FAKE_MULTI_RTMP_CONFIG,
+    FAKE_MULTI_RTMP_CONFIG_PATH,
     FAKE_MULTI_RTMP_SCRIPT_PATH,
     OBS_CONFIG_DIRECTORY,
     OBS_PORTABLE_MARKER,
@@ -110,6 +112,7 @@ export const writeObsConfig = () => {
     fs.writeFileSync(path.join(OBS_CONFIG_DIRECTORY, 'user.ini'), `${UTF8_BOM}${userIniLines.join('\n')}`);
     fs.writeFileSync(path.join(profileDirectory, 'basic.ini'), profileIniLines.join('\n'));
     fs.writeFileSync(path.join(profileDirectory, 'service.json'), JSON.stringify(service));
+    fs.writeFileSync(FAKE_MULTI_RTMP_CONFIG_PATH, JSON.stringify(FAKE_MULTI_RTMP_CONFIG, null, 4));
     fs.writeFileSync(path.join(scenesDirectory, `${STAND_COLLECTION_NAME}.json`), JSON.stringify(collection, null, 4));
     fs.writeFileSync(OBS_WEBSOCKET_CONFIG_PATH, JSON.stringify(webSocketConfig, null, 4));
 };

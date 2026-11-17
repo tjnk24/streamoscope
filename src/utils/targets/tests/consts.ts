@@ -1,4 +1,5 @@
 import {
+    BridgeConfiguredTargetDto,
     BridgeDataDto,
     BridgeOutputDto,
     BridgeOutputStatsDto,
@@ -100,6 +101,22 @@ export const MAIN_STREAM_PAIR: RequestResultPairDto = {
     },
 };
 
+const KICK_STREAM_OUTPUT: ObsOutputListItemDto = {
+    ...PLUGIN_STREAM_OUTPUT,
+    outputName: 'kick-output',
+};
+
+export const STARTED_PLUGINS_PAIR: RequestResultPairDto = {
+    request: OUTPUT_LIST_REQUEST,
+    result: {
+        requestType: 'GetOutputList',
+        requestStatus: SUCCESS_STATUS,
+        responseData: {
+            outputs: [MAIN_STREAM_OUTPUT, PLUGIN_STREAM_OUTPUT, KICK_STREAM_OUTPUT],
+        },
+    },
+};
+
 export const PLUGIN_STREAM_PAIR: RequestResultPairDto = {
     request: OUTPUT_LIST_REQUEST,
     result: {
@@ -148,6 +165,45 @@ const BRIDGE_DATA: BridgeDataDto = {
     updated: BRIDGE_UPDATED_AT,
     sampledAtMs: 5000,
     outputs: [TWITCH_OUTPUT, GOODGAME_OUTPUT, SECOND_TWITCH_OUTPUT],
+};
+
+const KICK_OUTPUT: BridgeOutputDto = {
+    name: 'kick-output',
+    server: 'rtmps://fa723fc1b171.global-contribute.live-video.net:443',
+    id: 'e27b6a90',
+    stats: OUTPUT_STATS,
+};
+
+const CONFIGURED_TARGETS: BridgeConfiguredTargetDto[] = [
+    {
+        id: 'b7c20e11',
+        name: 'multi-output',
+        server: 'rtmp://live.twitch.tv',
+        title: ' Main channel ',
+    },
+    {
+        id: 'a3f91c07',
+        name: 'multi-output',
+        server: 'rtmp://msk.goodgame.ru:1940',
+    },
+];
+
+const CONFIGURED_BRIDGE_DATA: BridgeDataDto = {
+    bridgeVersion: 8,
+    updated: BRIDGE_UPDATED_AT,
+    sampledAtMs: 5000,
+    outputs: [],
+    configuredTargets: CONFIGURED_TARGETS,
+};
+
+const STARTED_BRIDGE_DATA: BridgeDataDto = {
+    ...CONFIGURED_BRIDGE_DATA,
+    outputs: [TWITCH_OUTPUT, KICK_OUTPUT],
+};
+
+const SHORT_CONFIGURED_BRIDGE_DATA: BridgeDataDto = {
+    ...CONFIGURED_BRIDGE_DATA,
+    outputs: [TWITCH_OUTPUT],
 };
 
 const OLD_BRIDGE_DATA: BridgeDataDto = {
@@ -216,6 +272,39 @@ export const SHORT_BRIDGE_PAIR: RequestResultPairDto = {
         requestStatus: SUCCESS_STATUS,
         responseData: {
             parameterValue: JSON.stringify(SHORT_BRIDGE_DATA),
+        },
+    },
+};
+
+export const CONFIGURED_BRIDGE_PAIR: RequestResultPairDto = {
+    request: {requestType: 'GetProfileParameter'},
+    result: {
+        requestType: 'GetProfileParameter',
+        requestStatus: SUCCESS_STATUS,
+        responseData: {
+            parameterValue: JSON.stringify(CONFIGURED_BRIDGE_DATA),
+        },
+    },
+};
+
+export const STARTED_BRIDGE_PAIR: RequestResultPairDto = {
+    request: {requestType: 'GetProfileParameter'},
+    result: {
+        requestType: 'GetProfileParameter',
+        requestStatus: SUCCESS_STATUS,
+        responseData: {
+            parameterValue: JSON.stringify(STARTED_BRIDGE_DATA),
+        },
+    },
+};
+
+export const SHORT_CONFIGURED_BRIDGE_PAIR: RequestResultPairDto = {
+    request: {requestType: 'GetProfileParameter'},
+    result: {
+        requestType: 'GetProfileParameter',
+        requestStatus: SUCCESS_STATUS,
+        responseData: {
+            parameterValue: JSON.stringify(SHORT_CONFIGURED_BRIDGE_DATA),
         },
     },
 };

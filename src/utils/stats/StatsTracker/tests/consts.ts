@@ -17,6 +17,7 @@ export const MAIN_TARGET: StreamTargetDto = {
     outputName: null,
     outputId: null,
     pluginName: null,
+    targetTitle: null,
     platform: {
         title: 'YouTube',
         color: '#ff0000',

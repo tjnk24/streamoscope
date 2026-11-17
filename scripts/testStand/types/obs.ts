@@ -31,6 +31,12 @@ type BridgeOutputDto = {
     stats?: Record<string, unknown>;
 };
 
+type BridgeConfiguredTargetDto = {
+    id: string;
+    title?: string;
+};
+
 export type BridgeDataDto = {
     outputs: BridgeOutputDto[];
+    configuredTargets?: BridgeConfiguredTargetDto[];
 };

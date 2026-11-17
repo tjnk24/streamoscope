@@ -24,6 +24,7 @@ export type HealthTagDto = Pick<TagProps, 'color' | 'variant'>;
 
 export type OutputCardViewDto = {
     title: string;
+    targetTitle: Nullable<string>;
     color: string;
     notes: NoteDto[];
     hasReconnectAdvice: boolean;
