@@ -59,6 +59,10 @@ Describe 'Bridge installed with versions' {
         $script:Results.update | Should -Match '"available":true'
     }
 
+    It 'writes how many seconds after OBS finished loading the dock reported its health' {
+        $script:Results.dockReportLogged | Should -Be 'true'
+    }
+
     It 'erases an update command left in the profile file by the previous launch' {
         $script:Results.staleCommandLeftAfterLoad | Should -Be 'false'
     }

@@ -86,6 +86,18 @@ if marker ~= nil and marker ~= '' then
     record('afterOnCalledWith', wait_marker())
 end
 
+for _index, callback in ipairs(event_callbacks) do
+    callback(obslua.OBS_FRONTEND_EVENT_FINISHED_LOADING)
+end
+
+fake_now = fake_now + 14
+store['StreamoScope/UpdateCommand'] = 'healthy:9.9.9'
+timers[250]()
+
+local journal_text = text_file.read(environment.get('LOCALAPPDATA') .. '\\streamoscope\\logs\\streamoscope.log') or ''
+
+record('dockReportLogged', string.find(journal_text, 'updater  dock reported healthy version=9.9.9 after_loading=14s', 1, true) ~= nil)
+
 timers[1000]()
 script_unload()
 

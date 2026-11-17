@@ -47,6 +47,8 @@ return {
     JOURNAL_CONTROL_CHARACTER_PATTERN = '%c',
     JOURNAL_BITRATE_TEMPLATE = '%d',
     JOURNAL_OUTPUT_ID_TEMPLATE = '%s@%s',
+    JOURNAL_DOCK_REPORT_TEMPLATE = 'dock reported healthy version=%s after_loading=%s',
+    JOURNAL_SECONDS_TEMPLATE = '%ds',
     BITS_PER_BYTE = 8,
     BITS_PER_KILOBIT = 1000,
     NANOSECONDS_PER_MILLISECOND = 1000000,

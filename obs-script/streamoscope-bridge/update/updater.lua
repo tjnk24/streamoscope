@@ -94,6 +94,10 @@ function Updater:handle_command()
     local healthy_version = string.match(command, consts.HEALTHY_COMMAND_PATTERN)
 
     if healthy_version ~= nil then
+        if self.journal ~= nil then
+            self.journal:log_dock_report(healthy_version)
+        end
+
         confirm_version(self, healthy_version)
     end
 end

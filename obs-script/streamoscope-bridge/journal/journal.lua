@@ -166,7 +166,17 @@ function Journal:handle_schedule(sources)
     end
 end
 
+function Journal:log_dock_report(version)
+    local delay = self.finished_loading_at ~= nil and string.format(consts.JOURNAL_SECONDS_TEMPLATE, os.time() - self.finished_loading_at) or 'unknown'
+
+    self:log('INFO', string.format(consts.JOURNAL_DOCK_REPORT_TEMPLATE, version, delay), 'updater')
+end
+
 function Journal:handle_frontend_event(event)
+    if event == obs.OBS_FRONTEND_EVENT_FINISHED_LOADING then
+        self.finished_loading_at = os.time()
+    end
+
     for event_name, message in pairs(consts.JOURNAL_FRONTEND_EVENTS) do
         if obs[event_name] == event then
             self:log('INFO', message, 'obs')

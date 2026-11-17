@@ -145,6 +145,8 @@ export const JOURNAL_SILENCE_MS = 3000;
 
 export const JOURNAL_STATS_PATTERN = /STAT\s+\S+\s+kbps_avg=[1-9]\d*/;
 
+export const JOURNAL_DOCK_REPORT_PATTERN = /updater\s+dock reported healthy version=\S+ after_loading=\d+s/;
+
 export const JOURNAL_OUTPUT_ID_STATS_PATTERN = /STAT\s+multi-output@([0-9a-f]{8})\s+kbps_avg=[1-9]/g;
 
 export const JOURNAL_OBS_STATS_PATTERN = /STAT\s+OBS\s+fps=\d+\.\d frame_ms=\d+\.\d render_lag=\d+ encoder_lag=\d+ cpu=\d+\.\d% memory_mb=[1-9]/;

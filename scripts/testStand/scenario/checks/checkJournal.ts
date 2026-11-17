@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import {
     CONNECTION_WAIT_MS,
     JOURNAL_FORBIDDEN_TEXTS,
+    JOURNAL_DOCK_REPORT_PATTERN,
     JOURNAL_OBS_STATS_PATTERN,
     JOURNAL_PATH,
     JOURNAL_SILENCE_MS,
@@ -26,6 +27,7 @@ export const checkJournal = async () => {
     checkStep('the journal has the OBS events from the bridge', /obs\s+stream started/.test(journal), true);
     checkStep('the journal has the stream statistics', JOURNAL_STATS_PATTERN.test(journal), true);
     checkStep('the journal has the OBS statistics', JOURNAL_OBS_STATS_PATTERN.test(journal), true);
+    checkStep('the journal has how long after loading the dock reported', JOURNAL_DOCK_REPORT_PATTERN.test(journal), true);
 
     const {server_password: password} = readWebSocketConfig();
 
