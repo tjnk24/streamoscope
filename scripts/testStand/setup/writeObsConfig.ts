@@ -12,6 +12,7 @@ import {
     OBS_WEBSOCKET_CONFIG_PATH,
     STAND_COLLECTION_NAME,
     STAND_RTMP_SERVER,
+    STAND_STREAM_KEY,
     STAND_WEBSOCKET_PORT,
     UTF8_BOM,
 } from '../consts.ts';
@@ -70,7 +71,7 @@ export const writeObsConfig = () => {
         type: 'rtmp_custom',
         settings: {
             server: STAND_RTMP_SERVER,
-            key: 'stand',
+            key: STAND_STREAM_KEY,
             use_auth: false,
             bwtest: false,
         },

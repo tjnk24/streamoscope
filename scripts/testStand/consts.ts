@@ -99,6 +99,8 @@ export const MEDIAMTX_CONFIG = [
 
 export const STAND_RTMP_SERVER = 'rtmp://127.0.0.1:1935/stand';
 
+export const STAND_STREAM_KEY = 'stand';
+
 export const FAKE_MULTI_RTMP_SCRIPT_PATH = path.join(ROOT_DIRECTORY, 'scripts', 'testStand', 'obs', 'fake-multi-rtmp.lua');
 
 export const FAKE_MULTI_RTMP_PARAMETER: Record<string, string> = {
@@ -111,6 +113,8 @@ export const FAKE_MULTI_RTMP_KEY_PREFIX = 'stand-multi-key-';
 export const FAKE_MULTI_RTMP_PATH_PREFIX = 'multi/';
 
 const FAKE_MULTI_RTMP_SERVER = 'rtmp://127.0.0.1:1935/multi';
+
+export const FAKE_MULTI_RTMP_MAIN_COPY_TITLE = 'Stand copy of main';
 
 export const FAKE_MULTI_RTMP_CONFIG_PATH = path.join(OBS_CONFIG_DIRECTORY, 'basic', 'profiles', STAND_COLLECTION_NAME, 'obs-multi-rtmp.json');
 
@@ -139,6 +143,14 @@ export const FAKE_MULTI_RTMP_CONFIG: FakeMultiRtmpConfigDto = {
             'protocol': 'RTMP',
             'service-param': {server: FAKE_MULTI_RTMP_SERVER, key: `${FAKE_MULTI_RTMP_KEY_PREFIX}2`},
             'video-config': 'video-1200',
+        },
+        {
+            'id': '5',
+            'name': FAKE_MULTI_RTMP_MAIN_COPY_TITLE,
+            'enabled': true,
+            'protocol': 'RTMP',
+            'service-param': {server: FAKE_MULTI_RTMP_SERVER, key: STAND_STREAM_KEY},
+            'video-config': 'video-400',
         },
         {
             'id': '4',
@@ -303,6 +315,8 @@ export const LIVE_BITRATE_PATTERN = /Live\s+[1-9]\d*\s+kbps/;
 
 export const DOCK_SAME_NAME_WARNING_TEXT = 'stats for one of them only';
 
+export const DOCK_SAME_KEY_WARNING_TEXT = 'already taken by the main OBS stream';
+
 export const DOCK_WAITING_FOR_FIRST_STREAM_TEXT = 'Statistics will appear as soon as you start your streams.';
 
 export const DOCK_WAITING_FOR_STREAM_TEXT = 'Statistics will appear when you start streaming to this platform.';
@@ -355,7 +369,7 @@ start                         start the RTMP server, the test release server and
 stop                          close them
 status                        show the versions, the update files, the dock and the stream
 stream <on|off>               start or stop the stream to the local RTMP server
-multi <on|off>                start or stop three outputs named multi-output with their own bitrates (an imitation of obs-multi-rtmp)
+multi <on|off>                start or stop four outputs named multi-output with their own bitrates (an imitation of obs-multi-rtmp)
 update <version>              send the bridge install:<version>
 open-settings                 open the settings page of the dock
 evaluate <expression>         run an expression in the dock and print the result

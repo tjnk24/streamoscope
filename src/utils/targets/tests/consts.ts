@@ -196,6 +196,41 @@ const CONFIGURED_BRIDGE_DATA: BridgeDataDto = {
     configuredTargets: CONFIGURED_TARGETS,
 };
 
+const MAIN_KEY_ID = 'c4d8e2f1';
+
+const MAIN_KEY_CONFIGURED_TARGETS: BridgeConfiguredTargetDto[] = [
+    {
+        ...CONFIGURED_TARGETS[0],
+        keyId: MAIN_KEY_ID,
+    },
+    {
+        ...CONFIGURED_TARGETS[1],
+        keyId: '6e1f0b92',
+    },
+];
+
+const MAIN_KEY_CONFIGURED_BRIDGE_DATA: BridgeDataDto = {
+    ...CONFIGURED_BRIDGE_DATA,
+    bridgeVersion: 9,
+    configuredTargets: MAIN_KEY_CONFIGURED_TARGETS,
+    mainKeyId: MAIN_KEY_ID,
+};
+
+const MAIN_KEY_TWITCH_OUTPUT: BridgeOutputDto = {
+    ...TWITCH_OUTPUT,
+    keyId: MAIN_KEY_ID,
+};
+
+const MAIN_KEY_STARTED_BRIDGE_DATA: BridgeDataDto = {
+    ...MAIN_KEY_CONFIGURED_BRIDGE_DATA,
+    outputs: [MAIN_KEY_TWITCH_OUTPUT],
+};
+
+const WITHOUT_MAIN_KEY_BRIDGE_DATA: BridgeDataDto = {
+    ...MAIN_KEY_CONFIGURED_BRIDGE_DATA,
+    mainKeyId: undefined,
+};
+
 const STARTED_BRIDGE_DATA: BridgeDataDto = {
     ...CONFIGURED_BRIDGE_DATA,
     outputs: [TWITCH_OUTPUT, KICK_OUTPUT],
@@ -294,6 +329,39 @@ export const STARTED_BRIDGE_PAIR: RequestResultPairDto = {
         requestStatus: SUCCESS_STATUS,
         responseData: {
             parameterValue: JSON.stringify(STARTED_BRIDGE_DATA),
+        },
+    },
+};
+
+export const MAIN_KEY_CONFIGURED_BRIDGE_PAIR: RequestResultPairDto = {
+    request: {requestType: 'GetProfileParameter'},
+    result: {
+        requestType: 'GetProfileParameter',
+        requestStatus: SUCCESS_STATUS,
+        responseData: {
+            parameterValue: JSON.stringify(MAIN_KEY_CONFIGURED_BRIDGE_DATA),
+        },
+    },
+};
+
+export const MAIN_KEY_STARTED_BRIDGE_PAIR: RequestResultPairDto = {
+    request: {requestType: 'GetProfileParameter'},
+    result: {
+        requestType: 'GetProfileParameter',
+        requestStatus: SUCCESS_STATUS,
+        responseData: {
+            parameterValue: JSON.stringify(MAIN_KEY_STARTED_BRIDGE_DATA),
+        },
+    },
+};
+
+export const WITHOUT_MAIN_KEY_BRIDGE_PAIR: RequestResultPairDto = {
+    request: {requestType: 'GetProfileParameter'},
+    result: {
+        requestType: 'GetProfileParameter',
+        requestStatus: SUCCESS_STATUS,
+        responseData: {
+            parameterValue: JSON.stringify(WITHOUT_MAIN_KEY_BRIDGE_DATA),
         },
     },
 };

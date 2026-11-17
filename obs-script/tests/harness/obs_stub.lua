@@ -1,6 +1,7 @@
 local store = {}
 local stub_outputs = {}
 local stub_sampled_at_ms = 5000
+local stub_main_key_id = nil
 local timers = {}
 local timer_callbacks = {}
 local event_callbacks = {}
@@ -74,7 +75,11 @@ end
 
 package.loaded['streamoscope-bridge.outputs.stream_outputs'] = {
     new = function()
-        return {close = function() end, read = function() return stub_outputs, stub_sampled_at_ms end}
+        return {
+            close = function() end,
+            read = function() return stub_outputs, stub_sampled_at_ms end,
+            read_main_key_id = function() return stub_main_key_id end,
+        }
     end,
 }
 

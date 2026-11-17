@@ -12,6 +12,7 @@ import {
     MOCK_FIRST_STREAM_DELAY_SEC,
     MOCK_FPS,
     MOCK_GPU,
+    MOCK_MAIN_KEY_ID,
     MOCK_MAIN_OUTPUT_NAME,
     MOCK_OFF_STREAM_STATUS,
     MOCK_SCENE_COLLECTION,
@@ -256,13 +257,14 @@ export class MockObsSimulator {
     };
 
     private buildBridgeData = (now: number, streamSeconds: number): BridgeDataDto => ({
-        bridgeVersion: 8,
+        bridgeVersion: 9,
         updated: Math.floor(Date.now() / 1000),
         sampledAtMs: Math.floor(now),
         update: {available: true, status: null},
         sceneCollection: MOCK_SCENE_COLLECTION,
         outputs: this.buildBridgeOutputs(now, streamSeconds),
         configuredTargets: MOCK_CONFIGURED_TARGETS,
+        mainKeyId: MOCK_MAIN_KEY_ID,
         gpu: {
             ...MOCK_GPU,
             usage: randomBetween(40, 60),

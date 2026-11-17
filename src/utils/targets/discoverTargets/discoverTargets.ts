@@ -41,6 +41,7 @@ export const discoverTargets = (pairs: RequestResultPairDto[]): StreamTargetDto[
     const configuredTargets = getConfiguredTargets(bridgeData);
     const configuredOutputs = groupBy(configuredTargets, 'name');
     const titles = new Map(configuredTargets.map(({id, title}) => [id, isString(title) ? title.trim() : '']));
+    const mainKeyId = isString(bridgeData?.mainKeyId) ? bridgeData.mainKeyId : null;
 
     const {service: serviceName, server} = service.streamServiceSettings || {};
 
@@ -74,7 +75,7 @@ export const discoverTargets = (pairs: RequestResultPairDto[]): StreamTargetDto[
         const measuredIds = new Set(measured.map(({id}) => id));
         const waiting = (configuredOutputs[outputName] ?? []).filter(({id}) => !measuredIds.has(id));
 
-        return buildIdentifiedTargets([...measured, ...waiting], titles);
+        return buildIdentifiedTargets([...measured, ...waiting], titles, mainKeyId);
     });
 
     return [main, ...plugins];

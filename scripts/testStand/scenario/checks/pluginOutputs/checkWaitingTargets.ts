@@ -1,11 +1,13 @@
 import {
     BRIDGE_PARAMETER,
     CONNECTION_WAIT_MS,
+    DOCK_SAME_KEY_WARNING_TEXT,
     DOCK_WAITING_FOR_FIRST_STREAM_TEXT,
     DOCK_WAITING_FOR_STREAM_TEXT,
     FAKE_MULTI_RTMP_CONFIG,
     FAKE_MULTI_RTMP_ENABLED_TARGETS,
     FAKE_MULTI_RTMP_KEY_PREFIX,
+    FAKE_MULTI_RTMP_MAIN_COPY_TITLE,
     OUTPUT_FINGERPRINT_PATTERN,
 } from '../../../consts.ts';
 import {getDockText} from '../../../dock/getDockText.ts';
@@ -34,12 +36,19 @@ export const checkWaitingTargets = async () => {
     checkStep('the main card and each target card wait for their stream', waitingCardCount, enabledTitles.length + 1);
     checkStep('the dock shows no card of a switched off target', switchedOffTitles.some(title => dockText.includes(title)), false);
     checkStep('the dock shows the cards instead of the wait for the first stream', dockText.includes(DOCK_WAITING_FOR_FIRST_STREAM_TEXT), false);
+    checkStep('the dock warns once about a target with the key of the main stream', dockText.split(DOCK_SAME_KEY_WARNING_TEXT).length - 1, 1);
 
     const {parameterValue} = await sendObsRequest('GetProfileParameter', BRIDGE_PARAMETER);
     const bridgeText = String(parameterValue);
-    const {configuredTargets = []} = JSON.parse(bridgeText) as BridgeDataDto;
+    const {configuredTargets = [], mainKeyId = ''} = JSON.parse(bridgeText) as BridgeDataDto;
     const configuredIds = configuredTargets.map(({id}) => id).filter(id => OUTPUT_FINGERPRINT_PATTERN.test(id));
 
+    const mainKeyTitles = configuredTargets
+        .filter(({keyId}) => keyId === mainKeyId)
+        .map(({title}) => title);
+
     checkStep('the bridge passes a fingerprint of each enabled target', new Set(configuredIds).size, enabledTitles.length);
+    checkStep('the bridge passes the key fingerprint of the main stream before the first stream', OUTPUT_FINGERPRINT_PATTERN.test(mainKeyId), true);
+    checkStep('only the copy of the main stream has its key fingerprint', mainKeyTitles.join(','), FAKE_MULTI_RTMP_MAIN_COPY_TITLE);
     checkStep('the bridge passes no stream key of a target', bridgeText.includes(FAKE_MULTI_RTMP_KEY_PREFIX), false);
 };

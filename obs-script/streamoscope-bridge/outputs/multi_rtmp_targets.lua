@@ -139,15 +139,12 @@ local function describe_target(self, item)
     if server ~= nil then
         local full_server = ffi.string(server)
         local title = take_text(self.libobs.obs_data_get_string(item, 'name'))
-
-        local parts = {
-            full_server,
-            take_text(self.libobs.obs_data_get_string(service, 'key')) or '',
-            take_text(self.libobs.obs_data_get_string(service, 'bearer_token')) or '',
-        }
+        local key = take_text(self.libobs.obs_data_get_string(service, 'key')) or ''
+        local token = take_text(self.libobs.obs_data_get_string(service, 'bearer_token')) or ''
 
         described = {
-            id = self.fingerprint:compute(parts),
+            id = self.fingerprint:compute({full_server, key, token}),
+            key_id = self.fingerprint:compute_key(key, token),
             server = full_server,
             title = title ~= nil and ffi.string(title) or nil,
         }

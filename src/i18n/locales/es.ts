@@ -112,6 +112,7 @@ export const es: TranslationDto = {
         graphCollecting: 'Recopilando datos de bitrate…',
         graphWaiting: 'El gráfico aparecerá cuando empiece el directo',
         sameOutputName: 'Salidas con el nombre «{{name}}»: {{count}}, estadísticas solo de una',
+        sameKeyAsMain: 'La clave de esta transmisión ya la usa la transmisión principal de OBS. Elimínala en el plugin o cambia su clave.',
         mainFallbackTitle: 'Directo',
         unknownPlatform: 'Plataforma desconocida',
     },

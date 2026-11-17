@@ -59,6 +59,7 @@ export const frog: DeepPartial<TranslationDto> = {
         graphCollecting: 'Ловим мух битрейта…',
         graphWaiting: 'График появится, когда болото заквакает',
         sameOutputName: 'Кувшинок с именем «{{name}}»: {{count}}, квакаем только про одну',
+        sameKeyAsMain: 'Ключ этой кувшинки уже занят главной кувшинкой. Удалите её в плагине или смените в ней ключ.',
         mainFallbackTitle: 'Кваканье',
         unknownPlatform: 'Неведомое болото',
     },

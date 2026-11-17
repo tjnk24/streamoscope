@@ -118,6 +118,15 @@ documents[config_path] = to_fake_data({
             },
         },
         {
+            id = '5',
+            name = 'Backup server',
+            protocol = 'RTMP',
+            ['service-param'] = {
+                server = 'rtmp://backup.example.com/app',
+                key = 'live_secret-key',
+            },
+        },
+        {
             id = '4',
             name = 'No server',
             enabled = true,

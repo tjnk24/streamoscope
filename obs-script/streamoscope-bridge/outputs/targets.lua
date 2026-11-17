@@ -57,6 +57,7 @@ function targets.read(stream_outputs)
                 name = output.name,
                 server = server,
                 id = output.id,
+                keyId = output.key_id,
                 stats = describe_stats(output),
             }
         end
@@ -78,6 +79,7 @@ function targets.read_configured(multi_rtmp_targets)
         if server ~= nil then
             result[#result + 1] = {
                 id = target.id,
+                keyId = target.key_id,
                 name = consts.MULTI_RTMP_OUTPUT_NAME,
                 server = server,
                 title = target.title,

@@ -112,6 +112,7 @@ export const de: TranslationDto = {
         graphCollecting: 'Bitrate-Daten werden gesammelt…',
         graphWaiting: 'Das Diagramm erscheint, sobald der Stream startet',
         sameOutputName: 'Ausgaben mit dem Namen „{{name}}“: {{count}}, Statistik nur für eine',
+        sameKeyAsMain: 'Der Schlüssel dieses Streams ist schon vom Hauptstream in OBS belegt. Lösche ihn im Plugin oder ändere seinen Schlüssel.',
         mainFallbackTitle: 'Stream',
         unknownPlatform: 'Unbekannte Plattform',
     },

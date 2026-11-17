@@ -12,6 +12,8 @@ import {discoverTargets} from '../discoverTargets';
 import {
     BRIDGE_NOW_MS,
     CONFIGURED_BRIDGE_PAIR,
+    MAIN_KEY_CONFIGURED_BRIDGE_PAIR,
+    MAIN_KEY_STARTED_BRIDGE_PAIR,
     MEASURED_BRIDGE_PAIR,
     OFFLINE_OUTPUTS_PAIR,
     OLD_BRIDGE_PAIR,
@@ -22,6 +24,7 @@ import {
     STARTED_BRIDGE_PAIR,
     STARTED_PLUGINS_PAIR,
     THREE_PLUGIN_OUTPUTS_PAIR,
+    WITHOUT_MAIN_KEY_BRIDGE_PAIR,
 } from './consts';
 
 describe('discoverTargets', () => {
@@ -112,6 +115,35 @@ describe('discoverTargets', () => {
         const targets = discoverTargets([SERVICE_PAIR, STARTED_PLUGINS_PAIR, STARTED_BRIDGE_PAIR]);
 
         expect(targets?.map(({key}) => key)).toEqual(['main', 'plugin:e27b6a90', 'plugin:a3f91c07', 'plugin:b7c20e11']);
+    });
+
+    it.each([
+        ['before the target starts', OFFLINE_OUTPUTS_PAIR, MAIN_KEY_CONFIGURED_BRIDGE_PAIR],
+        ['after the target starts', PLUGIN_STREAM_PAIR, MAIN_KEY_STARTED_BRIDGE_PAIR],
+    ])('warns on the card of a target with the stream key of the main stream %s', (_case, outputsPair, bridgePair) => {
+        const targets = discoverTargets([SERVICE_PAIR, outputsPair, bridgePair]);
+        const noteTypes = targets?.map(({key, notes}) => ({key, types: notes.map(({type}) => type)}));
+
+        expect(noteTypes).toEqual([
+            {
+                key: 'main',
+                types: [],
+            },
+            {
+                key: 'plugin:a3f91c07',
+                types: [],
+            },
+            {
+                key: 'plugin:b7c20e11',
+                types: ['warning'],
+            },
+        ]);
+    });
+
+    it('does not warn without the key fingerprint of the main stream', () => {
+        const targets = discoverTargets([SERVICE_PAIR, OFFLINE_OUTPUTS_PAIR, WITHOUT_MAIN_KEY_BRIDGE_PAIR]);
+
+        expect(targets?.flatMap(({notes}) => notes)).toEqual([]);
     });
 
     it('keeps one card by name without the waiting targets when the bridge sees fewer outputs than OBS', () => {

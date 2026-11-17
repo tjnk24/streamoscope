@@ -115,6 +115,14 @@ function OutputFingerprint:compute(parts)
     return is_finished and format_digest(digest) or nil
 end
 
+function OutputFingerprint:compute_key(key, token)
+    if measure_part(key) == 0 and measure_part(token) == 0 then
+        return nil
+    end
+
+    return self:compute({key, token})
+end
+
 function OutputFingerprint:close()
     if self.algorithm ~= nil then
         self.bcrypt.BCryptCloseAlgorithmProvider(self.algorithm, 0)

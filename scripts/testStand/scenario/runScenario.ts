@@ -36,7 +36,7 @@ export const runScenario = async () => {
         console.log('--- the journal');
         await checkJournal();
 
-        console.log('--- three plugin outputs named multi-output');
+        console.log('--- plugin outputs named multi-output');
         await checkPluginOutputs();
 
         console.log(`--- the Update button, version ${button}`);

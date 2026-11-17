@@ -112,6 +112,7 @@ export const ru: TranslationDto = {
         graphCollecting: 'Собираем данные о битрейте…',
         graphWaiting: 'График появится, когда начнётся эфир',
         sameOutputName: 'Выходов с именем «{{name}}»: {{count}}, статистика только по одному',
+        sameKeyAsMain: 'Ключ этой трансляции уже занят основной трансляцией OBS. Удалите её в плагине или смените в ней ключ.',
         mainFallbackTitle: 'Трансляция',
         unknownPlatform: 'Неизвестная площадка',
     },

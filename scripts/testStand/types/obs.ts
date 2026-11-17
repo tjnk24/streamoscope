@@ -28,15 +28,18 @@ export type ObsMessageDto = {
 type BridgeOutputDto = {
     name: string;
     id?: string;
+    keyId?: string;
     stats?: Record<string, unknown>;
 };
 
 type BridgeConfiguredTargetDto = {
     id: string;
+    keyId?: string;
     title?: string;
 };
 
 export type BridgeDataDto = {
     outputs: BridgeOutputDto[];
     configuredTargets?: BridgeConfiguredTargetDto[];
+    mainKeyId?: string;
 };

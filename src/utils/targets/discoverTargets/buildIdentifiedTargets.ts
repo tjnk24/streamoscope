@@ -1,14 +1,24 @@
 import {t} from 'i18next';
+import type {Nullable} from 'infrastructure/common';
 import sortBy from 'lodash/sortBy';
 
 import {BridgeConfiguredTargetDto} from '__types/bridge';
-import {OutputOriginEnum, StreamTargetDto} from '__types/targets';
+import {
+    NoteDto,
+    OutputOriginEnum,
+    StreamTargetDto,
+} from '__types/targets';
 import {PLUGIN_OUTPUT_NAMES} from '__utils/consts';
 
 import {detectPlatform} from '../detectPlatform';
 
-export const buildIdentifiedTargets = (outputs: BridgeConfiguredTargetDto[], titles: Map<string, string>) => {
-    const targets = outputs.map(({name, server, id}): StreamTargetDto => ({
+export const buildIdentifiedTargets = (outputs: BridgeConfiguredTargetDto[], titles: Map<string, string>, mainKeyId: Nullable<string>) => {
+    const sameKeyNote: NoteDto = {
+        text: t('stats.sameKeyAsMain'),
+        type: 'warning',
+    };
+
+    const targets = outputs.map(({name, server, id, keyId}): StreamTargetDto => ({
         key: `plugin:${id}`,
         origin: OutputOriginEnum.Plugin,
         outputName: name,
@@ -16,7 +26,7 @@ export const buildIdentifiedTargets = (outputs: BridgeConfiguredTargetDto[], tit
         pluginName: PLUGIN_OUTPUT_NAMES[name] || null,
         targetTitle: titles.get(id) || null,
         platform: detectPlatform(null, server, t('stats.unknownPlatform')),
-        notes: [],
+        notes: mainKeyId !== null && keyId === mainKeyId ? [sameKeyNote] : [],
     }));
 
     return sortBy(targets, [({platform}) => platform.title.toLowerCase(), 'outputId']);

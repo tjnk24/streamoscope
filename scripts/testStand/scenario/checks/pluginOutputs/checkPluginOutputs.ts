@@ -4,6 +4,7 @@ import uniq from 'lodash/uniq.js';
 import {
     BRIDGE_PARAMETER,
     CARD_BITRATES_EXPRESSION,
+    DOCK_SAME_KEY_WARNING_TEXT,
     DOCK_SAME_NAME_WARNING_TEXT,
     FAKE_MULTI_RTMP_CONFIG,
     FAKE_MULTI_RTMP_ENABLED_TARGETS,
@@ -32,8 +33,8 @@ export const checkPluginOutputs = async () => {
 
     await setFakeMultiRtmp(true);
 
-    await waitFor('three outputs named multi-output on the RTMP server', async () => await countReadyPluginPaths() === expectedBitrates.length, STREAM_WAIT_MS);
-    console.log('ok   the RTMP server receives three outputs named multi-output');
+    await waitFor('an output named multi-output for each target on the RTMP server', async () => await countReadyPluginPaths() === expectedBitrates.length, STREAM_WAIT_MS);
+    console.log(`ok   the RTMP server receives ${expectedBitrates.length} outputs named multi-output`);
 
     const shownBitrates = await waitFor('a card with its own bitrate for each output', async () => {
         const bitrates = sortBy(await evaluateInDock<number[]>(CARD_BITRATES_EXPRESSION));
@@ -46,16 +47,23 @@ export const checkPluginOutputs = async () => {
 
     console.log(`ok   each output has its own card with its own bitrate: ${shownBitrates.join(', ')} kbps`);
 
-    checkStep('the dock shows no warning about outputs of the same name', (await getDockText()).includes(DOCK_SAME_NAME_WARNING_TEXT), false);
+    const streamingDockText = await getDockText();
+
+    checkStep('the dock shows no warning about outputs of the same name', streamingDockText.includes(DOCK_SAME_NAME_WARNING_TEXT), false);
+    checkStep('the dock still warns once about a target with the key of the main stream', streamingDockText.split(DOCK_SAME_KEY_WARNING_TEXT).length - 1, 1);
 
     const {parameterValue} = await sendObsRequest('GetProfileParameter', BRIDGE_PARAMETER);
     const bridgeText = String(parameterValue);
-    const {outputs: bridgeOutputs, configuredTargets = []} = JSON.parse(bridgeText) as BridgeDataDto;
+    const {outputs: bridgeOutputs, configuredTargets = [], mainKeyId = ''} = JSON.parse(bridgeText) as BridgeDataDto;
     const pluginIds = bridgeOutputs.filter(({name, stats}) => name === 'multi-output' && stats).map(({id}) => id ?? '');
     const configuredIds = configuredTargets.map(({id}) => id);
+    const mainKeyOutputNames = bridgeOutputs.filter(({keyId}) => keyId === mainKeyId).map(({name}) => name);
+    const pluginMainKeyCount = mainKeyOutputNames.filter(name => name === 'multi-output').length;
 
     checkStep('the bridge passes a fingerprint of each output', uniq(pluginIds).filter(id => OUTPUT_FINGERPRINT_PATTERN.test(id)).length, expectedBitrates.length);
     checkStep('each output has the fingerprint of its target known before the start', sortBy(pluginIds).join(','), sortBy(configuredIds).join(','));
+    checkStep('the main output has the key fingerprint of the main stream', mainKeyOutputNames.length - pluginMainKeyCount, 1);
+    checkStep('only the copy of the main stream among the plugin outputs has it', pluginMainKeyCount, 1);
 
     const dockText = await getDockText();
 

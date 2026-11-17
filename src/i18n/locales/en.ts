@@ -110,6 +110,7 @@ export const en = {
         graphCollecting: 'Collecting bitrate data…',
         graphWaiting: 'The graph appears when the stream starts',
         sameOutputName: '{{count}} outputs named “{{name}}”, stats for one of them only',
+        sameKeyAsMain: 'The key of this stream is already taken by the main OBS stream. Delete it in the plugin or change its key.',
         mainFallbackTitle: 'Stream',
         unknownPlatform: 'Unknown platform',
     },

@@ -10,6 +10,7 @@ export const MOCK_TWITCH_OUTPUT_ID = '5be0c1d2';
 export const MOCK_TWITCH_SERVER = 'rtmp://ingest.global-contribute.live-video.net';
 const MOCK_GOODGAME_OUTPUT_ID = '9a41e7f3';
 const MOCK_GOODGAME_SERVER = 'rtmp://msk.goodgame.ru:1940';
+export const MOCK_MAIN_KEY_ID = 'c4d8e2f1';
 export const MOCK_TWITCH_DELAY_SEC = 5;
 export const MOCK_FIRST_STREAM_DELAY_SEC = 10;
 export const MOCK_SCENE_COLLECTION = 'Mock scenes';
@@ -50,6 +51,13 @@ export const MOCK_CONFIGURED_TARGETS: BridgeConfiguredTargetDto[] = [
         name: MOCK_TWITCH_OUTPUT_NAME,
         server: MOCK_GOODGAME_SERVER,
         title: 'Night show',
+    },
+    {
+        id: '71b3a5d8',
+        keyId: MOCK_MAIN_KEY_ID,
+        name: MOCK_TWITCH_OUTPUT_NAME,
+        server: 'rtmp://a.rtmp.youtube.com/live2',
+        title: 'Copy of main',
     },
 ];
 

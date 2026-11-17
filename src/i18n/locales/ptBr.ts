@@ -112,6 +112,7 @@ export const ptBr: TranslationDto = {
         graphCollecting: 'Coletando dados de bitrate…',
         graphWaiting: 'O gráfico aparece quando a live começar',
         sameOutputName: 'Saídas com o nome “{{name}}”: {{count}}, estatísticas de apenas uma',
+        sameKeyAsMain: 'A chave desta transmissão já está em uso pela transmissão principal do OBS. Exclua-a no plugin ou troque a chave dela.',
         mainFallbackTitle: 'Live',
         unknownPlatform: 'Plataforma desconhecida',
     },
