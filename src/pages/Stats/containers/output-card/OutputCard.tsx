@@ -120,12 +120,12 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
 
             {items.length > 0 && <StatList items={items}/>}
 
-            {notes.map(({text, type}) => (
+            {notes.map(({textKey, values, type}) => (
                 <Alert
-                    key={text}
+                    key={textKey}
                     className={style.note}
                     type={type}
-                    title={text}
+                    title={t(textKey, values)}
                     showIcon
                 />
             ))}

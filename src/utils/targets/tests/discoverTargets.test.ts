@@ -70,9 +70,15 @@ describe('discoverTargets', () => {
     it('keeps one card with the warning when the bridge passes no statistics', () => {
         const targets = discoverTargets([SERVICE_PAIR, THREE_PLUGIN_OUTPUTS_PAIR, OLD_BRIDGE_PAIR]);
 
+        const sameNameNote = {
+            textKey: 'stats.sameOutputName',
+            values: {name: 'multi-output', count: 3},
+            type: 'warning',
+        };
+
         expect(targets).toHaveLength(2);
         expect(targets?.[1]).toMatchObject({key: 'plugin:multi-output', outputId: null});
-        expect(targets?.[1].notes).toHaveLength(1);
+        expect(targets?.[1].notes).toEqual([sameNameNote]);
     });
 
     it('keeps one card with the warning when the bridge sees fewer outputs than OBS', () => {
@@ -122,20 +128,20 @@ describe('discoverTargets', () => {
         ['after the target starts', PLUGIN_STREAM_PAIR, MAIN_KEY_STARTED_BRIDGE_PAIR],
     ])('warns on the card of a target with the stream key of the main stream %s', (_case, outputsPair, bridgePair) => {
         const targets = discoverTargets([SERVICE_PAIR, outputsPair, bridgePair]);
-        const noteTypes = targets?.map(({key, notes}) => ({key, types: notes.map(({type}) => type)}));
+        const noteKeys = targets?.map(({key, notes}) => ({key, textKeys: notes.map(({textKey}) => textKey)}));
 
-        expect(noteTypes).toEqual([
+        expect(noteKeys).toEqual([
             {
                 key: 'main',
-                types: [],
+                textKeys: [],
             },
             {
                 key: 'plugin:a3f91c07',
-                types: [],
+                textKeys: [],
             },
             {
                 key: 'plugin:b7c20e11',
-                types: ['warning'],
+                textKeys: ['stats.sameKeyAsMain'],
             },
         ]);
     });

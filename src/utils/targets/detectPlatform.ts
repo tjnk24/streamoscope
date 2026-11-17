@@ -5,7 +5,7 @@ import {PLATFORM_RULES, UNKNOWN_PLATFORM_COLOR} from '__utils/consts';
 
 import {getServerHost} from './getServerHost';
 
-export const detectPlatform = (service: Nullable<string>, server: Nullable<string>, fallbackTitle: string): PlatformDto => {
+export const detectPlatform = (service: Nullable<string>, server: Nullable<string>): PlatformDto => {
     const host = getServerHost(server);
 
     const rule = PLATFORM_RULES.find(({services, hosts}) => (
@@ -18,5 +18,5 @@ export const detectPlatform = (service: Nullable<string>, server: Nullable<strin
         return {title, color, isKnown: true};
     }
 
-    return {title: service || host || fallbackTitle, color: UNKNOWN_PLATFORM_COLOR, isKnown: false};
+    return {title: service || host || null, color: UNKNOWN_PLATFORM_COLOR, isKnown: false};
 };

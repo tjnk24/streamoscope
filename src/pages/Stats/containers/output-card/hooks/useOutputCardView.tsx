@@ -6,7 +6,7 @@ import {settingsHiddenOutputStatsSelector} from '__selectors/settingsSelectors';
 import {statsSelector} from '__selectors/statsSelectors';
 import {OutputStatKeyEnum} from '__types/stats/statKeys';
 import {AdviceEnum, HealthLevelEnum} from '__types/stats/views';
-import {StreamTargetDto} from '__types/targets';
+import {OutputOriginEnum, StreamTargetDto} from '__types/targets';
 import {OFF_OUTPUT_VIEW, RECENT_WINDOW_SEC} from '__utils/consts';
 
 import CongestionProgress from '../../../components/congestion-progress';
@@ -40,7 +40,7 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
 
     const {t} = useTranslation();
 
-    const {platform: {title, color}, targetTitle, notes} = target;
+    const {origin, platform: {title, color}, targetTitle, notes} = target;
 
     const {
         isActive,
@@ -56,6 +56,10 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
         graph,
         advices,
     } = outputs[target.key] || OFF_OUTPUT_VIEW;
+
+    const fallbackTitleKey = origin === OutputOriginEnum.Main ? 'stats.mainFallbackTitle' : 'stats.unknownPlatform';
+
+    const platformTitle = title ?? t(fallbackTitleKey);
 
     const isWaitingForStream = !isActive && !isReconnecting;
 
@@ -132,13 +136,13 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
     const visibleItems = isWaitingForStream ? shownItems.filter(({key}) => key === Source) : shownItems;
 
     return {
-        title,
-        targetTitle: targetTitle && targetTitle.toLowerCase() !== title.toLowerCase() ? targetTitle : null,
+        title: platformTitle,
+        targetTitle: targetTitle && targetTitle.toLowerCase() !== platformTitle.toLowerCase() ? targetTitle : null,
         color,
         notes,
         hasReconnectAdvice: advices.includes(Reconnecting),
         hasDragHandle: targets.length > 1,
-        platformMark: PLATFORM_MARKS[title] ?? null,
+        platformMark: PLATFORM_MARKS[platformTitle] ?? null,
         healthTag: HEALTH_TAGS[isReconnecting ? Warn : level],
         isStatusShown: !hiddenOutputStats.includes(Status),
         statusKey: isReconnecting ? 'stats.statuses.reconnecting' : `stats.statuses.${level}`,

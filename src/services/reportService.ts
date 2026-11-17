@@ -76,7 +76,7 @@ class ReportService {
         pluginName,
         platform,
     }: StreamTargetDto) => {
-        const title = platform.isKnown ? platform.title : JOURNAL_OTHER_TARGET_LABEL;
+        const title = platform.isKnown && platform.title ? platform.title : JOURNAL_OTHER_TARGET_LABEL;
 
         if (origin === OutputOriginEnum.Main) {
             return `- ${title}: main output`;

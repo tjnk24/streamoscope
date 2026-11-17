@@ -1,4 +1,3 @@
-import {t} from 'i18next';
 import countBy from 'lodash/countBy';
 import groupBy from 'lodash/groupBy';
 import isString from 'lodash/isString';
@@ -52,7 +51,7 @@ export const discoverTargets = (pairs: RequestResultPairDto[]): StreamTargetDto[
         outputId: null,
         pluginName: null,
         targetTitle: null,
-        platform: detectPlatform(serviceName ?? null, server ?? null, t('stats.mainFallbackTitle')),
+        platform: detectPlatform(serviceName ?? null, server ?? null),
         notes: [],
     };
 

@@ -21,7 +21,7 @@ describe('detectPlatform', () => {
         ['Mixcloud', 'Mixcloud'],
         ['Vaughn Live / iNSTAGIB', 'Vaughn Live'],
     ])('names the OBS service %s', (service, title) => {
-        expect(detectPlatform(service, null, 'Main')).toMatchObject({title, isKnown: true});
+        expect(detectPlatform(service, null)).toMatchObject({title, isKnown: true});
     });
 
     it.each([
@@ -47,7 +47,7 @@ describe('detectPlatform', () => {
         ['rtmp://vsu.mycdn.me/input/', 'OK'],
         ['rtmp://ovsu.mycdn.me/input/', 'VK Видео'],
     ])('names the custom server %s', (server, title) => {
-        expect(detectPlatform(null, server, 'Plugin')).toMatchObject({title, isKnown: true});
+        expect(detectPlatform(null, server)).toMatchObject({title, isKnown: true});
     });
 
     it.each([
@@ -55,6 +55,10 @@ describe('detectPlatform', () => {
         ['a host that only ends like a known one', null, 'rtmp://notrumble.com/live'],
         ['a navercorp host that is not CHZZK', null, 'rtmp://other.navercorp.com/live'],
     ])('leaves %s unknown', (_name, service, server) => {
-        expect(detectPlatform(service, server, 'Plugin')).toMatchObject({isKnown: false});
+        expect(detectPlatform(service, server)).toMatchObject({isKnown: false});
+    });
+
+    it('leaves the title to the card when there is neither a service nor a host', () => {
+        expect(detectPlatform(null, null)).toMatchObject({title: null, isKnown: false});
     });
 });

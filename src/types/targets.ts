@@ -1,15 +1,19 @@
+import type {ParseKeys} from 'i18next';
+import type {Nullable} from 'infrastructure/common';
+
 export enum OutputOriginEnum {
     Main = 'main',
     Plugin = 'plugin',
 }
 
 export type NoteDto = {
-    text: string;
+    textKey: ParseKeys;
+    values: Record<string, string | number>;
     type: 'info' | 'warning';
 };
 
 export type PlatformDto = {
-    title: string;
+    title: Nullable<string>;
     color: string;
     isKnown: boolean;
 };

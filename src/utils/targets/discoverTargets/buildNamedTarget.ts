@@ -1,4 +1,3 @@
-import {t} from 'i18next';
 import type {Nullable} from 'infrastructure/common';
 
 import {
@@ -15,7 +14,8 @@ export const buildNamedTarget = (outputName: string, count: number, bridgeServer
 
     if (count > 1) {
         const sameNameNote: NoteDto = {
-            text: t('stats.sameOutputName', {name: outputName, count}),
+            textKey: 'stats.sameOutputName',
+            values: {name: outputName, count},
             type: 'warning',
         };
 
@@ -29,7 +29,7 @@ export const buildNamedTarget = (outputName: string, count: number, bridgeServer
         outputId: null,
         pluginName: PLUGIN_OUTPUT_NAMES[outputName] || null,
         targetTitle: null,
-        platform: detectPlatform(null, bridgeServer, t('stats.unknownPlatform')),
+        platform: detectPlatform(null, bridgeServer),
         notes,
     };
 };

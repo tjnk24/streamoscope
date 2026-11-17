@@ -1,4 +1,3 @@
-import {t} from 'i18next';
 import type {Nullable} from 'infrastructure/common';
 import sortBy from 'lodash/sortBy';
 
@@ -14,7 +13,8 @@ import {detectPlatform} from '../detectPlatform';
 
 export const buildIdentifiedTargets = (outputs: BridgeConfiguredTargetDto[], titles: Map<string, string>, mainKeyId: Nullable<string>) => {
     const sameKeyNote: NoteDto = {
-        text: t('stats.sameKeyAsMain'),
+        textKey: 'stats.sameKeyAsMain',
+        values: {},
         type: 'warning',
     };
 
@@ -25,9 +25,9 @@ export const buildIdentifiedTargets = (outputs: BridgeConfiguredTargetDto[], tit
         outputId: id,
         pluginName: PLUGIN_OUTPUT_NAMES[name] || null,
         targetTitle: titles.get(id) || null,
-        platform: detectPlatform(null, server, t('stats.unknownPlatform')),
+        platform: detectPlatform(null, server),
         notes: mainKeyId !== null && keyId === mainKeyId ? [sameKeyNote] : [],
     }));
 
-    return sortBy(targets, [({platform}) => platform.title.toLowerCase(), 'outputId']);
+    return sortBy(targets, [({platform}) => platform.title?.toLowerCase() ?? '', 'outputId']);
 };
