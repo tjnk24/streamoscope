@@ -21,7 +21,8 @@
 > [!WARNING]
 > 🧪 **Beta.** StreamoScope runs our streams and those of a few brave early adopters, but not every rough edge has been found yet. Spotted one? [Report it](https://github.com/tjnk24/streamoscope/issues) and it gets filed down. The installer backs up every OBS file it touches, just in case.
 >
-> 🐛 Thanks to [VideogamesSematary](https://www.twitch.tv/videogamessematary) on Twitch for helping catch the bugs. Want to see your name here too? [Report bugs](https://github.com/tjnk24/streamoscope/issues), and ye shall be rewarded in full.
+> 🐛 Thanks to [VideogamesSematary](https://www.twitch.tv/videogamessematary) on Twitch for helping catch the bugs.\
+> Want to see your name here too? [Report bugs](https://github.com/tjnk24/streamoscope/issues), and ye shall be rewarded in full.
 
 > [!NOTE]
 > 🤖 Built with a lot of help from AI. A human set the course, tested it in real OBS and argued with the robot along the way. The bugs are a joint venture.
