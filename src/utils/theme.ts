@@ -28,6 +28,8 @@ export const THEME: ThemeConfig = {
         colorSuccess: '#4cb36c',
         colorWarning: '#e2a63b',
         colorError: '#e5534b',
+        colorLinkHover: '#4998e8',
+        colorErrorBorderHover: '#dc766d',
         colorBgBase: '#1D1F26',
         colorBgLayout: '#1D1F26',
         colorBgContainer: '#272a33',
