@@ -20,8 +20,8 @@ local VERSION_PATTERN = '%d+%.%d+%.%d+'
 local TRIAL_FILE = 'update-trial.txt'
 local TRIAL_TEMPLATE = 'version=%s\r\nprevious=%s\r\npanel=%s\r\nprocess=%d\r\nlaunches=%d\r\n'
 local TRIAL_MAX_LAUNCHES = 2
-local TRIAL_VERDICT_DELAY_SEC = 5
-local TRIAL_VERDICT_FALLBACK_SEC = 30
+local TRIAL_VERDICT_DELAY_SEC = 60
+local TRIAL_VERDICT_FALLBACK_SEC = 90
 local TRIAL_CHECK_INTERVAL_MS = 1000
 local ROLLED_BACK_FILE = 'rolled-back-version.txt'
 

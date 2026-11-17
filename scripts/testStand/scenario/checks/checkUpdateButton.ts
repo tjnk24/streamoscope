@@ -3,6 +3,8 @@ import {
     HEALTHY_VERSION_PATH,
     OPEN_SETTINGS_EXPRESSION,
     OPEN_UPDATES_GROUP_EXPRESSION,
+    ROLLED_BACK_VERSION_PATH,
+    SLOW_DOCK_DELAY_MS,
     TRIAL_PATH,
     UPDATE_WAIT_MS,
 } from '../../consts.ts';
@@ -10,6 +12,7 @@ import {clickDockButton} from '../../dock/clickDockButton.ts';
 import {evaluateInDock} from '../../dock/evaluateInDock.ts';
 import {findDockTarget} from '../../dock/findDockTarget.ts';
 import {getDockText} from '../../dock/getDockText.ts';
+import {setDockLoaderDelay} from '../../packaging/setDockLoaderDelay.ts';
 import {restartObs} from '../../processes/restartObs.ts';
 import {waitFor} from '../../processes/waitFor.ts';
 import {getCurrentVersion} from '../getCurrentVersion.ts';
@@ -37,9 +40,12 @@ export const checkUpdateButton = async (version: string) => {
     checkStep('the running dock stays on its version', (await findDockTarget())?.url.includes(`/versions/${version}/`), false);
     checkStep('the new version is on trial', readStandFile(TRIAL_PATH) !== null, true);
 
+    setDockLoaderDelay(SLOW_DOCK_DELAY_MS);
     await restartObs();
     await waitFor('the health report of the new version', () => readStandFile(HEALTHY_VERSION_PATH) === version, CONNECTION_WAIT_MS);
-    checkStep('after a restart the dock opens the new version', (await findDockTarget())?.url.includes(`/versions/${version}/`), true);
+    checkStep(`after a restart a dock opening ${SLOW_DOCK_DELAY_MS / 1000} s late opens the new version`, (await findDockTarget())?.url.includes(`/versions/${version}/`), true);
     await waitFor('the end of the trial', () => readStandFile(TRIAL_PATH) === null, CONNECTION_WAIT_MS);
     console.log('ok   a healthy dock ends the trial');
+    checkStep('a late dock causes no rollback', readStandFile(ROLLED_BACK_VERSION_PATH), null);
+    setDockLoaderDelay(0);
 };

@@ -4,7 +4,7 @@ function Invoke-BridgeLaunch {
         [string]$EarlyCommand = '',
         [string]$LateCommand = '',
         [bool]$IsLoadingFinished = $true,
-        [int]$ElapsedSeconds = 6,
+        [int]$ElapsedSeconds = 61,
         [switch]$SameProcess
     )
 

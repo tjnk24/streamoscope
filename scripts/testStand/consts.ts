@@ -274,7 +274,11 @@ export const BACKGROUND_UPDATE_WAIT_MS = 180000;
 
 export const STREAM_WAIT_MS = 30000;
 
-export const ROLLBACK_WAIT_MS = 45000;
+export const ROLLBACK_WAIT_MS = 120000;
+
+export const SLOW_DOCK_DELAY_MS = 12000;
+
+export const DOCK_LOADER_VERSION_LINE = 'document.head.appendChild(versionScript);';
 
 export const DOCK_PICTURE_METRICS: Record<string, number | boolean> = {
     width: 420,

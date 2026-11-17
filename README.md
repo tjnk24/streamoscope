@@ -152,6 +152,7 @@ Use the dock's **gear icon** to change language, show or hide the stream cards a
 | Installer didn't configure OBS | See `%LOCALAPPDATA%\streamoscope\configure-obs.log`; rerun with OBS closed |
 | Installer takes long at **Setting up OBS...** | It normally takes seconds, even with dozens of scene collections. After three minutes it asks whether to keep waiting; if you stop it, rerun it with OBS closed or set OBS up as in [Manual installation](#-manual--portable-installation) |
 | Dock asks to run the installer | Close OBS and run the latest `streamoscope-setup-<version>.exe` over your install; settings and the journal stay |
+| An update says the new version didn't start and went back | If OBS opens the dock slowly, versions up to 0.10.0 can mistake that for a broken start. Close OBS and run the latest `streamoscope-setup-<version>.exe` once: it installs without that check, and from there on updates wait for a slow dock |
 
 ### 🩺 Stream problems
 

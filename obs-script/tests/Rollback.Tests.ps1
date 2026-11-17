@@ -171,10 +171,10 @@ Describe 'Bridge loader rollback' {
         (Invoke-BridgeLaunch -InstallRoot $app).Version | Should -Be $script:PreviousVersion
     }
 
-    It 'rolls back when the dock stays silent 5 seconds after OBS finished loading' {
+    It 'rolls back when the dock stays silent 60 seconds after OBS finished loading' {
         $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Trial (New-TrialText)
 
-        (Invoke-BridgeLaunch -InstallRoot $app -ElapsedSeconds 6).Version | Should -Be $script:NewVersion
+        (Invoke-BridgeLaunch -InstallRoot $app -ElapsedSeconds 61).Version | Should -Be $script:NewVersion
         Get-CurrentVersion -InstallRoot $app | Should -Be $script:PreviousVersion
         [System.IO.File]::ReadAllText((Join-Path $app 'rolled-back-version.txt')) | Should -Be $script:NewVersion
         Join-Path $app 'update-trial.txt' | Should -Not -Exist
@@ -193,7 +193,7 @@ Describe 'Bridge loader rollback' {
         $currentVersionFile.IsReadOnly = $true
 
         try {
-            (Invoke-BridgeLaunch -InstallRoot $app -ElapsedSeconds 6).Version | Should -Be $script:NewVersion
+            (Invoke-BridgeLaunch -InstallRoot $app -ElapsedSeconds 61).Version | Should -Be $script:NewVersion
         } finally {
             $currentVersionFile.IsReadOnly = $false
         }
@@ -204,24 +204,34 @@ Describe 'Bridge loader rollback' {
         Join-Path $app 'update-trial.txt' | Should -Exist
     }
 
-    It 'gives no verdict before 5 seconds' {
+    It 'gives no verdict before 60 seconds' {
         $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Trial (New-TrialText)
 
-        Invoke-BridgeLaunch -InstallRoot $app -ElapsedSeconds 4 | Out-Null
+        Invoke-BridgeLaunch -InstallRoot $app -ElapsedSeconds 59 | Out-Null
 
         Get-CurrentVersion -InstallRoot $app | Should -Be $script:NewVersion
         Join-Path $app 'update-trial.txt' | Should -Exist
     }
 
+    It 'keeps the new version when OBS opens the dock 20 seconds after it finished loading' {
+        $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Trial (New-TrialText)
+
+        Invoke-BridgeLaunch -InstallRoot $app -ElapsedSeconds 20 -LateCommand "healthy:$($script:NewVersion)" | Out-Null
+
+        Get-CurrentVersion -InstallRoot $app | Should -Be $script:NewVersion
+        Join-Path $app 'update-trial.txt' | Should -Not -Exist
+        Join-Path $app 'rolled-back-version.txt' | Should -Not -Exist
+    }
+
     It 'waits for the fallback when the loading event never comes' {
         $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Trial (New-TrialText)
 
-        Invoke-BridgeLaunch -InstallRoot $app -IsLoadingFinished $false -ElapsedSeconds 29 | Out-Null
+        Invoke-BridgeLaunch -InstallRoot $app -IsLoadingFinished $false -ElapsedSeconds 89 | Out-Null
         Get-CurrentVersion -InstallRoot $app | Should -Be $script:NewVersion
 
         $app = New-BridgeInstall -WorkDirectory $script:WorkDirectory -Trial (New-TrialText)
 
-        Invoke-BridgeLaunch -InstallRoot $app -IsLoadingFinished $false -ElapsedSeconds 31 | Out-Null
+        Invoke-BridgeLaunch -InstallRoot $app -IsLoadingFinished $false -ElapsedSeconds 91 | Out-Null
         Get-CurrentVersion -InstallRoot $app | Should -Be $script:PreviousVersion
     }
 
