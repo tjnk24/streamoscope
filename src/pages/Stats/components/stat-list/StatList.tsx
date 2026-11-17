@@ -1,12 +1,6 @@
-import {QuestionCircleOutlined} from '@ant-design/icons';
-import {
-    Descriptions,
-    Flex,
-    Tooltip,
-    Typography,
-} from 'antd';
+import {Descriptions, Typography} from 'antd';
 
-import EnhancedText from '__components/EnhancedText';
+import StatLabel from '../stat-label';
 
 import {LEVEL_TEXT_TYPES} from './consts';
 import {Props} from './types';
@@ -32,21 +26,10 @@ const StatList = ({items, column = 1}: Props) => (
         }) => ({
             key,
             label: (
-                <Flex
-                    className={style.label}
-                    align="center"
-                    gap={4}
-                >
-                    <EnhancedText className={style.labelText}>
-                        {label}
-                    </EnhancedText>
-
-                    {hint && (
-                        <Tooltip title={hint}>
-                            <QuestionCircleOutlined/>
-                        </Tooltip>
-                    )}
-                </Flex>
+                <StatLabel
+                    label={label}
+                    hint={hint}
+                />
             ),
             children: (
                 <Typography.Text type={level ? LEVEL_TEXT_TYPES[level] : undefined}>

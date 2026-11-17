@@ -9,6 +9,8 @@ import {
 import {Props} from './types';
 import {formatProgressPercent} from './utils/formatProgressPercent';
 
+import style from './style.module.scss';
+
 const CongestionProgress = ({value}: Props) => {
     const {token} = theme.useToken();
 
@@ -27,6 +29,10 @@ const CongestionProgress = ({value}: Props) => {
             size={PROGRESS_SIZE}
             strokeColor={strokeColor}
             format={formatProgressPercent}
+            classNames={{
+                root: style.progress,
+                track: style.track,
+            }}
         />
     );
 };

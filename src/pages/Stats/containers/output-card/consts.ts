@@ -1,6 +1,8 @@
 import {HealthLevelEnum} from '__types/stats/views';
 
-import {HealthTagDto, PlatformMarkDto} from './types';
+import {PlatformMarkDto} from '../../types';
+
+import {HealthTagDto} from './types';
 
 const {Ok, Warn, Bad, Off} = HealthLevelEnum;
 

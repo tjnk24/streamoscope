@@ -3,10 +3,6 @@
     table-layout: fixed;
 }
 
-.label {
-    min-width: 0;
-}
-
 .list .itemLabel {
     flex: 1 1 auto;
     min-width: 0;
@@ -18,8 +14,4 @@
     justify-content: flex-end;
     text-align: right;
     font-variant-numeric: tabular-nums;
-}
-
-.label .labelText {
-    color: inherit;
 }

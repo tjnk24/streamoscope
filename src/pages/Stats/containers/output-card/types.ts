@@ -8,16 +8,12 @@ import {GraphPointDto} from '__types/stats/views';
 import {NoteDto, StreamTargetDto} from '__types/targets';
 
 import {StatItemDto} from '../../components/stat-list';
+import {PlatformMarkDto} from '../../types';
 
 export type TargetSourceDto = {
     text: string;
     hint: string;
     color: Nullable<string>;
-};
-
-export type PlatformMarkDto = {
-    emoji: string;
-    hintKey: ParseKeys;
 };
 
 export type HealthTagDto = Pick<TagProps, 'color' | 'variant'>;

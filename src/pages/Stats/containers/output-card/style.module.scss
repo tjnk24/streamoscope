@@ -8,37 +8,6 @@
     box-shadow: var(--ant-box-shadow);
 }
 
-.heading {
-    min-width: 0;
-}
-
-.draggable {
-    cursor: grab;
-    user-select: none;
-    touch-action: none;
-}
-
-.dragging .draggable {
-    cursor: grabbing;
-}
-
-.platformTitle {
-    flex: none;
-}
-
-.targetTitle {
-    font-weight: normal;
-}
-
-.handle {
-    color: var(--ant-color-text-quaternary);
-    transition: color var(--ant-motion-duration-mid);
-}
-
-.draggable:hover .handle {
-    color: var(--ant-color-text-secondary);
-}
-
 .sourceTag {
     margin-inline-end: 0;
 }

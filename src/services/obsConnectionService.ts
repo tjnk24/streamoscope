@@ -5,6 +5,7 @@ import {commonActions} from '__actions';
 import {connectionSelector} from '__selectors/connectionSelectors';
 import {settingsSelector} from '__selectors/settingsSelectors';
 import {statsSelector} from '__selectors/statsSelectors';
+import {updateSelector} from '__selectors/updateSelectors';
 import {getStore} from '__store';
 import {HardwareDto} from '__types/bridge';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
@@ -413,7 +414,12 @@ class ObsConnectionService {
             const {sceneCollection} = connectionSelector(getStore());
 
             this.showHardware(getHardware(pairs, sceneCollection));
-            commonActions.update.setBridge(getBridgeUpdate(pairs, sceneCollection));
+
+            const bridgeUpdate = getBridgeUpdate(pairs, sceneCollection);
+
+            if (bridgeUpdate === null || !isEqual(bridgeUpdate, updateSelector(getStore()).bridge)) {
+                commonActions.update.setBridge(bridgeUpdate);
+            }
         }
 
         const obsVersion = getObsVersion(pairs);

@@ -1,23 +1,20 @@
-import {HolderOutlined} from '@ant-design/icons';
 import {
     Alert,
-    Badge,
     Card,
     Empty,
     Flex,
     Statistic,
     Tag,
-    Tooltip,
 } from 'antd';
 import cn from 'classnames';
 import isNumber from 'lodash/isNumber';
 import {memo} from 'react';
 import {useTranslation} from 'react-i18next';
 
-import EnhancedText from '__components/EnhancedText';
 import {AdviceEnum} from '__types/stats/views';
 
 import BitrateGraph from '../../components/bitrate-graph';
+import CardHeading from '../../components/card-heading';
 import StatList from '../../components/stat-list';
 import {formatNumber} from '../../utils/formatNumber';
 import AdviceIcon from '../advice-icon';
@@ -60,38 +57,16 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
                 body: style.body,
             }}
             title={(
-                <Flex
-                    ref={setActivatorNodeRef}
-                    className={cn(style.heading, {[style.draggable]: hasDragHandle})}
-                    align="center"
-                    gap={6}
-                    {...listeners}
-                >
-                    {hasDragHandle && (
-                        <HolderOutlined className={style.handle}/>
-                    )}
-
-                    <Badge color={color}/>
-
-                    <EnhancedText className={cn({[style.platformTitle]: targetTitle})}>
-                        {title}
-                    </EnhancedText>
-
-                    {platformMark && (
-                        <Tooltip title={t(platformMark.hintKey)}>
-                            <span>{platformMark.emoji}</span>
-                        </Tooltip>
-                    )}
-
-                    {targetTitle && (
-                        <EnhancedText
-                            className={style.targetTitle}
-                            type="secondary"
-                        >
-                            {targetTitle}
-                        </EnhancedText>
-                    )}
-                </Flex>
+                <CardHeading
+                    title={title}
+                    targetTitle={targetTitle}
+                    color={color}
+                    platformMark={platformMark}
+                    hasDragHandle={hasDragHandle}
+                    isDragging={isDragging}
+                    listeners={listeners}
+                    setActivatorNodeRef={setActivatorNodeRef}
+                />
             )}
             extra={(
                 <Flex align="center">

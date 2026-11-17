@@ -1,0 +1,30 @@
+.heading {
+    min-width: 0;
+}
+
+.draggable {
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+}
+
+.draggable.dragging {
+    cursor: grabbing;
+}
+
+.platformTitle {
+    flex: none;
+}
+
+.targetTitle {
+    font-weight: normal;
+}
+
+.handle {
+    color: var(--ant-color-text-quaternary);
+    transition: color var(--ant-motion-duration-mid);
+}
+
+.draggable:hover .handle {
+    color: var(--ant-color-text-secondary);
+}
