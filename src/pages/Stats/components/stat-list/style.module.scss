@@ -15,3 +15,19 @@
     text-align: right;
     font-variant-numeric: tabular-nums;
 }
+
+.ok {
+    color: var(--ant-color-success-text);
+}
+
+.warn {
+    color: var(--ant-color-warning-text);
+}
+
+.bad {
+    color: var(--ant-color-error-text);
+}
+
+.off {
+    color: var(--ant-color-text-description);
+}

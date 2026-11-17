@@ -15,6 +15,7 @@ paths:
 - **Текст рядом с кнопкой, значком или полем - с заметным отступом**: подпись справа от кнопки - `gap={14}` у `Flex`, а не `small` (8 px).
 - **Загрузка - `Skeleton` вокруг содержимого** (решение пользователя): `<Skeleton loading={isPending} active>...</Skeleton>`; отдельный `{isPending && <Skeleton active/>}` и проверки `!isPending` внутри не пишем (`ReleaseNotesModal`).
 - **Сначала возможности antd, потом свой CSS**: отступы - `Flex`/`Space` с `gap`, коробка - `Card`, текст - `Typography` с пропсами (`type`, `strong`). Свой CSS - для раскладки.
+  - Исключение - значения строк статистики (`StatList`, `LagValue`; решение пользователя): `span` с классом цвета из переменной темы (`var(--ant-color-success-text)`, `var(--ant-color-text-description)`), а не `Typography.Text`. Они перерисовываются каждую секунду, а `Typography.Text` на каждую ячейку - десятки хуков; почему - `docs/internals/dock.md`, «Перерисовка раз в секунду».
 - **Инлайн-стилей нет**: ни `style`, ни `styles` у antd, ни `CSSProperties` в `consts.ts`.
   - Исключение - `transform` и `transition` от `useSortable` (dnd-kit) у перетаскиваемой карточки (`SortableCard`): их пересчитывают на каждом кадре перетаскивания, классом не задать.
   - Внутренние части antd (`title`, `body`, `label`, `content`, `suffix`) - через `classNames` классами из `style.module.scss`; чтобы перебить вложенные селекторы antd, класс части пишем внутри класса корня (`.card .title`, `.list .itemLabel`).

@@ -1,8 +1,8 @@
-import {Descriptions, Typography} from 'antd';
+import {Descriptions} from 'antd';
 
 import StatLabel from '../stat-label';
 
-import {LEVEL_TEXT_TYPES} from './consts';
+import {LEVEL_CLASS_NAMES} from './consts';
 import {Props} from './types';
 
 import style from './style.module.scss';
@@ -32,9 +32,9 @@ const StatList = ({items, column = 1}: Props) => (
                 />
             ),
             children: (
-                <Typography.Text type={level ? LEVEL_TEXT_TYPES[level] : undefined}>
+                <span className={level && LEVEL_CLASS_NAMES[level]}>
                     {value}
-                </Typography.Text>
+                </span>
             ),
         }))}
     />
