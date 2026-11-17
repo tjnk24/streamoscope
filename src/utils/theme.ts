@@ -61,5 +61,9 @@ export const THEME: ThemeConfig = {
         TreeSelect: {
             colorBgContainer: FIELD_COLORS.colorBgContainer,
         },
+        Message: {
+            contentBg: '#3b404d',
+            boxShadowTertiary: '0 0 0 1px #555b6e, 0 6px 16px 0 rgba(0, 0, 0, 0.55)',
+        },
     },
 };
