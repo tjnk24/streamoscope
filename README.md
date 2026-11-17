@@ -38,7 +38,7 @@ Running multiple streams from one OBS instance? You shouldn't have to open a sep
 **No plugin loyalty.** 🤷
 
 <p align="center">
-  <img src="docs/images/stats-wide.png" width="700" alt="StreamoScope wide dock: five simultaneous streams, obs-multi-rtmp targets signed with their names, with live bitrate, dropped-frame statistics and red hints on the rows in trouble">
+  <img src="docs/images/stats-wide.png" width="700" alt="StreamoScope wide dock: four simultaneous streams, obs-multi-rtmp streams signed with their names, live bitrate, dropped-frame statistics, the OBS card and red hints on the rows in trouble">
 </p>
 <p align="center"><sub>Four streams, four sets of stats, one less reason to panic. 😌</sub></p>
 
