@@ -6,8 +6,13 @@ import {settingsSelector} from '__selectors/settingsSelectors';
 import {statsSelector} from '__selectors/statsSelectors';
 import {getStore} from '__store';
 import {OutputOriginEnum, StreamTargetDto} from '__types/targets';
-import {BYTES_IN_GIGABYTE, JOURNAL_OTHER_TARGET_LABEL} from '__utils/consts';
+import {
+    BYTES_IN_GIGABYTE,
+    JOURNAL_OTHER_TARGET_LABEL,
+    PLATFORM_SOURCE_LABELS,
+} from '__utils/consts';
 import {removePrivateText} from '__utils/journal/lines/removePrivateText';
+import {resolveTargetPlatform} from '__utils/targets/resolveTargetPlatform';
 
 import {journalService} from './journal/journalService';
 
@@ -69,22 +74,26 @@ class ReportService {
         ];
     };
 
-    private describeTarget = ({
-        origin,
-        outputName,
-        outputId,
-        pluginName,
-        platform,
-    }: StreamTargetDto) => {
+    private describeTarget = (target: StreamTargetDto) => {
+        const {
+            origin,
+            outputName,
+            outputId,
+            pluginName,
+            platform,
+        } = target;
+
+        const {selected, source} = resolveTargetPlatform(target, settingsSelector(getStore()).cardPlatforms);
         const title = platform.isKnown && platform.title ? platform.title : JOURNAL_OTHER_TARGET_LABEL;
+        const platformText = source ? `, ${PLATFORM_SOURCE_LABELS[source]}: ${selected}` : '';
 
         if (origin === OutputOriginEnum.Main) {
-            return `- ${title}: main output`;
+            return `- ${title}: main output${platformText}`;
         }
 
         const outputLabel = outputId ? `${outputName}@${outputId}` : outputName;
 
-        return `- ${title}: plugin output "${outputLabel}"${pluginName ? ` (${pluginName})` : ''}`;
+        return `- ${title}: plugin output "${outputLabel}"${pluginName ? ` (${pluginName})` : ''}${platformText}`;
     };
 }
 

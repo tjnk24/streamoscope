@@ -2,10 +2,17 @@ import {HolderOutlined} from '@ant-design/icons';
 import {
     Badge,
     Flex,
+    RefSelectProps,
+    Select,
     Tooltip,
 } from 'antd';
 import cn from 'classnames';
-import {memo} from 'react';
+import {
+    memo,
+    PointerEvent,
+    useRef,
+    useState,
+} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import EnhancedText from '__components/EnhancedText';
@@ -18,13 +25,31 @@ const CardHeading = ({
     title,
     targetTitle,
     color,
+    platformChoices,
+    selectedPlatform,
+    onPlatformChange,
     platformMark,
     hasDragHandle,
     isDragging,
     listeners,
     setActivatorNodeRef,
 }: Props) => {
+    const [isPlatformListOpen, setIsPlatformListOpen] = useState(false);
+
     const {t} = useTranslation();
+
+    const platformSelectRef = useRef<RefSelectProps>(null);
+
+    const hasPlatformChoices = platformChoices.length > 0;
+    const platformOptions = platformChoices.map(choice => ({value: choice, label: choice}));
+    const platformHint = selectedPlatform || isPlatformListOpen ? null : t('stats.sharedServersHint');
+
+    const keepFromDragging = (event: PointerEvent) => event.stopPropagation();
+
+    const handlePlatformChange = (platform: string) => {
+        platformSelectRef.current?.blur();
+        onPlatformChange(platform);
+    };
 
     return (
         <Flex
@@ -40,9 +65,33 @@ const CardHeading = ({
 
             <Badge color={color}/>
 
-            <EnhancedText className={cn({[style.platformTitle]: targetTitle})}>
-                {title}
-            </EnhancedText>
+            {hasPlatformChoices && (
+                <Tooltip title={platformHint}>
+                    <span
+                        className={style.platformSelect}
+                        onPointerDown={keepFromDragging}
+                    >
+                        <Select
+                            ref={platformSelectRef}
+                            size="small"
+                            variant="borderless"
+                            value={selectedPlatform ?? undefined}
+                            placeholder={t('stats.choosePlatform')}
+                            options={platformOptions}
+                            popupMatchSelectWidth={false}
+                            classNames={{root: style.select, placeholder: style.selectPlaceholder}}
+                            onChange={handlePlatformChange}
+                            onOpenChange={setIsPlatformListOpen}
+                        />
+                    </span>
+                </Tooltip>
+            )}
+
+            {!hasPlatformChoices && (
+                <EnhancedText className={cn({[style.platformTitle]: targetTitle})}>
+                    {title}
+                </EnhancedText>
+            )}
 
             {platformMark && (
                 <Tooltip title={t(platformMark.hintKey)}>

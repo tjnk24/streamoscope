@@ -1,3 +1,4 @@
+import {CardPlatformDto} from '__types/app/settings';
 import {
     BridgeConfiguredTargetDto,
     BridgeDataDto,
@@ -6,6 +7,7 @@ import {
 } from '__types/bridge';
 import {RequestResultPairDto} from '__types/obs/requests';
 import {ObsOutputListItemDto} from '__types/obs/responses';
+import {OutputOriginEnum, StreamTargetDto} from '__types/targets';
 
 const SUCCESS_STATUS = {
     result: true,
@@ -375,4 +377,29 @@ export const SHORT_CONFIGURED_BRIDGE_PAIR: RequestResultPairDto = {
             parameterValue: JSON.stringify(SHORT_CONFIGURED_BRIDGE_DATA),
         },
     },
+};
+
+export const SHARED_PLATFORM_CHOICES = ['VK Видео', 'OK', 'Boosty'];
+
+export const SHARED_TARGET: StreamTargetDto = {
+    key: 'plugin:a3f91c07',
+    origin: OutputOriginEnum.Plugin,
+    outputName: 'multi-output',
+    outputId: 'a3f91c07',
+    keyId: 'c4d8e2f1',
+    pluginName: 'multi-rtmp',
+    targetTitle: 'Night show',
+    platform: {
+        title: 'VK/OK/Boosty',
+        color: '#2787f5',
+        isKnown: true,
+        choices: SHARED_PLATFORM_CHOICES,
+        guess: null,
+    },
+    notes: [],
+};
+
+export const BOOSTY_CHOICE: CardPlatformDto = {
+    platform: 'Boosty',
+    keyId: 'c4d8e2f1',
 };

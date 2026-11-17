@@ -8,9 +8,10 @@ import {
 } from 'antd';
 import cn from 'classnames';
 import isNumber from 'lodash/isNumber';
-import {memo} from 'react';
+import {memo, useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 
+import {commonActions} from '__actions';
 import {AdviceEnum} from '__types/stats/views';
 
 import BitrateGraph from '../../components/bitrate-graph';
@@ -31,6 +32,8 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
         title,
         targetTitle,
         color,
+        platformChoices,
+        selectedPlatform,
         notes,
         hasReconnectAdvice,
         hasDragHandle,
@@ -48,6 +51,12 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
         items,
     } = useOutputCardView(target);
 
+    const {key: cardKey, keyId} = target;
+
+    const handlePlatformChange = useCallback((platform: string) => {
+        commonActions.settings.setCardPlatform({cardKey, platform, keyId});
+    }, [cardKey, keyId]);
+
     return (
         <Card
             size="small"
@@ -61,6 +70,9 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
                     title={title}
                     targetTitle={targetTitle}
                     color={color}
+                    platformChoices={platformChoices}
+                    selectedPlatform={selectedPlatform}
+                    onPlatformChange={handlePlatformChange}
                     platformMark={platformMark}
                     hasDragHandle={hasDragHandle}
                     isDragging={isDragging}

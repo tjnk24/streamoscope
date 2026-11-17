@@ -51,6 +51,16 @@ export const describeOutputChanges = (previousOutputs: JournalOutputSnapshotDto[
 
             entries.push(levelEntry);
         }
+
+        if (previous.chosenPlatform !== current.chosenPlatform) {
+            const platformEntry: JournalEntryDto = {
+                level: Info,
+                source,
+                message: `chosen platform=${current.chosenPlatform ?? 'none'}`,
+            };
+
+            entries.push(platformEntry);
+        }
     });
 
     return entries;

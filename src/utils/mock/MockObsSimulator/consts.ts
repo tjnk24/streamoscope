@@ -14,6 +14,8 @@ export const MOCK_MAIN_KEY_ID = 'c4d8e2f1';
 export const MOCK_TWITCH_DELAY_SEC = 5;
 export const MOCK_FIRST_STREAM_DELAY_SEC = 10;
 export const MOCK_SCENE_COLLECTION = 'Mock scenes';
+const MOCK_SHARED_SERVER_OUTPUT_ID = '6f2a9c41';
+export const MOCK_SHARED_SERVER_CARD_KEY = `plugin:${MOCK_SHARED_SERVER_OUTPUT_ID}`;
 
 export const MOCK_EXTRA_TARGETS: MockTargetDto[] = [
     {
@@ -24,18 +26,18 @@ export const MOCK_EXTRA_TARGETS: MockTargetDto[] = [
         maxKbps: 4300,
     },
     {
-        outputName: 'kick-output',
-        outputId: 'e27b6a90',
-        server: 'rtmps://fa723fc1b171.global-contribute.live-video.net:443',
-        minKbps: 7600,
-        maxKbps: 8200,
-    },
-    {
         outputName: 'vk-live-output',
         outputId: '3d8c4f15',
         server: 'rtmp://rtmp.vkvideo.ru',
         minKbps: 4700,
         maxKbps: 5100,
+    },
+    {
+        outputName: 'shared-server-output',
+        outputId: MOCK_SHARED_SERVER_OUTPUT_ID,
+        server: 'rtmp://vsu.mycdn.me/input',
+        minKbps: 5800,
+        maxKbps: 6200,
     },
 ];
 

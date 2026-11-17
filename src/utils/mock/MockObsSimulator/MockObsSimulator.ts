@@ -16,6 +16,7 @@ import {
     MOCK_MAIN_OUTPUT_NAME,
     MOCK_OFF_STREAM_STATUS,
     MOCK_SCENE_COLLECTION,
+    MOCK_SHARED_SERVER_CARD_KEY,
     MOCK_SYSTEM_MEMORY,
     MOCK_TWITCH_DELAY_SEC,
     MOCK_TWITCH_OUTPUT_ID,
@@ -47,6 +48,8 @@ const {
 } = ObsRequestTypeEnum;
 
 export class MockObsSimulator {
+    readonly sharedServerCardKey = MOCK_SHARED_SERVER_CARD_KEY;
+
     private readonly startedAt = performance.now();
 
     private lastTickAt = this.startedAt;

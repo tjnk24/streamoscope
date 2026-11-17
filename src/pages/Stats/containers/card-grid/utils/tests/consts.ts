@@ -7,12 +7,15 @@ const MAIN_TARGET: StreamTargetDto = {
     origin: Main,
     outputName: null,
     outputId: null,
+    keyId: null,
     pluginName: null,
     targetTitle: null,
     platform: {
         title: 'YouTube',
         color: '#ff0000',
         isKnown: true,
+        choices: [],
+        guess: null,
     },
     notes: [],
 };
@@ -22,12 +25,15 @@ const MULTI_RTMP_TARGET: StreamTargetDto = {
     origin: Plugin,
     outputName: 'multi-output',
     outputId: null,
+    keyId: null,
     pluginName: 'multi-rtmp',
     targetTitle: null,
     platform: {
         title: 'Twitch',
         color: '#9146ff',
         isKnown: true,
+        choices: [],
+        guess: null,
     },
     notes: [],
 };
@@ -37,12 +43,15 @@ const OTHER_PLUGIN_TARGET: StreamTargetDto = {
     origin: Plugin,
     outputName: 'other-output',
     outputId: null,
+    keyId: null,
     pluginName: null,
     targetTitle: null,
     platform: {
         title: 'Unknown platform',
         color: '#8c8c8c',
         isKnown: false,
+        choices: [],
+        guess: null,
     },
     notes: [],
 };

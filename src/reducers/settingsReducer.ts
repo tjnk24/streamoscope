@@ -1,7 +1,9 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import isPlainObject from 'lodash/isPlainObject';
+import omit from 'lodash/omit';
 
 import {storageService} from '__services/storageService';
-import {SettingsDto} from '__types/app/settings';
+import {CardPlatformChoiceDto, SettingsDto} from '__types/app/settings';
 import {LanguageEnum} from '__types/i18n/language';
 import {GeneralStatKeyEnum, OutputStatKeyEnum} from '__types/stats/statKeys';
 
@@ -42,6 +44,18 @@ const slice = createSlice({
         },
         setCardOrder: (state, {payload}: PayloadAction<string[]>) => {
             state.cardOrder = payload;
+        },
+        setCardPlatform: (state, {payload}: PayloadAction<CardPlatformChoiceDto>) => {
+            const {cardKey, platform, keyId} = payload;
+
+            if (!isPlainObject(state.cardPlatforms)) {
+                state.cardPlatforms = {};
+            }
+
+            state.cardPlatforms[cardKey] = {platform, keyId};
+        },
+        resetCardPlatform: (state, {payload}: PayloadAction<string>) => {
+            state.cardPlatforms = isPlainObject(state.cardPlatforms) ? omit(state.cardPlatforms, payload) : {};
         },
         setHiddenOutputStats: (state, {payload}: PayloadAction<OutputStatKeyEnum[]>) => {
             state.hiddenOutputStats = payload;

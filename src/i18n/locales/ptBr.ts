@@ -115,6 +115,8 @@ export const ptBr: TranslationDto = {
         sameKeyAsMain: 'A chave desta transmissão já está em uso pela transmissão principal do OBS. Exclua-a no plugin ou troque a chave dela.',
         mainFallbackTitle: 'Live',
         unknownPlatform: 'Plataforma desconhecida',
+        choosePlatform: 'Qual plataforma?',
+        sharedServersHint: 'Clique e escolha a plataforma na lista. VK Video, OK e Boosty recebem transmissões nos mesmos servidores, então o endereço do servidor não basta para diferenciá-las.',
     },
     general: {
         title: 'OBS',

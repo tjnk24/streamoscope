@@ -31,6 +31,7 @@ export type JournalOutputSnapshotDto = {
     isReconnecting: boolean;
     level: HealthLevelEnum;
     recentDropped: number;
+    chosenPlatform: Nullable<string>;
 };
 
 export type JournalSnapshotDto = {

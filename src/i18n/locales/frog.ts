@@ -62,6 +62,7 @@ export const frog: DeepPartial<TranslationDto> = {
         sameKeyAsMain: 'Ключ этой кувшинки уже занят главной кувшинкой. Удалите её в плагине или смените в ней ключ.',
         mainFallbackTitle: 'Кваканье',
         unknownPlatform: 'Неведомое болото',
+        choosePlatform: 'Какая кувшинка?',
     },
     general: {
         title: 'Болото OBS',

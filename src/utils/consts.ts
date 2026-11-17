@@ -6,10 +6,16 @@ import {
 import {LanguageEnum, ObsLanguagePrefixDto} from '__types/i18n/language';
 import {ProfileParameterKeyDto} from '__types/obs/requests';
 import {HealthLevelEnum, OutputViewDto} from '__types/stats/views';
-import {PlatformRuleDto} from '__types/targets';
+import {
+    PlatformRuleDto,
+    PlatformSourceEnum,
+    SharedPlatformRuleDto,
+} from '__types/targets';
 import {UpdateStageEnum} from '__types/update/bridgeUpdate';
 
 const {Ru, Es, De, PtBr} = LanguageEnum;
+
+const {User, TargetTitle} = PlatformSourceEnum;
 
 const {Preparing, Downloading, Verifying, Installing} = UpdateStageEnum;
 
@@ -54,6 +60,7 @@ export const DEFAULT_SETTINGS: SettingsDto = {
     lastNotifiedVersion: null,
     isMockEnabled: false,
     cardOrder: [],
+    cardPlatforms: {},
     hiddenOutputStats: [],
     hiddenGeneralStats: [],
 };
@@ -158,19 +165,19 @@ export const PLATFORM_RULES: PlatformRuleDto[] = [
         title: 'Boosty',
         color: '#f15f2c',
         services: /boosty/i,
-        hosts: [/(^|\.)boosty\.to$/, /^vsu\.okcdn\.ru$/],
+        hosts: [/(^|\.)boosty\.to$/],
     },
     {
         title: 'OK',
         color: '#ff7700',
         services: /ok\.ru|odnoklassniki|одноклассники/i,
-        hosts: [/(^|\.)ok\.ru$/, /^vsu\.mycdn\.me$/],
+        hosts: [/(^|\.)ok\.ru$/],
     },
     {
         title: 'VK Видео',
         color: '#2787f5',
         services: /\bvk\b/i,
-        hosts: [/(^|\.)(vk\.com|vkvideo\.ru|okcdn\.ru|mycdn\.me)$/],
+        hosts: [/(^|\.)(vk\.com|vkvideo\.ru)$/],
     },
     {
         title: 'Rutube',
@@ -287,6 +294,34 @@ export const PLATFORM_RULES: PlatformRuleDto[] = [
         hosts: [/(^|\.)vaughnsoft\.net$/],
     },
 ];
+
+export const SHARED_PLATFORM_RULE: SharedPlatformRuleDto = {
+    title: 'VK/OK/Boosty',
+    color: '#2787f5',
+    hosts: [/(^|\.)(okcdn\.ru|mycdn\.me)$/],
+    choices: [
+        {
+            title: 'VK Видео',
+            targetTitlePattern: /(?<![\p{L}\d])(?:vk|вк|vkvideo|вконтакте|vkontakte)(?![\p{L}\d])/iu,
+            otherPlatformPattern: /(?<![\p{L}\d])(?:live|life|play|лайв|лайф|плей)(?![\p{L}\d])/iu,
+        },
+        {
+            title: 'OK',
+            targetTitlePattern: /(?<![\p{L}\d])(?:ok|ок|одноклассники|odnoklassniki)(?![\p{L}\d])/iu,
+            otherPlatformPattern: null,
+        },
+        {
+            title: 'Boosty',
+            targetTitlePattern: /(?<![\p{L}\d])(?:boosty|бусти)(?![\p{L}\d])/iu,
+            otherPlatformPattern: null,
+        },
+    ],
+};
+
+export const PLATFORM_SOURCE_LABELS: Record<PlatformSourceEnum, string> = {
+    [User]: 'platform chosen by user',
+    [TargetTitle]: 'platform from target name',
+};
 
 export const OFF_OUTPUT_VIEW: OutputViewDto = {
     isActive: false,

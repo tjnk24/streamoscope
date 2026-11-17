@@ -115,6 +115,8 @@ export const es: TranslationDto = {
         sameKeyAsMain: 'La clave de esta transmisión ya la usa la transmisión principal de OBS. Elimínala en el plugin o cambia su clave.',
         mainFallbackTitle: 'Directo',
         unknownPlatform: 'Plataforma desconocida',
+        choosePlatform: '¿Qué plataforma?',
+        sharedServersHint: 'Haz clic y elige la plataforma de la lista. VK Video, OK y Boosty reciben las emisiones en los mismos servidores, así que la dirección del servidor no basta para distinguirlas.',
     },
     general: {
         title: 'OBS',

@@ -2,12 +2,13 @@ import {Tag} from 'antd';
 import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
-import {settingsHiddenOutputStatsSelector} from '__selectors/settingsSelectors';
+import {settingsSelector} from '__selectors/settingsSelectors';
 import {statsSelector} from '__selectors/statsSelectors';
 import {OutputStatKeyEnum} from '__types/stats/statKeys';
 import {AdviceEnum, HealthLevelEnum} from '__types/stats/views';
 import {OutputOriginEnum, StreamTargetDto} from '__types/targets';
 import {OFF_OUTPUT_VIEW, RECENT_WINDOW_SEC} from '__utils/consts';
+import {resolveTargetPlatform} from '__utils/targets/resolveTargetPlatform';
 
 import CongestionProgress from '../../../components/congestion-progress';
 import {StatItemDto} from '../../../components/stat-list';
@@ -36,11 +37,13 @@ const {
 
 export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto => {
     const {view: {outputs, now}, targets} = useSelector(statsSelector);
-    const hiddenOutputStats = useSelector(settingsHiddenOutputStatsSelector);
+    const {hiddenOutputStats, cardPlatforms} = useSelector(settingsSelector);
 
     const {t} = useTranslation();
 
-    const {origin, platform: {title, color}, targetTitle, notes} = target;
+    const {origin, targetTitle, notes} = target;
+
+    const {title, color, choices, selected} = resolveTargetPlatform(target, cardPlatforms);
 
     const {
         isActive,
@@ -139,6 +142,8 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
         title: platformTitle,
         targetTitle: targetTitle && targetTitle.toLowerCase() !== platformTitle.toLowerCase() ? targetTitle : null,
         color,
+        platformChoices: choices,
+        selectedPlatform: selected,
         notes,
         hasReconnectAdvice: advices.includes(Reconnecting),
         hasDragHandle: targets.length > 1,

@@ -7,6 +7,9 @@ interface OwnProps {
     title: string;
     targetTitle: Nullable<string>;
     color: string;
+    platformChoices: string[];
+    selectedPlatform: Nullable<string>;
+    onPlatformChange: (platform: string) => void;
     platformMark: Nullable<PlatformMarkDto>;
     hasDragHandle: boolean;
     isDragging: boolean;

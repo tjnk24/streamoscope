@@ -115,6 +115,8 @@ export const ru: TranslationDto = {
         sameKeyAsMain: 'Ключ этой трансляции уже занят основной трансляцией OBS. Удалите её в плагине или смените в ней ключ.',
         mainFallbackTitle: 'Трансляция',
         unknownPlatform: 'Неизвестная площадка',
+        choosePlatform: 'Какая площадка?',
+        sharedServersHint: 'Нажмите и выберите площадку из списка. VK Видео, OK и Boosty принимают эфир на одних серверах, и по адресу сервера их не различить.',
     },
     general: {
         title: 'OBS',

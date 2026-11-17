@@ -192,6 +192,8 @@ class ObsConnectionService {
         if (settingsSelector(state).isMockEnabled) {
             this.simulator = new MockObsSimulator();
 
+            commonActions.settings.resetCardPlatform(this.simulator.sharedServerCardKey);
+
             commonActions.connection.setStatus(ConnectionStatusEnum.Identified);
 
             this.startPolling();

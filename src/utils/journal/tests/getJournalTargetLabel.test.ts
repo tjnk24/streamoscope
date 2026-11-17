@@ -32,6 +32,8 @@ describe('getJournalTargetLabel', () => {
                 title: 'Twitch',
                 color: '#000',
                 isKnown: true,
+                choices: [],
+                guess: null,
             },
         };
 

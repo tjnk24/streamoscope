@@ -6,7 +6,9 @@ import {updateSelector} from '__selectors/updateSelectors';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
 import {JournalSnapshotDto} from '__types/journal';
 import {HealthLevelEnum} from '__types/stats/views';
+import {PlatformSourceEnum} from '__types/targets';
 import {BRIDGE_MISSING_CHECKS} from '__utils/consts';
+import {resolveTargetPlatform} from '__utils/targets/resolveTargetPlatform';
 
 import {getJournalTargetLabel} from '../getJournalTargetLabel';
 
@@ -22,6 +24,7 @@ export const buildJournalSnapshot = (state: BaseStore): JournalSnapshotDto => {
         isShowOutputCards,
         isShowGeneralCard,
         isAutoUpdateEnabled,
+        cardPlatforms,
     } = settingsSelector(state);
 
     return {
@@ -39,6 +42,7 @@ export const buildJournalSnapshot = (state: BaseStore): JournalSnapshotDto => {
         targetsDescription: targets.map(target => `${getJournalTargetLabel(target)}(${target.outputName ?? target.origin})`).join(', '),
         outputs: targets.map(target => {
             const output = view.outputs[target.key];
+            const {selected, source} = resolveTargetPlatform(target, cardPlatforms);
 
             return {
                 label: getJournalTargetLabel(target),
@@ -46,6 +50,7 @@ export const buildJournalSnapshot = (state: BaseStore): JournalSnapshotDto => {
                 isReconnecting: output?.isReconnecting ?? false,
                 level: output?.level ?? HealthLevelEnum.Off,
                 recentDropped: output?.recentDropped ?? 0,
+                chosenPlatform: source === PlatformSourceEnum.User ? selected : null,
             };
         }),
         port,

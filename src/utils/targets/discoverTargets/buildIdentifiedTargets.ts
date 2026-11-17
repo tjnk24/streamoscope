@@ -18,16 +18,21 @@ export const buildIdentifiedTargets = (outputs: BridgeConfiguredTargetDto[], tit
         type: 'warning',
     };
 
-    const targets = outputs.map(({name, server, id, keyId}): StreamTargetDto => ({
-        key: `plugin:${id}`,
-        origin: OutputOriginEnum.Plugin,
-        outputName: name,
-        outputId: id,
-        pluginName: PLUGIN_OUTPUT_NAMES[name] || null,
-        targetTitle: titles.get(id) || null,
-        platform: detectPlatform(null, server),
-        notes: mainKeyId !== null && keyId === mainKeyId ? [sameKeyNote] : [],
-    }));
+    const targets = outputs.map(({name, server, id, keyId}): StreamTargetDto => {
+        const targetTitle = titles.get(id) || null;
+
+        return {
+            key: `plugin:${id}`,
+            origin: OutputOriginEnum.Plugin,
+            outputName: name,
+            outputId: id,
+            keyId: keyId ?? null,
+            pluginName: PLUGIN_OUTPUT_NAMES[name] || null,
+            targetTitle,
+            platform: detectPlatform(null, server, targetTitle),
+            notes: mainKeyId !== null && keyId === mainKeyId ? [sameKeyNote] : [],
+        };
+    });
 
     return sortBy(targets, [({platform}) => platform.title?.toLowerCase() ?? '', 'outputId']);
 };

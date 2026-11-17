@@ -5,6 +5,17 @@ import {GeneralStatKeyEnum, OutputStatKeyEnum} from '../stats/statKeys';
 
 export type StoredSettingsDto = Record<string, unknown>;
 
+export type CardPlatformDto = {
+    platform: string;
+    keyId: Nullable<string>;
+};
+
+export type CardPlatformChoiceDto = {
+    cardKey: string;
+    platform: string;
+    keyId: Nullable<string>;
+};
+
 export type SettingsDto = {
     settingsVersion: number;
     port: number;
@@ -17,6 +28,7 @@ export type SettingsDto = {
     lastUpdateCheckAt: Nullable<number>;
     lastNotifiedVersion: Nullable<string>;
     cardOrder: string[];
+    cardPlatforms: Record<string, CardPlatformDto>;
     hiddenOutputStats: OutputStatKeyEnum[];
     hiddenGeneralStats: GeneralStatKeyEnum[];
 };

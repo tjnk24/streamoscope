@@ -4,7 +4,11 @@ import {
     it,
 } from 'vitest';
 
+import {PLATFORM_RULES, SHARED_PLATFORM_RULE} from '__utils/consts';
+
 import {detectPlatform} from '../detectPlatform';
+
+import {SHARED_PLATFORM_CHOICES} from './consts';
 
 describe('detectPlatform', () => {
     it.each([
@@ -21,7 +25,7 @@ describe('detectPlatform', () => {
         ['Mixcloud', 'Mixcloud'],
         ['Vaughn Live / iNSTAGIB', 'Vaughn Live'],
     ])('names the OBS service %s', (service, title) => {
-        expect(detectPlatform(service, null)).toMatchObject({title, isKnown: true});
+        expect(detectPlatform(service, null, null)).toMatchObject({title, isKnown: true});
     });
 
     it.each([
@@ -43,11 +47,12 @@ describe('detectPlatform', () => {
         ['rtmp://live-ams.vaughnsoft.net/live', 'Vaughn Live'],
         ['rtmps://ab2262fdd9c5.global-contribute.live-video.net/app/', 'W.TV'],
         ['rtmps://fa723fc1b171.global-contribute.live-video.net/app/', 'Kick'],
-        ['rtmp://vsu.okcdn.ru/input/', 'Boosty'],
-        ['rtmp://vsu.mycdn.me/input/', 'OK'],
-        ['rtmp://ovsu.mycdn.me/input/', 'VK Видео'],
+        ['rtmp://rtmp.vkvideo.ru/live', 'VK Video Live'],
+        ['rtmp://live.boosty.to/input/', 'Boosty'],
+        ['rtmp://stream.ok.ru/input/', 'OK'],
+        ['rtmp://stream.vk.com/live', 'VK Видео'],
     ])('names the custom server %s', (server, title) => {
-        expect(detectPlatform(null, server)).toMatchObject({title, isKnown: true});
+        expect(detectPlatform(null, server, null)).toMatchObject({title, isKnown: true, choices: []});
     });
 
     it.each([
@@ -55,10 +60,72 @@ describe('detectPlatform', () => {
         ['a host that only ends like a known one', null, 'rtmp://notrumble.com/live'],
         ['a navercorp host that is not CHZZK', null, 'rtmp://other.navercorp.com/live'],
     ])('leaves %s unknown', (_name, service, server) => {
-        expect(detectPlatform(service, server)).toMatchObject({isKnown: false});
+        expect(detectPlatform(service, server, null)).toMatchObject({isKnown: false, choices: []});
     });
 
     it('leaves the title to the card when there is neither a service nor a host', () => {
-        expect(detectPlatform(null, null)).toMatchObject({title: null, isKnown: false});
+        expect(detectPlatform(null, null, null)).toMatchObject({title: null, isKnown: false});
+    });
+
+    it.each([
+        'rtmp://vsu.okcdn.ru/input/',
+        'rtmp://ovsu.okcdn.ru/input/',
+        'rtmp://vsu.mycdn.me/input/',
+        'rtmp://ovsu.mycdn.me/input/',
+    ])('offers VK Video, OK and Boosty for the shared server %s', server => {
+        expect(detectPlatform(null, server, null)).toMatchObject({
+            title: 'VK/OK/Boosty',
+            isKnown: true,
+            choices: SHARED_PLATFORM_CHOICES,
+            guess: null,
+        });
+    });
+
+    it('lets the OBS service win over a shared server', () => {
+        expect(detectPlatform('Boosty', 'rtmp://vsu.okcdn.ru/input/', null)).toMatchObject({title: 'Boosty', choices: []});
+    });
+
+    it.each([
+        ['ВК', 'VK Видео'],
+        ['VK', 'VK Видео'],
+        ['вк видео', 'VK Видео'],
+        ['VK Video', 'VK Видео'],
+        ['VKVideo', 'VK Видео'],
+        ['ВКонтакте', 'VK Видео'],
+        ['vk.com', 'VK Видео'],
+        ['OK', 'OK'],
+        ['ок', 'OK'],
+        ['Одноклассники', 'OK'],
+        ['ok.ru', 'OK'],
+        ['Boosty', 'Boosty'],
+        ['Бусти', 'Boosty'],
+        ['Boosty Live', 'Boosty'],
+    ])('guesses the platform of a shared server from the target name %s', (targetTitle, guess) => {
+        expect(detectPlatform(null, 'rtmp://vsu.mycdn.me/input/', targetTitle)).toMatchObject({choices: SHARED_PLATFORM_CHOICES, guess});
+    });
+
+    it.each([
+        'VK Video Live',
+        'ВК Видео Лайф',
+        'VK Play',
+        'ВК Плей',
+        'VK и Boosty',
+        'Night show',
+        'Book club',
+        'Вкусный стрим',
+    ])('does not guess from the target name %s', targetTitle => {
+        expect(detectPlatform(null, 'rtmp://vsu.mycdn.me/input/', targetTitle)).toMatchObject({choices: SHARED_PLATFORM_CHOICES, guess: null});
+    });
+
+    it('does not let the target name change a server it recognizes', () => {
+        expect(detectPlatform(null, 'rtmp://live.twitch.tv/app', 'VK')).toMatchObject({title: 'Twitch', guess: null});
+    });
+
+    it('offers only platforms it knows by name and colour', () => {
+        const ruleTitles = PLATFORM_RULES.map(({title}) => title);
+
+        const choiceTitles = SHARED_PLATFORM_RULE.choices.map(({title}) => title);
+
+        expect(ruleTitles).toEqual(expect.arrayContaining(choiceTitles));
     });
 });

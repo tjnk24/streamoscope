@@ -115,6 +115,8 @@ export const de: TranslationDto = {
         sameKeyAsMain: 'Der Schlüssel dieses Streams ist schon vom Hauptstream in OBS belegt. Lösche ihn im Plugin oder ändere seinen Schlüssel.',
         mainFallbackTitle: 'Stream',
         unknownPlatform: 'Unbekannte Plattform',
+        choosePlatform: 'Welche Plattform?',
+        sharedServersHint: 'Klicke und wähle die Plattform aus der Liste. VK Video, OK und Boosty empfangen Streams auf denselben Servern, an der Serveradresse lassen sie sich nicht unterscheiden.',
     },
     general: {
         title: 'OBS',

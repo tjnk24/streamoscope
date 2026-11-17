@@ -109,6 +109,25 @@ describe('describeJournalChanges', () => {
         expect(stoppedEntry.message).toBe('stream stopped');
     });
 
+    it('writes the platform the user chose for a card and its reset', () => {
+        const chosen = {
+            ...SNAPSHOT,
+            outputs: [{...OUTPUT, chosenPlatform: 'Boosty'}],
+        };
+
+        const chosenEntries = describeJournalChanges(SNAPSHOT, chosen);
+
+        const [resetEntry] = describeJournalChanges(chosen, SNAPSHOT);
+
+        expect(chosenEntries).toEqual([{
+            level: Info,
+            source: 'Twitch',
+            message: 'chosen platform=Boosty',
+        }]);
+
+        expect(resetEntry.message).toBe('chosen platform=none');
+    });
+
     it('writes the settings the user changed', () => {
         const withoutAutoUpdate = {...SNAPSHOT, isAutoUpdateEnabled: false};
 

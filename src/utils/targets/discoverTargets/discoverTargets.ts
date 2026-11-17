@@ -49,9 +49,10 @@ export const discoverTargets = (pairs: RequestResultPairDto[]): StreamTargetDto[
         origin: OutputOriginEnum.Main,
         outputName: null,
         outputId: null,
+        keyId: mainKeyId,
         pluginName: null,
         targetTitle: null,
-        platform: detectPlatform(serviceName ?? null, server ?? null),
+        platform: detectPlatform(serviceName ?? null, server ?? null, null),
         notes: [],
     };
 

@@ -22,6 +22,8 @@ export type OutputCardViewDto = {
     title: string;
     targetTitle: Nullable<string>;
     color: string;
+    platformChoices: string[];
+    selectedPlatform: Nullable<string>;
     notes: NoteDto[];
     hasReconnectAdvice: boolean;
     hasDragHandle: boolean;

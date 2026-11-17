@@ -113,6 +113,8 @@ export const en = {
         sameKeyAsMain: 'The key of this stream is already taken by the main OBS stream. Delete it in the plugin or change its key.',
         mainFallbackTitle: 'Stream',
         unknownPlatform: 'Unknown platform',
+        choosePlatform: 'Which platform?',
+        sharedServersHint: 'Click and pick the platform from the list. VK Video, OK and Boosty receive streams on the same servers, so the server address cannot tell them apart.',
     },
     general: {
         title: 'OBS',

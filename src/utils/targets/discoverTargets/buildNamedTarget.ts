@@ -27,9 +27,10 @@ export const buildNamedTarget = (outputName: string, count: number, bridgeServer
         origin: OutputOriginEnum.Plugin,
         outputName,
         outputId: null,
+        keyId: null,
         pluginName: PLUGIN_OUTPUT_NAMES[outputName] || null,
         targetTitle: null,
-        platform: detectPlatform(null, bridgeServer),
+        platform: detectPlatform(null, bridgeServer, null),
         notes,
     };
 };

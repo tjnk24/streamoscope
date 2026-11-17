@@ -9,6 +9,7 @@ export const OUTPUT: JournalOutputSnapshotDto = {
     isReconnecting: false,
     level: HealthLevelEnum.Ok,
     recentDropped: 0,
+    chosenPlatform: null,
 };
 
 export const SNAPSHOT: JournalSnapshotDto = {

@@ -16,12 +16,15 @@ export const MAIN_TARGET: StreamTargetDto = {
     origin: OutputOriginEnum.Main,
     outputName: null,
     outputId: null,
+    keyId: null,
     pluginName: null,
     targetTitle: null,
     platform: {
         title: 'YouTube',
         color: '#ff0000',
         isKnown: true,
+        choices: [],
+        guess: null,
     },
     notes: [],
 };

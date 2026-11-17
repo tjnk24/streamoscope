@@ -16,6 +16,19 @@
     flex: none;
 }
 
+.platformSelect {
+    flex: none;
+    display: inline-flex;
+}
+
+.platformSelect .select {
+    padding-inline: 0;
+}
+
+.platformSelect .select .selectPlaceholder {
+    color: var(--ant-color-text-secondary);
+}
+
 .targetTitle {
     font-weight: normal;
 }
