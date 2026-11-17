@@ -4,7 +4,7 @@
     {
       "name": "dock-dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "start:dev"],
+      "runtimeArgs": ["run", "start:dev", "--", "--no-open"],
       "port": 3062
     },
     {
