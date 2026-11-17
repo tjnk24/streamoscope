@@ -56,7 +56,7 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 | --- | --- |
 | Current bitrate and two-minute graph | FPS, highlighted when it drops, and frame time |
 | Dropped network frames: total and recent | Encoding and rendering lag since the stream started |
-| Live / losing some / unstable / reconnecting / offline status, with a hint on what to try | CPU usage and OBS memory |
+| Live / dropping frames / unstable / reconnecting / offline status, with a hint on what to try | CPU usage and OBS memory |
 | Uptime and network congestion | GPU usage, encoder load, VRAM and system RAM¹ |
 | Detected platform and output source, when available | Diagnostics, mock mode, update checks and release notes right in the dock |
 
