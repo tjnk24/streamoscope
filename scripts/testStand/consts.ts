@@ -313,7 +313,7 @@ export const DOCK_OFFLINE_TEXT = 'Offline';
 
 export const LIVE_BITRATE_PATTERN = /Live\s+[1-9]\d*\s+kbps/;
 
-export const DOCK_SAME_NAME_WARNING_TEXT = 'stats for one of them only';
+export const DOCK_SAME_NAME_WARNING_TEXT = 'so only one of them has stats';
 
 export const DOCK_SAME_KEY_WARNING_TEXT = 'already taken by the main OBS stream';
 

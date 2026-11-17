@@ -163,11 +163,11 @@ When a stream runs into trouble, a red icon lights up next to the row with the p
 
 | Problem | Where the icon shows | Try this |
 | --- | --- | --- |
-| Frames are being dropped | **Dropped (frames/min)**: at least 1% of frames lost in the last minute | Lower the bitrate in **Settings → Output**; turn on dynamic bitrate in **Settings → Advanced → Network**; use a cable instead of Wi-Fi and pause other uploads; pick a closer server |
+| Frames are being dropped | **Dropped per minute**: at least 1% of frames lost in the last minute | Lower the bitrate in **Settings → Output**; turn on dynamic bitrate in **Settings → Advanced → Network**; use a cable instead of Wi-Fi and pause other uploads; pick a closer server |
 | The network is congested | **Network congestion**: the send buffer is at least half full | Same as for dropped frames: the network barely keeps up, and drops are next |
 | OBS is reconnecting | Next to the status of the card | Check the internet connection; if it keeps dropping, pick another server; check on the platform's site that the stream hasn't ended there |
-| The GPU is overloaded | **Rendering lagged**: at least 0.5% of frames in the last minute | Cap the game's FPS; run OBS as administrator; close other GPU-heavy apps; lower the base resolution or FPS in **Settings → Video** |
-| The encoder can't keep up | **Encoder lagged**: at least 0.5% of frames in the last minute | Pick a faster preset in **Settings → Output**; switch from x264 to a hardware encoder (NVENC, AMF, Quick Sync); lower the output resolution or FPS |
+| The GPU is overloaded | **Rendering missed**: at least 0.5% of frames in the last minute | Cap the game's FPS; run OBS as administrator; close other GPU-heavy apps; lower the **Base (Canvas) Resolution** or FPS in **Settings → Video** |
+| The encoder can't keep up | **Encoder skipped**: at least 0.5% of frames in the last minute | Pick a faster preset in **Settings → Output**; switch from x264 to a hardware encoder (NVENC, AMF, Quick Sync); lower the **Output (Scaled) Resolution** or FPS in **Settings → Video** |
 
 🆘 Still stuck? [Open an issue](https://github.com/tjnk24/streamoscope/issues), preferably with **Settings → Diagnostics → Copy diagnostics** and the file `streamoscope.log` from **Open journal folder**. If the dock won't open, the file is in `%LOCALAPPDATA%\streamoscope\logs`. Please don't attach passwords or stream keys.
 

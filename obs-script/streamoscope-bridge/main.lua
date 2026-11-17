@@ -80,18 +80,18 @@ function script_description()
     local icon = string.format(consts.DESCRIPTION_ICON_HTML, script_path())
 
     if string.sub(obs.obs_get_locale(), 1, 2) == 'ru' then
-        return icon .. 'Сообщает панели StreamoScope, на какую площадку стримят выходы плагинов (obs-multi-rtmp и любые другие) ' ..
-            'и статистику каждого из них, загрузку видеокарты и занятую память системы. Передаёт только адрес сервера без пути и ключа ' ..
-            'и короткие отпечатки: по ним панель узнаёт выход и замечает цель с тем же ключом, что у основной трансляции, ' ..
-            'а ключ по ним не восстановить. Цели obs-multi-rtmp ' ..
-            'читает из настроек плагина в профиле, чтобы их карточки с названиями были видны ещё до эфира.'
+        return icon .. 'Передаёт панели StreamoScope, на какие площадки идут трансляции плагинов (obs-multi-rtmp и других), ' ..
+            'статистику каждой из них, загрузку видеокарты и занятую память системы. Ключ трансляции не передаётся: ' ..
+            'только адрес сервера без пути и короткие отпечатки, из которых ключ не восстановить. ' ..
+            'По ним панель различает трансляции и замечает, если трансляция плагина идёт с ключом основной. ' ..
+            'Трансляции obs-multi-rtmp мост берёт из настроек плагина, поэтому их карточки видны ещё до эфира.'
     end
 
-    return icon .. 'Tells the StreamoScope dock which platform plugin outputs stream to (obs-multi-rtmp and any other) ' ..
-        'and the statistics of each, the GPU load and the system memory in use. Only the server address is passed, without the path ' ..
-        'or the key, plus short fingerprints that let the dock recognise the output and spot a target with the same key ' ..
-        'as the main stream; they cannot be turned back into the key. ' ..
-        'It reads the obs-multi-rtmp targets from the plugin settings in the profile, so their cards and names show up before you go live.'
+    return icon .. 'Tells the StreamoScope dock which platforms plugin streams (obs-multi-rtmp and others) go to, ' ..
+        'the statistics of each, the GPU load and the system memory in use. The stream key is never passed: ' ..
+        'only the server address without the path, plus short fingerprints that cannot be turned back into the key. ' ..
+        'With them the dock tells streams apart and notices when a plugin stream uses the key of the main one. ' ..
+        'The bridge reads obs-multi-rtmp streams from the plugin settings, so their cards show up before you go live.'
 end
 
 function script_load(_settings)
