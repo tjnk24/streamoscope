@@ -138,7 +138,6 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
                     className={style.note}
                     type={type}
                     title={t(textKey, values)}
-                    showIcon
                 />
             ))}
         </Card>
