@@ -187,6 +187,7 @@ export const ptBr: TranslationDto = {
         whatsNew: 'Novidades',
         updated: 'StreamoScope foi atualizado para {{version}}',
         whatsNewQuestion: 'O que há de novo?',
+        closeToast: 'Fechar',
         download: 'Baixar manualmente',
         retry: 'Tentar de novo',
         installerNeeded: 'Algumas correções só chegam com o instalador. Execute-o uma vez sobre esta instalação: suas configurações, o registro e o OBS ficam como estão.',

@@ -1,3 +1,4 @@
+import {CloseOutlined} from '@ant-design/icons';
 import {
     App,
     Flex,
@@ -46,20 +47,36 @@ export const useUpdatedToast = () => {
                 <Flex
                     align="center"
                     gap={14}
-                    wrap
                 >
-                    {t('update.updated', {version: process.env.APP_VERSION})}
+                    <Flex
+                        align="center"
+                        gap={14}
+                        wrap
+                    >
+                        {t('update.updated', {version: process.env.APP_VERSION})}
+
+                        <EnhancedButton
+                            buttonProps={{
+                                type: 'link',
+                                size: 'small',
+                                onClick: onOpenNotes,
+                            }}
+                            withSpinner={false}
+                        >
+                            {t('update.whatsNewQuestion')}
+                        </EnhancedButton>
+                    </Flex>
 
                     <EnhancedButton
                         buttonProps={{
-                            type: 'link',
+                            type: 'text',
                             size: 'small',
-                            onClick: onOpenNotes,
+                            icon: <CloseOutlined/>,
+                            'aria-label': t('update.closeToast'),
+                            onClick: () => message.destroy(UPDATED_TOAST_KEY),
                         }}
                         withSpinner={false}
-                    >
-                        {t('update.whatsNewQuestion')}
-                    </EnhancedButton>
+                    />
                 </Flex>
             ),
             duration: UPDATED_TOAST_DURATION_SEC,
