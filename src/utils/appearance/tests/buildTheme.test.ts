@@ -65,6 +65,18 @@ describe('buildTheme', () => {
         expect(buildTheme(null).token?.colorBgSpotlight).toBe(yamiSpotlight);
     });
 
+    it.each([
+        [null, 14, 28],
+        [10, 14, 28],
+        [8, 11, 22],
+        [12, 17, 34],
+    ])('scales the font for the OBS font size %s', (fontScale, fontSize, bitrateFontSize) => {
+        const {token, components} = buildTheme({...ACRI_THEME, fontScale});
+
+        expect(token?.fontSize).toBe(fontSize);
+        expect(components?.Statistic?.contentFontSize).toBe(bitrateFontSize);
+    });
+
     it('switches to the light algorithm for a light theme', () => {
         expect(buildTheme(LIGHT_THEME).algorithm).toEqual([theme.defaultAlgorithm, theme.compactAlgorithm]);
     });

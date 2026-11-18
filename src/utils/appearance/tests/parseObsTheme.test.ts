@@ -36,8 +36,18 @@ describe('parseObsTheme', () => {
     });
 
     it('falls back to its own palette when there are only light and dark, as in OBS 28 and 29', () => {
-        expect(parseObsTheme({id: 'com.obsproject.Yami.Original', isDark: false})).toEqual({isDark: false, colors: LIGHT_THEME_COLORS});
-        expect(parseObsTheme({isDark: true, colors: {window: '#101010'}})).toEqual({isDark: true, colors: DARK_THEME_COLORS});
+        expect(parseObsTheme({id: 'com.obsproject.Yami.Original', isDark: false})).toEqual({isDark: false, colors: LIGHT_THEME_COLORS, fontScale: null});
+        expect(parseObsTheme({isDark: true, colors: {window: '#101010'}})).toEqual({isDark: true, colors: DARK_THEME_COLORS, fontScale: null});
+    });
+
+    it.each([
+        [12, 12],
+        [8, 8],
+        [100, 20],
+        ['12', null],
+        [Number.NaN, null],
+    ])('takes the OBS font size %s as %s', (fontScale, expected) => {
+        expect(parseObsTheme({...ACRI_BRIDGE_THEME, fontScale})?.fontScale).toBe(expected);
     });
 
     it.each([

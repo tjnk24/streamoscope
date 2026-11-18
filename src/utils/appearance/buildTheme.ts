@@ -10,11 +10,14 @@ import {
     FIELD_HOVER_WEIGHT,
     HOVER_WEIGHT,
     LIGHT_SHADOW_OPACITY,
+    OBS_DEFAULT_FONT_SCALE,
     TEXT_MIN_CONTRAST,
 } from '__utils/consts';
 import {
     BASE_THEME,
+    BITRATE_FONT_SIZE,
     DARK_THEME_COLORS,
+    DOCK_FONT_SIZE,
     ERROR_COLOR,
     SUCCESS_COLOR,
     WARNING_COLOR,
@@ -48,6 +51,7 @@ export const buildTheme = (obsTheme: Nullable<ObsThemeDto>): ThemeConfig => {
     const error = ensureContrast(ERROR_COLOR, base, CONTROL_MIN_CONTRAST);
     const fieldHover = mixColors(input, text, FIELD_HOVER_WEIGHT);
     const shadowOpacity = isDark ? DARK_SHADOW_OPACITY : LIGHT_SHADOW_OPACITY;
+    const fontRatio = (obsTheme?.fontScale ?? OBS_DEFAULT_FONT_SCALE) / OBS_DEFAULT_FONT_SCALE;
     const darkerBackground = getRelativeLuminance(layout) <= getRelativeLuminance(base) ? layout : base;
     const spotlight = colorAlgorithm({...theme.defaultSeed, colorBgBase: darkerBackground}).colorBgSpotlight;
 
@@ -63,6 +67,7 @@ export const buildTheme = (obsTheme: Nullable<ObsThemeDto>): ThemeConfig => {
         algorithm: [colorAlgorithm, theme.compactAlgorithm],
         token: {
             ...BASE_THEME.token,
+            fontSize: Math.round(DOCK_FONT_SIZE * fontRatio),
             colorPrimary: accent,
             colorInfo: accent,
             colorLink: link,
@@ -84,6 +89,9 @@ export const buildTheme = (obsTheme: Nullable<ObsThemeDto>): ThemeConfig => {
         },
         components: {
             ...BASE_THEME.components,
+            Statistic: {
+                contentFontSize: Math.round(BITRATE_FONT_SIZE * fontRatio),
+            },
             Button: {
                 colorLink: link,
                 defaultColor: link,

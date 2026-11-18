@@ -28,6 +28,7 @@ export const ACRI_THEME: ObsThemeDto = {
         input: '#28282a',
         inputBorder: '#616161',
     },
+    fontScale: null,
 };
 
 export const LIGHT_THEME: ObsThemeDto = {
@@ -42,4 +43,5 @@ export const LIGHT_THEME: ObsThemeDto = {
         input: '#f5f5f5',
         inputBorder: '#8c8c8c',
     },
+    fontScale: null,
 };

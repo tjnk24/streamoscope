@@ -146,7 +146,7 @@ text_file.write(portable_user_themes .. '/Portable.ovt', table.concat({
     '}',
 }, '\n'))
 
-local user_config = {['Appearance/Theme'] = 'test.Base.Variant'}
+local user_config = {['Appearance/Theme'] = 'test.Base.Variant', ['Appearance/FontScale'] = '12'}
 local app_config = {['Locations/Configuration'] = string.gsub(root .. 'roaming/', '/', '\\')}
 local global_config = {['Appearance/Theme'] = 'test.Old'}
 local profile_path = root .. 'config30/obs-studio/basic/profiles/Main'
@@ -214,12 +214,18 @@ local variant = modern_theme:read()
 record('variantId', variant.id)
 record('variantIsDark', variant.isDark)
 record('variantColors', describe_colors(variant))
+record('variantFontScale', variant.fontScale)
 record('cached', rawequal(modern_theme:read(), variant))
 
 local dock_file = text_file.read(dock_file_path) or ''
 
 record('dockFileGlobal', string.match(dock_file, '^window%.STREAMOSCOPE_OBS_THEME = {.*};\r\n$') ~= nil)
 record('dockFileWindow', string.match(dock_file, '"window":"(#%x+)"'))
+
+user_config['Appearance/FontScale'] = '9'
+record('fontScaleSameTable', rawequal(modern_theme:read(), variant))
+record('fontScaleAfterChange', variant.fontScale)
+record('dockFileFontScale', string.match(text_file.read(dock_file_path) or '', '"fontScale":(%d+)'))
 
 text_file.write(user_themes .. '/Variant.ovt', "@OBSThemeMeta { id: 'test.Base.Variant'; extends: 'test.Base'; }")
 record('cachedColors', describe_colors(modern_theme:read()))
@@ -242,6 +248,7 @@ record('loopColors', describe_colors(modern_theme:read()))
 local old = old_theme:read()
 
 record('oldIsDark', old.isDark)
+record('oldFontScale', old.fontScale)
 record('oldColors', describe_colors(old))
 record('freedProfilePaths', freed_profile_paths)
 record('dockFileWithoutPage', string.match(text_file.read(dock_file_path) or '', '"id":"([%w%.]+)"'))

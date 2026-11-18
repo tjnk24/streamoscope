@@ -1,3 +1,5 @@
+import type {Nullable} from 'infrastructure/common';
+
 export type ObsThemeColorsDto = {
     window: string;
     base: string;
@@ -12,4 +14,5 @@ export type ObsThemeColorsDto = {
 export type ObsThemeDto = {
     isDark: boolean;
     colors: ObsThemeColorsDto;
+    fontScale: Nullable<number>;
 };

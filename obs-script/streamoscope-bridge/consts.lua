@@ -87,6 +87,7 @@ return {
     OBS_THEME_DEFAULT_ID = 'com.obsproject.Yami.Original',
     OBS_THEME_CONFIG_SECTION = 'Appearance',
     OBS_THEME_CONFIG_NAME = 'Theme',
+    OBS_FONT_SCALE_CONFIG_NAME = 'FontScale',
     OBS_LOCATIONS_SECTION = 'Locations',
     OBS_CONFIGURATION_LOCATION_NAME = 'Configuration',
     OBS_THEME_INSTALL_DIRECTORY = '/data/obs-studio/themes',

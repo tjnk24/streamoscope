@@ -59,6 +59,7 @@ export type BridgeThemeDto = {
     id?: string;
     isDark?: boolean;
     colors?: Partial<ObsThemeColorsDto>;
+    fontScale?: number;
 };
 
 export type BridgeDataDto = {

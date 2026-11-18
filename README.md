@@ -73,7 +73,7 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 
 ✂️ **Only what you read.** **Settings → Display** has a switch for the stream cards and one for the OBS card, and under each switch a checkbox for every row of those cards (the big bitrate number and its graph count as one row, and so does the status label in the header). Not into OBS health today? Switch the OBS card off. Untick what you never look at and the cards shrink to match, down to a bare header; to hide the cards themselves, use their switch. Rows added in future versions show up ticked.
 
-🎨 **Dressed like your OBS.** The dock takes its colours from the OBS theme: Yami and its styles, Light, or a theme you installed yourself. Pick another theme in OBS and the dock follows within a second. Where an OBS colour would be hard to read in a dock (a near-black accent, a neon platform colour on a light background), the dock shifts it just enough to read. Needs the bridge and OBS 30 or newer; OBS 28 and 29 only tell the dock light from dark.
+🎨 **Dressed like your OBS.** The dock takes its colours from the OBS theme: Yami and its styles, Light, or a theme you installed yourself. The font size from **Settings → Appearance** carries over too. Pick another theme or font size in OBS and the dock follows within a second. Where an OBS colour would be hard to read in a dock (a near-black accent, a neon platform colour on a light background), the dock shifts it just enough to read. Needs the bridge and OBS 30 or newer; OBS 28 and 29 only tell the dock light from dark.
 
 🌍 The interface supports **English, Russian, Spanish, German and Brazilian Portuguese**.
 

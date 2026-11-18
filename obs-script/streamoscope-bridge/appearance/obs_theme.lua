@@ -72,12 +72,20 @@ local function read_config_text(self, config, section, name)
     return ffi.string(pointer)
 end
 
-local function read_theme_id(self)
-    local user_config = take_pointer(call_optional(self.frontend, 'obs_frontend_get_user_config'))
+local function read_user_config(self)
+    return take_pointer(call_optional(self.frontend, 'obs_frontend_get_user_config'))
         or take_pointer(call_optional(self.frontend, 'obs_frontend_get_global_config'))
+end
 
+local function read_theme_id(self, user_config)
     return read_config_text(self, user_config, consts.OBS_THEME_CONFIG_SECTION, consts.OBS_THEME_CONFIG_NAME)
         or consts.OBS_THEME_DEFAULT_ID
+end
+
+local function read_font_scale(self, user_config)
+    local font_scale = read_config_text(self, user_config, consts.OBS_THEME_CONFIG_SECTION, consts.OBS_FONT_SCALE_CONFIG_NAME)
+
+    return font_scale ~= nil and tonumber(font_scale) or nil
 end
 
 local function strip_trailing_separator(path)
@@ -280,13 +288,25 @@ function ObsTheme:read()
         return nil
     end
 
-    local id = read_theme_id(self)
+    local user_config = read_user_config(self)
+    local id = read_theme_id(self, user_config)
+    local font_scale = read_font_scale(self, user_config)
+    local is_changed = false
 
     if id ~= self.theme_id then
         local described, theme = pcall(describe, self, id)
 
         self.theme_id = id
         self.theme = described and theme or nil
+        is_changed = true
+    end
+
+    if self.theme ~= nil and self.theme.fontScale ~= font_scale then
+        self.theme.fontScale = font_scale
+        is_changed = true
+    end
+
+    if is_changed then
         pcall(write_dock_file, self)
     end
 

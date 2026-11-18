@@ -402,3 +402,6 @@ export const ACTIVE_WEIGHT = 0.2;
 export const FIELD_HOVER_WEIGHT = 0.05;
 export const DARK_SHADOW_OPACITY = 0.55;
 export const LIGHT_SHADOW_OPACITY = 0.15;
+export const OBS_DEFAULT_FONT_SCALE = 10;
+export const OBS_MIN_FONT_SCALE = 6;
+export const OBS_MAX_FONT_SCALE = 20;

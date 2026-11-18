@@ -10,6 +10,10 @@ export const WARNING_COLOR = '#e2a63b';
 
 export const ERROR_COLOR = '#e5534b';
 
+export const DOCK_FONT_SIZE = 14;
+
+export const BITRATE_FONT_SIZE = 28;
+
 export const DARK_THEME_COLORS: ObsThemeColorsDto = {
     window: '#1d1f26',
     base: '#272a33',
@@ -38,16 +42,12 @@ export const BASE_THEME: ThemeConfig = {
     },
     token: {
         borderRadius: 5,
-        fontSize: 14,
         fontFamily: '\'Inter Variable\', Inter, Roboto, \'Helvetica Neue\', Geneva, arial, Tahoma, verdana, sans-serif',
     },
     components: {
         Descriptions: {
             itemPaddingBottom: 2,
             itemPaddingEnd: 24,
-        },
-        Statistic: {
-            contentFontSize: 28,
         },
     },
 };

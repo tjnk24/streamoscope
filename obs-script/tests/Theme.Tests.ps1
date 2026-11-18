@@ -34,6 +34,14 @@ Describe 'Colors of the OBS theme passed by the bridge' {
         $script:Results.variantColors | Should -Be 'base:#0a141e,border:#445566,input:#222222,primary:#abcdef,text:#ffffff,window:#c8c9ca'
     }
 
+    It 'passes the OBS font size and follows its change without reading the theme files again' {
+        $script:Results.variantFontScale | Should -Be '12'
+        $script:Results.fontScaleSameTable | Should -Be 'true'
+        $script:Results.fontScaleAfterChange | Should -Be '9'
+        $script:Results.dockFileFontScale | Should -Be '9'
+        $script:Results.oldFontScale | Should -Be 'nil'
+    }
+
     It 'takes darkness from the theme when OBS cannot tell it' {
         $script:Results.variantIsDark | Should -Be 'false'
         $script:Results.missingIsDark | Should -Be 'true'
