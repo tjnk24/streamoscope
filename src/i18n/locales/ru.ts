@@ -126,6 +126,7 @@ export const ru: TranslationDto = {
     },
     general: {
         title: 'OBS',
+        totalBitrate: 'Отдаётся всего',
         fps: 'FPS',
         frameTime: 'Время кадра',
         encoding: 'Кодировщик пропустил',
@@ -141,6 +142,7 @@ export const ru: TranslationDto = {
         recentLag: ' · +{{count}} за мин',
         reset: 'Сбросить графики',
         hints: {
+            totalBitrate: 'Сумма битрейта всех трансляций, которые сейчас в эфире. Сравнивайте со скоростью отдачи интернета: нужен запас хотя бы в треть',
             fps: 'Становится оранжевым ниже 95% от частоты кадров, заданной в OBS, и красным ниже 80%, как в окне «$t(obs.stats)»',
             lagStart: 'Считается с начала последнего эфира, а если эфира ещё не было — с подключения панели к OBS.',
             encoding: 'Кадры, которые кодировщик не успел сжать ($t(obs.skippedFrames)). Общие для всех площадок. $t(general.hints.lagStart)',
@@ -272,6 +274,7 @@ export const ru: TranslationDto = {
         megabytes: '{{value}} МБ',
         gigabytes: '{{value}} ГБ',
         gigabytesOf: '{{used}} из {{total}} ГБ',
+        megabitsPerSecond: '{{value}} Мбит/с',
     },
     errorBoundary: {
         title: 'Что-то пошло не так',

@@ -66,6 +66,7 @@ export const frog: DeepPartial<TranslationDto> = {
     },
     general: {
         title: 'Болото OBS',
+        totalBitrate: 'Квакается всего',
         fps: 'Прыжков в секунду',
         frameTime: 'Время прыжка',
         encoding: 'Квакодировщик пропустил',
@@ -81,6 +82,7 @@ export const frog: DeepPartial<TranslationDto> = {
         recentLag: ' · +{{count}} мух за мин',
         reset: 'Взбаламутить графики',
         hints: {
+            totalBitrate: 'Сколько квакают вместе все кувшинки в эфире. Сравнивайте со скоростью отдачи интернета: нужен запас хотя бы в треть',
             fps: 'Оранжевеет, когда болото прыгает медленнее 95% от заданного в OBS, и краснеет ниже 80%, как в окне «$t(obs.stats)»',
             lagStart: 'Считаем с последнего прыжка в эфир, а если в эфир ещё не прыгали — с того, как панель приквакалась к OBS.',
             encoding: 'Мухи-кадры, которых квакодировщик не успел проглотить ($t(obs.skippedFrames)). Общие для всех прудов. $t(general.hints.lagStart)',
@@ -103,6 +105,9 @@ export const frog: DeepPartial<TranslationDto> = {
         titleCurrent: 'Что нового в пруду {{version}}',
         titleNewer: 'Что нового в свежих прудах',
         close: 'Квак, понятно',
+    },
+    units: {
+        megabitsPerSecond: '{{value}} Мквабит/с',
     },
     errorBoundary: {
         title: 'Болото забурлило',

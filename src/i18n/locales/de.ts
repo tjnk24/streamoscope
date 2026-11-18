@@ -126,6 +126,7 @@ export const de: TranslationDto = {
     },
     general: {
         title: 'OBS',
+        totalBitrate: 'Upload gesamt',
         fps: 'FPS',
         frameTime: 'Framezeit',
         encoding: 'Encoder übersprang',
@@ -141,6 +142,7 @@ export const de: TranslationDto = {
         recentLag: ' · +{{count}} pro Min.',
         reset: 'Diagramme zurücksetzen',
         hints: {
+            totalBitrate: 'Bitrate aller Streams, die gerade live sind, zusammengezählt. Vergleiche sie mit der Upload-Geschwindigkeit deines Internets und lass mindestens ein Drittel Reserve',
             fps: 'Wird orange unter 95 % der in OBS eingestellten Bildrate und rot unter 80 %, wie im Fenster „$t(obs.stats)“',
             lagStart: 'Gezählt ab dem Start des letzten Streams. Gab es noch keinen, ab dem Verbinden des Docks mit OBS.',
             encoding: 'Frames, die der Encoder nicht rechtzeitig komprimieren konnte ($t(obs.skippedFrames)). Für alle Plattformen gemeinsam. $t(general.hints.lagStart)',
@@ -272,6 +274,7 @@ export const de: TranslationDto = {
         megabytes: '{{value}} MB',
         gigabytes: '{{value}} GB',
         gigabytesOf: '{{used}} von {{total}} GB',
+        megabitsPerSecond: '{{value}} Mbit/s',
     },
     errorBoundary: {
         title: 'Etwas ist schiefgelaufen',

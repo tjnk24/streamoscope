@@ -12,9 +12,12 @@ import {formatFixed} from '../../../utils/formatFixed';
 import {formatGigabytes} from '../../../utils/formatGigabytes';
 import {formatMemory} from '../../../utils/formatMemory';
 import AdviceIcon from '../../advice-icon';
+import {KILOBITS_IN_MEGABIT, MIN_TOTAL_BITRATE_STREAMS} from '../consts';
 import {getFpsLevel} from '../utils/getFpsLevel';
+import {getTotalBitrate} from '../utils/getTotalBitrate';
 
 const {
+    TotalBitrate,
     Fps,
     FrameTime,
     Encoding,
@@ -30,12 +33,22 @@ const {
 const {Rendering: RenderingAdvice, Encoding: EncodingAdvice} = AdviceEnum;
 
 export const useItems = (): StatItemDto<GeneralStatKeyEnum>[] => {
-    const {view: {general: view}, hardware: {gpu, systemMemory}} = useSelector(statsSelector);
+    const {view: {general: view, outputs}, hardware: {gpu, systemMemory}, targets} = useSelector(statsSelector);
     const hiddenGeneralStats = useSelector(settingsHiddenGeneralStatsSelector);
 
     const {t} = useTranslation();
 
+    const totalBitrate = getTotalBitrate(targets, outputs);
+
     const items: StatItemDto<GeneralStatKeyEnum>[] = [
+        ...(totalBitrate.liveCount >= MIN_TOTAL_BITRATE_STREAMS
+            ? [{
+                key: TotalBitrate,
+                label: t('general.totalBitrate'),
+                hint: t('general.hints.totalBitrate'),
+                value: t('units.megabitsPerSecond', {value: formatFixed(totalBitrate.kbps / KILOBITS_IN_MEGABIT, 1)}),
+            }]
+            : []),
         {
             key: Fps,
             label: t('general.fps'),

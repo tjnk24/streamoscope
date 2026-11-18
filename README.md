@@ -57,9 +57,9 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 
 | Every active streaming output | OBS and system |
 | --- | --- |
-| Current bitrate and two-minute graph | FPS, highlighted when it drops, and frame time |
-| Dropped network frames: total and recent | Encoding and rendering lag since the stream started |
-| Live / dropping frames / unstable / reconnecting / offline status, with a hint on what to try | CPU usage and OBS memory |
+| Current bitrate and two-minute graph | Total upload of all live streams, to hold against your internet upload speed (shown from two streams up) |
+| Dropped network frames: total and recent | FPS, highlighted when it drops, and frame time |
+| Live / dropping frames / unstable / reconnecting / offline status, with a hint on what to try | Encoding and rendering lag since the stream started, CPU usage and OBS memory |
 | Uptime and network congestion | GPU usage, encoder load, VRAM and system RAM¹ |
 | Detected platform and output source, when available | Diagnostics, mock mode, update checks and release notes right in the dock |
 

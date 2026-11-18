@@ -124,6 +124,7 @@ export const en = {
     },
     general: {
         title: 'OBS',
+        totalBitrate: 'Total upload',
         fps: 'FPS',
         frameTime: 'Frame time',
         encoding: 'Encoder skipped',
@@ -139,6 +140,7 @@ export const en = {
         recentLag: ' · +{{count}} per min',
         reset: 'Reset graphs',
         hints: {
+            totalBitrate: 'Bitrate of all streams live right now, added up. Compare it with your internet upload speed and keep at least a third spare',
             fps: 'Turns orange below 95% of the frame rate set in OBS and red below 80%, as in the $t(obs.stats) window',
             lagStart: 'Counted from the start of the latest stream. If there was none yet, from when the dock connected to OBS.',
             encoding: 'Frames the encoder failed to compress in time ($t(obs.skippedFrames)). Shared by all platforms. $t(general.hints.lagStart)',
@@ -270,6 +272,7 @@ export const en = {
         megabytes: '{{value}} MB',
         gigabytes: '{{value}} GB',
         gigabytesOf: '{{used}} of {{total}} GB',
+        megabitsPerSecond: '{{value}} Mbps',
     },
     errorBoundary: {
         title: 'Something went wrong',

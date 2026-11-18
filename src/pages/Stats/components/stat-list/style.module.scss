@@ -3,6 +3,10 @@
     table-layout: fixed;
 }
 
+.list :global(.ant-descriptions-item[colspan='2'] > .ant-descriptions-item-container) {
+    width: calc(50% - var(--ant-descriptions-item-padding-end));
+}
+
 .list .itemLabel {
     flex: 1 1 auto;
     min-width: 0;

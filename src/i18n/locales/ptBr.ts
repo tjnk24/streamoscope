@@ -126,6 +126,7 @@ export const ptBr: TranslationDto = {
     },
     general: {
         title: 'OBS',
+        totalBitrate: 'Upload total',
         fps: 'FPS',
         frameTime: 'Tempo de quadro',
         encoding: 'Codificador pulou',
@@ -141,6 +142,7 @@ export const ptBr: TranslationDto = {
         recentLag: ' · +{{count}} por min',
         reset: 'Zerar gráficos',
         hints: {
+            totalBitrate: 'Bitrate de todas as transmissões ao vivo agora, somado. Compare com a velocidade de upload da sua internet e deixe pelo menos um terço de folga',
             fps: 'Fica laranja abaixo de 95% da taxa de quadros definida no OBS e vermelho abaixo de 80%, como na janela “$t(obs.stats)”',
             lagStart: 'Contado desde o início da última live. Se ainda não houve nenhuma, desde que o painel se conectou ao OBS.',
             encoding: 'Quadros que o codificador não conseguiu comprimir a tempo ($t(obs.skippedFrames)). Comuns a todas as plataformas. $t(general.hints.lagStart)',
@@ -272,6 +274,7 @@ export const ptBr: TranslationDto = {
         megabytes: '{{value}} MB',
         gigabytes: '{{value}} GB',
         gigabytesOf: '{{used}} de {{total}} GB',
+        megabitsPerSecond: '{{value}} Mbps',
     },
     errorBoundary: {
         title: 'Algo deu errado',

@@ -126,6 +126,7 @@ export const es: TranslationDto = {
     },
     general: {
         title: 'OBS',
+        totalBitrate: 'Subida total',
         fps: 'FPS',
         frameTime: 'Tiempo de fotograma',
         encoding: 'Codificador omitió',
@@ -141,6 +142,7 @@ export const es: TranslationDto = {
         recentLag: ' · +{{count}} por min',
         reset: 'Reiniciar gráficos',
         hints: {
+            totalBitrate: 'Bitrate de todas las transmisiones en directo ahora mismo, sumado. Compáralo con la velocidad de subida de tu internet y deja al menos un tercio de margen',
             fps: 'Se vuelve naranja por debajo del 95 % de la frecuencia de fotogramas configurada en OBS y roja por debajo del 80 %, como en la ventana «$t(obs.stats)»',
             lagStart: 'Se cuenta desde el inicio del último directo. Si aún no ha habido ninguno, desde que el panel se conectó a OBS.',
             encoding: 'Fotogramas que el codificador no pudo comprimir a tiempo ($t(obs.skippedFrames)). Comunes a todas las plataformas. $t(general.hints.lagStart)',
@@ -272,6 +274,7 @@ export const es: TranslationDto = {
         megabytes: '{{value}} MB',
         gigabytes: '{{value}} GB',
         gigabytesOf: '{{used}} de {{total}} GB',
+        megabitsPerSecond: '{{value}} Mbps',
     },
     errorBoundary: {
         title: 'Algo salió mal',

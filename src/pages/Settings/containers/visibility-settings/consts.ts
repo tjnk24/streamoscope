@@ -13,6 +13,7 @@ const {
 } = OutputStatKeyEnum;
 
 const {
+    TotalBitrate,
     Fps,
     FrameTime,
     Encoding,
@@ -36,6 +37,7 @@ export const OUTPUT_STAT_OPTIONS: StatOptionDto<OutputStatKeyEnum>[] = [
 ];
 
 export const GENERAL_STAT_OPTIONS: StatOptionDto<GeneralStatKeyEnum>[] = [
+    {value: TotalBitrate, labelKey: 'general.totalBitrate'},
     {value: Fps, labelKey: 'general.fps'},
     {value: FrameTime, labelKey: 'general.frameTime'},
     {value: Encoding, labelKey: 'general.encoding'},

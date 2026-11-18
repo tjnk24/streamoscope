@@ -9,6 +9,7 @@ export enum OutputStatKeyEnum {
 }
 
 export enum GeneralStatKeyEnum {
+    TotalBitrate = 'totalBitrate',
     Fps = 'fps',
     FrameTime = 'frameTime',
     Encoding = 'encoding',
