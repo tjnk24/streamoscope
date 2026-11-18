@@ -11,7 +11,7 @@ import {useSelector} from 'react-redux';
 import {commonActions} from '__actions';
 import EnhancedButton from '__components/EnhancedButton';
 import {connectionStatusSelector} from '__selectors/connectionSelectors';
-import {settingsLastNotifiedVersionSelector} from '__selectors/settingsSelectors';
+import {settingsIsMockEnabledSelector, settingsLastNotifiedVersionSelector} from '__selectors/settingsSelectors';
 import {releaseNotesService} from '__services/releaseNotesService';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
 
@@ -20,12 +20,13 @@ import {UPDATED_TOAST_DURATION_SEC, UPDATED_TOAST_KEY} from '../consts';
 export const useUpdatedToast = () => {
     const status = useSelector(connectionStatusSelector);
     const lastNotifiedVersion = useSelector(settingsLastNotifiedVersionSelector);
+    const isMockEnabled = useSelector(settingsIsMockEnabledSelector);
 
     const {message} = App.useApp();
 
     const {t} = useTranslation();
 
-    const isToastDue = status === ConnectionStatusEnum.Identified && lastNotifiedVersion !== process.env.APP_VERSION;
+    const isToastDue = status === ConnectionStatusEnum.Identified && (isMockEnabled || lastNotifiedVersion !== process.env.APP_VERSION);
 
     useEffect(() => {
         if (!isToastDue) {
