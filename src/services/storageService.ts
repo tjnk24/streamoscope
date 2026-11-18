@@ -1,9 +1,12 @@
 import type {Nullable} from 'infrastructure/common';
 
 import {SettingsDto} from '__types/app/settings';
+import {ObsThemeDto} from '__types/theme';
+import {parseObsTheme} from '__utils/appearance/parseObsTheme';
 import {
     DISCARDED_SETTINGS_STORAGE_KEY,
     JOURNAL_STORAGE_KEY,
+    OBS_THEME_STORAGE_KEY,
     PASSWORD_STORAGE_KEY,
     SETTINGS_STORAGE_KEY,
 } from '__utils/consts';
@@ -46,6 +49,16 @@ class StorageService {
     loadJournal = () => this.getItem(JOURNAL_STORAGE_KEY)?.split('\n') ?? [];
 
     saveJournal = (lines: string[]) => this.setItem(JOURNAL_STORAGE_KEY, lines.join('\n'));
+
+    loadObsTheme = () => {
+        try {
+            return parseObsTheme(JSON.parse(this.getItem(OBS_THEME_STORAGE_KEY) ?? 'null'));
+        } catch {
+            return null;
+        }
+    };
+
+    saveObsTheme = (obsTheme: ObsThemeDto) => this.setItem(OBS_THEME_STORAGE_KEY, JSON.stringify(obsTheme));
 
     private getItem = (key: string): Nullable<string> => {
         try {

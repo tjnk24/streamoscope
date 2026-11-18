@@ -25,6 +25,9 @@ import {
     RequestResultPairDto,
 } from '__types/obs/requests';
 import {StatsViewDto} from '__types/stats/views';
+import {ObsThemeDto} from '__types/theme';
+import {getObsTheme} from '__utils/appearance/getObsTheme';
+import {parseObsTheme} from '__utils/appearance/parseObsTheme';
 import {getAuthString} from '__utils/auth/getAuthString';
 import {getBridgeUpdate} from '__utils/bridge/getBridgeUpdate';
 import {getHardware} from '__utils/bridge/getHardware';
@@ -36,6 +39,9 @@ import {
     OBS_RPC_VERSION,
     OBS_WEBSOCKET_PROTOCOL,
     POLL_INTERVAL_MS,
+    FILE_PROTOCOL,
+    OBS_THEME_FILE_NAME,
+    OBS_THEME_FILE_REFRESH_MS,
     RECONNECT_INTERVAL_MS,
     REQUEST_TIMEOUT_MS,
     VIEW_RESUME_DELAY_MS,
@@ -90,6 +96,8 @@ class ObsConnectionService {
     private passwordChange: Nullable<PasswordChangeDto> = null;
 
     private simulator: Nullable<MockObsSimulator> = null;
+
+    private themeFileLoadedAt = 0;
 
     private pendingRequests: ObsRequestDto[] = [];
 
@@ -372,6 +380,7 @@ class ObsConnectionService {
             const requests = this.buildBatch();
 
             this.onBatchResults(requests, this.simulator.answer(requests));
+            this.reloadThemeFile(now);
 
             return;
         }
@@ -416,6 +425,7 @@ class ObsConnectionService {
             const {sceneCollection} = connectionSelector(getStore());
 
             this.showHardware(getHardware(pairs, sceneCollection));
+            this.updateObsTheme(getObsTheme(pairs, sceneCollection));
 
             const bridgeUpdate = getBridgeUpdate(pairs, sceneCollection);
 
@@ -467,6 +477,36 @@ class ObsConnectionService {
         }
 
         commonActions.stats.setHardware(hardware);
+    };
+
+    private reloadThemeFile = (now: number) => {
+        if (location.protocol !== FILE_PROTOCOL || now - this.themeFileLoadedAt < OBS_THEME_FILE_REFRESH_MS) {
+            return;
+        }
+
+        this.themeFileLoadedAt = now;
+
+        const script = document.createElement('script');
+
+        script.src = `${OBS_THEME_FILE_NAME}?${Date.now()}`;
+
+        script.onload = () => {
+            script.remove();
+            this.updateObsTheme(parseObsTheme(window.STREAMOSCOPE_OBS_THEME));
+        };
+
+        script.onerror = () => script.remove();
+
+        document.head.append(script);
+    };
+
+    private updateObsTheme = (obsTheme: Nullable<ObsThemeDto>) => {
+        if (obsTheme === null || isEqual(obsTheme, connectionSelector(getStore()).obsTheme)) {
+            return;
+        }
+
+        commonActions.connection.setObsTheme(obsTheme);
+        storageService.saveObsTheme(obsTheme);
     };
 
     private updateSceneCollection = (sceneCollection: Nullable<string>) => {

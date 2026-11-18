@@ -1,5 +1,6 @@
 import type {Nullable} from 'infrastructure/common';
 
+import {ObsThemeColorsDto} from './theme';
 import {BridgeUpdateDto} from './update/bridgeUpdate';
 
 export type BridgeOutputStatsDto = {
@@ -54,6 +55,12 @@ export type HardwareDto = {
     systemMemory: Nullable<SystemMemoryDto>;
 };
 
+export type BridgeThemeDto = {
+    id?: string;
+    isDark?: boolean;
+    colors?: Partial<ObsThemeColorsDto>;
+};
+
 export type BridgeDataDto = {
     bridgeVersion?: number;
     updated: number;
@@ -65,4 +72,5 @@ export type BridgeDataDto = {
     gpu?: GpuStatsDto;
     systemMemory?: SystemMemoryDto;
     update?: BridgeUpdateDto;
+    theme?: BridgeThemeDto;
 };

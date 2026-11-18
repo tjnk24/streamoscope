@@ -1,5 +1,4 @@
 /* eslint-disable no-restricted-imports */
-import {ConfigProvider} from 'antd';
 import ReactDOM from 'react-dom/client';
 import {Provider} from 'react-redux';
 import {createHashRouter, RouterProvider} from 'react-router';
@@ -7,10 +6,11 @@ import {createHashRouter, RouterProvider} from 'react-router';
 import '@fontsource-variable/inter';
 
 import '__i18n';
+import ThemeProvider from '__components/ThemeProvider';
 import Core from '__pages/Core';
 import {routerManager} from '__services/routerManager';
 import store from '__store';
-import {THEME, THEME_CSS_VAR_KEY} from '__utils/theme';
+import {THEME_CSS_VAR_KEY} from '__utils/theme';
 
 import './global.module.scss';
 
@@ -24,8 +24,8 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
     <Provider store={store}>
-        <ConfigProvider theme={THEME}>
+        <ThemeProvider>
             <RouterProvider router={router}/>
-        </ConfigProvider>
+        </ThemeProvider>
     </Provider>,
 );

@@ -1,5 +1,6 @@
 local obs = obslua
 
+local ObsTheme = require('streamoscope-bridge.appearance.obs_theme')
 local consts = require('streamoscope-bridge.consts')
 local Gpu = require('streamoscope-bridge.hardware.gpu')
 local Journal = require('streamoscope-bridge.journal.journal')
@@ -26,6 +27,7 @@ local function open_sources()
         stream_outputs = create_safely(StreamOutputs),
         multi_rtmp_targets = create_safely(MultiRtmpTargets, journal),
         updater = create_safely(Updater, journal),
+        obs_theme = create_safely(ObsTheme),
     }
 end
 
@@ -84,14 +86,16 @@ function script_description()
             'статистику каждой из них, загрузку видеокарты и занятую память системы. Ключ трансляции не передаётся: ' ..
             'только адрес сервера без пути и короткие отпечатки, из которых ключ не восстановить. ' ..
             'По ним панель различает трансляции и замечает, если трансляция плагина идёт с ключом основной. ' ..
-            'Трансляции obs-multi-rtmp мост берёт из настроек плагина, поэтому их карточки видны ещё до эфира.'
+            'Трансляции obs-multi-rtmp мост берёт из настроек плагина, поэтому их карточки видны ещё до эфира. ' ..
+            'Ещё мост передаёт цвета текущей темы OBS, чтобы панель выглядела так же.'
     end
 
     return icon .. 'Tells the StreamoScope dock which platforms plugin streams (obs-multi-rtmp and others) go to, ' ..
         'the statistics of each, the GPU load and the system memory in use. The stream key is never passed: ' ..
         'only the server address without the path, plus short fingerprints that cannot be turned back into the key. ' ..
         'With them the dock tells streams apart and notices when a plugin stream uses the key of the main one. ' ..
-        'The bridge reads obs-multi-rtmp streams from the plugin settings, so their cards show up before you go live.'
+        'The bridge reads obs-multi-rtmp streams from the plugin settings, so their cards show up before you go live. ' ..
+        'It also passes the colours of the current OBS theme, so the dock looks the same.'
 end
 
 function script_load(_settings)

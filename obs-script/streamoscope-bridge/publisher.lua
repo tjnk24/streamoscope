@@ -38,6 +38,7 @@ local function build_payload(sources)
         gpu = sources.gpu ~= nil and sample_safely(sources.gpu.sample, sources.gpu) or nil,
         systemMemory = sample_safely(system_memory.sample),
         update = sources.updater ~= nil and sample_safely(describe_update, sources.updater) or nil,
+        theme = sources.obs_theme ~= nil and sample_safely(sources.obs_theme.read, sources.obs_theme) or nil,
     }
 end
 

@@ -73,6 +73,8 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 
 ✂️ **Only what you read.** **Settings → Display** has a switch for the stream cards and one for the OBS card, and under each switch a checkbox for every row of those cards (the big bitrate number and its graph count as one row, and so does the status label in the header). Not into OBS health today? Switch the OBS card off. Untick what you never look at and the cards shrink to match, down to a bare header; to hide the cards themselves, use their switch. Rows added in future versions show up ticked.
 
+🎨 **Dressed like your OBS.** The dock takes its colours from the OBS theme: Yami and its styles, Light, or a theme you installed yourself. Pick another theme in OBS and the dock follows within a second. Where an OBS colour would be hard to read in a dock (a near-black accent, a neon platform colour on a light background), the dock shifts it just enough to read. Needs the bridge and OBS 30 or newer; OBS 28 and 29 only tell the dock light from dark.
+
 🌍 The interface supports **English, Russian, Spanish, German and Brazilian Portuguese**.
 
 <p align="center">
@@ -134,7 +136,7 @@ The bridge tells the dock where plugin outputs are streaming and how each of the
 - **Outputs of the same name need the bridge.** Without it, several outputs a plugin names alike share one card with a warning: WebSocket asks about outputs by name and answers for one. With the bridge each gets its own card, kept in place by its fingerprint. Change a target's stream key or server and its card counts as new, so drag it back once.
 - **Labels are best-effort.** The dock knows 27 platforms by name and colour: YouTube, Twitch, Kick, TikTok, Instagram, Facebook, X, Rumble, Steam, Trovo, W.TV, Rutube, VK Video Live, VK Video, OK, Boosty, GoodGame, Telegram, CHZZK, SOOP, Bilibili, niconico, Nimo TV, Picarto, Piczel.tv, Mixcloud and Vaughn Live. Any other destination still gets its card, titled with the service name or server host, and unrecognized plugin outputs can appear as **Plugin**.
 - **VK Video, OK and Boosty share ingest servers.** There only the stream key tells them apart, and the dock never reads it. An obs-multi-rtmp target named after one of them (VK, ВК, OK, Boosty and the like) gets that platform. Any other card on those servers asks **Which platform?** right in its header and remembers the answer until its server or key changes; a guess from the target name can be overruled the same way.
-- **Without the bridge, only the basics.** Bitrate, dropped frames and OBS statistics still work, but plugin outputs lose their platform names, outputs of the same name share a card, the same-key warning is gone, hardware readings (Windows only) disappear and updates have to be installed by hand.
+- **Without the bridge, only the basics.** Bitrate, dropped frames and OBS statistics still work, but plugin outputs lose their platform names, outputs of the same name share a card, the same-key warning is gone, hardware readings (Windows only) disappear, the dock keeps its own dark colours instead of the OBS theme and updates have to be installed by hand.
 - **Manual installs update manually.** Automatic updates work only in the installed version: replace the files yourself.
 
 ## ⚙️ Settings, privacy and troubleshooting

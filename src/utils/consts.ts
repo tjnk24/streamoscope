@@ -25,6 +25,9 @@ export const OBS_RPC_VERSION = 1;
 export const AUTHENTICATION_FAILED_CLOSE_CODE = 4009;
 
 export const POLL_INTERVAL_MS = 1000;
+export const OBS_THEME_FILE_NAME = './obs-theme.js';
+export const OBS_THEME_FILE_REFRESH_MS = 2000;
+export const FILE_PROTOCOL = 'file:';
 export const PROFILE_PARAMETER_SPACING_MS = 750;
 export const REQUEST_TIMEOUT_MS = 5000;
 export const RECONNECT_INTERVAL_MS = 3000;
@@ -46,6 +49,7 @@ export const PASSWORD_STORAGE_KEY = 'streamoscope.password';
 export const SETTINGS_STORAGE_KEY = 'streamoscope.settings';
 export const DISCARDED_SETTINGS_STORAGE_KEY = 'streamoscope.settings.discarded';
 export const JOURNAL_STORAGE_KEY = 'streamoscope.journal';
+export const OBS_THEME_STORAGE_KEY = 'streamoscope.obsTheme';
 export const SETTINGS_VERSION = 2;
 
 export const DEFAULT_SETTINGS: SettingsDto = {
@@ -373,3 +377,28 @@ export const FIRST_BRIDGE_VERSION = 1;
 export const UPDATE_STAGES: string[] = Object.values(UpdateStageEnum);
 
 export const HTTP_NOT_FOUND = 404;
+
+export const HEX_COLOR_PATTERN = /^#[\da-f]{6}$/i;
+export const WHITE_COLOR = '#ffffff';
+export const BLACK_COLOR = '#000000';
+export const RGB_CHANNEL_MAX = 255;
+export const LUMINANCE_CHANNEL_WEIGHTS = [0.2126, 0.7152, 0.0722];
+export const LUMINANCE_LINEAR_LIMIT = 0.03928;
+export const LUMINANCE_LINEAR_DIVISOR = 12.92;
+export const LUMINANCE_GAMMA_OFFSET = 0.055;
+export const LUMINANCE_GAMMA = 2.4;
+export const CONTRAST_LUMINANCE_OFFSET = 0.05;
+export const DARK_LUMINANCE_LIMIT = 0.5;
+export const CONTRAST_STEPS = 20;
+export const TEXT_MIN_CONTRAST = 4.5;
+export const CONTROL_MIN_CONTRAST = 3;
+export const GRAPHIC_MIN_CONTRAST = 2;
+export const MUTED_TEXT_WEIGHT = 0.4;
+export const BORDER_WEIGHT = 0.12;
+export const INPUT_BORDER_WEIGHT = 0.3;
+export const ELEVATED_WEIGHT = 0.5;
+export const HOVER_WEIGHT = 0.3;
+export const ACTIVE_WEIGHT = 0.2;
+export const FIELD_HOVER_WEIGHT = 0.05;
+export const DARK_SHADOW_OPACITY = 0.55;
+export const LIGHT_SHADOW_OPACITY = 0.15;

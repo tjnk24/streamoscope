@@ -1,4 +1,4 @@
-import {Tag} from 'antd';
+import {Tag, theme} from 'antd';
 import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
@@ -7,7 +7,12 @@ import {statsSelector} from '__selectors/statsSelectors';
 import {OutputStatKeyEnum} from '__types/stats/statKeys';
 import {AdviceEnum, HealthLevelEnum} from '__types/stats/views';
 import {OutputOriginEnum, StreamTargetDto} from '__types/targets';
-import {OFF_OUTPUT_VIEW, RECENT_WINDOW_SEC} from '__utils/consts';
+import {ensureContrast} from '__utils/appearance/colors/ensureContrast';
+import {
+    GRAPHIC_MIN_CONTRAST,
+    OFF_OUTPUT_VIEW,
+    RECENT_WINDOW_SEC,
+} from '__utils/consts';
 import {resolveTargetPlatform} from '__utils/targets/resolveTargetPlatform';
 
 import CongestionProgress from '../../../components/congestion-progress';
@@ -40,6 +45,8 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
     const {hiddenOutputStats, cardPlatforms} = useSelector(settingsSelector);
 
     const {t} = useTranslation();
+
+    const {token} = theme.useToken();
 
     const {origin, targetTitle, notes} = target;
 
@@ -141,7 +148,7 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
     return {
         title: platformTitle,
         targetTitle: targetTitle && targetTitle.toLowerCase() !== platformTitle.toLowerCase() ? targetTitle : null,
-        color,
+        color: ensureContrast(color, token.colorBgContainer, GRAPHIC_MIN_CONTRAST),
         platformChoices: choices,
         selectedPlatform: selected,
         notes,
