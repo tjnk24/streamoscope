@@ -49,6 +49,7 @@ const ReleaseNotesModal = () => {
 
     return (
         <Modal
+            className={style.modal}
             classNames={{body: style.body}}
             title={title}
             footer={[

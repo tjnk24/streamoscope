@@ -1,8 +1,13 @@
-.body {
+.modal .body {
     max-height: 60vh;
+    padding-inline-end: var(--ant-padding-sm);
     overflow-y: auto;
 }
 
 .release + .release {
     margin-top: var(--ant-margin-md);
+}
+
+.release blockquote {
+    opacity: 1;
 }

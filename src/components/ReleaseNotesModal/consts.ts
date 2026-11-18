@@ -1,7 +1,9 @@
 import {MarkdownToJSX} from 'markdown-to-jsx/react';
 
-import NotesLink from '__components/NotesLink';
 import {LanguageEnum} from '__types/i18n/language';
+
+import NotesQuote from './components/notes-quote';
+import NotesLink from './containers/notes-link';
 
 const {Ru, Frog} = LanguageEnum;
 
@@ -14,5 +16,6 @@ export const MARKDOWN_OPTIONS: MarkdownToJSX.Options = {
     forceBlock: true,
     overrides: {
         a: NotesLink,
+        blockquote: NotesQuote,
     },
 };
