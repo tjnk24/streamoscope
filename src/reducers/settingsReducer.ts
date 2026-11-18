@@ -6,6 +6,7 @@ import {storageService} from '__services/storageService';
 import {CardPlatformChoiceDto, SettingsDto} from '__types/app/settings';
 import {LanguageEnum} from '__types/i18n/language';
 import {GeneralStatKeyEnum, OutputStatKeyEnum} from '__types/stats/statKeys';
+import {ThemeModeEnum} from '__types/theme';
 
 import {SETTINGS_SLICE_NAME} from './consts';
 
@@ -26,6 +27,9 @@ const slice = createSlice({
         },
         setLanguage: (state, {payload}: PayloadAction<LanguageEnum>) => {
             state.language = payload;
+        },
+        setThemeMode: (state, {payload}: PayloadAction<ThemeModeEnum>) => {
+            state.themeMode = payload;
         },
         setIsMockEnabled: (state, {payload}: PayloadAction<boolean>) => {
             state.isMockEnabled = payload;

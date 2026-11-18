@@ -7,6 +7,7 @@ import {
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
 import {JournalLevelEnum} from '__types/journal';
 import {HealthLevelEnum} from '__types/stats/views';
+import {ThemeModeEnum} from '__types/theme';
 import {UpdateStageEnum} from '__types/update/bridgeUpdate';
 
 import {describeJournalChanges} from '../describeJournalChanges';
@@ -137,6 +138,18 @@ describe('describeJournalChanges', () => {
             level: Info,
             source: 'user',
             message: 'changed auto_update=false',
+        }]);
+    });
+
+    it('writes the colors the user picked', () => {
+        const withLightColors = {...SNAPSHOT, themeMode: ThemeModeEnum.Light};
+
+        const entries = describeJournalChanges(SNAPSHOT, withLightColors);
+
+        expect(entries).toEqual([{
+            level: Info,
+            source: 'user',
+            message: 'changed colors=light',
         }]);
     });
 });

@@ -130,6 +130,16 @@ export const describeJournalChanges = (previous: JournalSnapshotDto, current: Jo
         entries.push(languageEntry);
     }
 
+    if (previous.themeMode !== current.themeMode) {
+        const themeModeEntry: JournalEntryDto = {
+            level: Info,
+            source: 'user',
+            message: `changed colors=${current.themeMode}`,
+        };
+
+        entries.push(themeModeEntry);
+    }
+
     if (previous.isShowOutputCards !== current.isShowOutputCards) {
         const outputCardsEntry: JournalEntryDto = {
             level: Info,

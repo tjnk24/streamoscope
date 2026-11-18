@@ -29,6 +29,18 @@ describe('parseObsTheme', () => {
         expect(parsed?.colors.input).toBe(parsed?.colors.border);
     });
 
+    it('decides the darkness by the background, not by the mark in the theme file', () => {
+        const colors = {window: '#d3d3d3', base: '#e5e5e5', text: '#0a0a0a'};
+
+        expect(parseObsTheme({isDark: true, colors})?.isDark).toBe(false);
+    });
+
+    it('drops the colors of a theme whose text is hard to read on its cards', () => {
+        const colors = {window: '#202020', base: '#303030', text: '#505050', primary: '#ff0000'};
+
+        expect(parseObsTheme({isDark: true, colors, fontScale: 12})).toEqual({isDark: true, colors: DARK_THEME_COLORS, fontScale: 12});
+    });
+
     it('guesses the darkness from the background when the bridge cannot tell it', () => {
         const colors = {window: '#d3d3d3', base: '#e5e5e5', text: '#0a0a0a'};
 

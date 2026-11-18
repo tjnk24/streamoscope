@@ -67,6 +67,12 @@ export const ru: TranslationDto = {
         journalFolderBrowser: 'Журнал ведёт только панель внутри OBS',
         journalFolderBridge: 'Скрипт-мост не подключён или устарел. Проверьте, что он добавлен в эту коллекцию сцен, и перезапустите OBS.',
         languageLabel: 'Язык интерфейса',
+        themeLabel: 'Цвета',
+        themeModes: {
+            obs: 'Как в OBS',
+            dark: 'Тёмные',
+            light: 'Светлые',
+        },
         updatesTitle: 'Обновления',
         currentVersion: 'Версия {{version}}',
         localBuild: 'Локальная сборка {{label}}',

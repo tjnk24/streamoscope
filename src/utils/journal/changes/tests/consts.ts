@@ -1,6 +1,7 @@
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
 import {JournalOutputSnapshotDto, JournalSnapshotDto} from '__types/journal';
 import {HealthLevelEnum} from '__types/stats/views';
+import {ThemeModeEnum} from '__types/theme';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
 
 export const OUTPUT: JournalOutputSnapshotDto = {
@@ -28,6 +29,7 @@ export const SNAPSHOT: JournalSnapshotDto = {
     outputs: [OUTPUT],
     port: 4455,
     language: null,
+    themeMode: ThemeModeEnum.Obs,
     isShowOutputCards: true,
     isShowGeneralCard: true,
     isAutoUpdateEnabled: true,

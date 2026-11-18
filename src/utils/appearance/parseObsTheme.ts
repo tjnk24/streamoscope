@@ -16,9 +16,11 @@ import {
     MUTED_TEXT_WEIGHT,
     OBS_MAX_FONT_SCALE,
     OBS_MIN_FONT_SCALE,
+    TEXT_MIN_CONTRAST,
 } from '__utils/consts';
 import {DARK_THEME_COLORS, LIGHT_THEME_COLORS} from '__utils/theme';
 
+import {getContrastRatio} from './colors/getContrastRatio';
 import {getRelativeLuminance} from './colors/getRelativeLuminance';
 import {mixColors} from './colors/mixColors';
 
@@ -49,7 +51,15 @@ export const parseObsTheme = (theme: unknown): Nullable<ObsThemeDto> => {
         };
     }
 
-    const isThemeDark = isBoolean(isDark) ? isDark : getRelativeLuminance(base) < DARK_LUMINANCE_LIMIT;
+    const isThemeDark = getRelativeLuminance(base) < DARK_LUMINANCE_LIMIT;
+
+    if (getContrastRatio(text, base) < TEXT_MIN_CONTRAST) {
+        return {
+            isDark: isThemeDark,
+            colors: isThemeDark ? DARK_THEME_COLORS : LIGHT_THEME_COLORS,
+            fontScale: knownFontScale,
+        };
+    }
 
     const border = knownColors.border ?? mixColors(base, text, BORDER_WEIGHT);
 

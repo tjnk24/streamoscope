@@ -65,6 +65,12 @@ export const en = {
         journalFolderBrowser: 'The journal is kept only by the dock inside OBS',
         journalFolderBridge: 'The bridge script is missing or out of date. Check that it is loaded in this scene collection and restart OBS.',
         languageLabel: 'Interface language',
+        themeLabel: 'Colors',
+        themeModes: {
+            obs: 'As in OBS',
+            dark: 'Dark',
+            light: 'Light',
+        },
         updatesTitle: 'Updates',
         currentVersion: 'Version {{version}}',
         localBuild: 'Local build {{label}}',

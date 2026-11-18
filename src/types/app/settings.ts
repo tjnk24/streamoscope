@@ -2,6 +2,7 @@ import type {Nullable} from 'infrastructure/common';
 
 import {LanguageEnum} from '../i18n/language';
 import {GeneralStatKeyEnum, OutputStatKeyEnum} from '../stats/statKeys';
+import {ThemeModeEnum} from '../theme';
 
 export type StoredSettingsDto = Record<string, unknown>;
 
@@ -22,6 +23,7 @@ export type SettingsDto = {
     isShowGeneralCard: boolean;
     isShowOutputCards: boolean;
     language: Nullable<LanguageEnum>;
+    themeMode: ThemeModeEnum;
     isMockEnabled: boolean;
     isAutoUpdateEnabled: boolean;
     isJournalEnabled: boolean;

@@ -3,6 +3,7 @@ import type {Nullable} from 'infrastructure/common';
 import {ConnectionStatusEnum} from './connection/ConnectionStatusEnum';
 import {LanguageEnum} from './i18n/language';
 import {HealthLevelEnum} from './stats/views';
+import {ThemeModeEnum} from './theme';
 import {UpdateStageEnum} from './update/bridgeUpdate';
 import {UpdateCheckStatusEnum} from './update/UpdateCheckStatusEnum';
 
@@ -50,6 +51,7 @@ export type JournalSnapshotDto = {
     outputs: JournalOutputSnapshotDto[];
     port: number;
     language: Nullable<LanguageEnum>;
+    themeMode: ThemeModeEnum;
     isShowOutputCards: boolean;
     isShowGeneralCard: boolean;
     isAutoUpdateEnabled: boolean;

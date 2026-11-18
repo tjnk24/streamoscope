@@ -73,7 +73,7 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 
 ✂️ **Only what you read.** **Settings → Display** has a switch for the stream cards and one for the OBS card, and under each switch a checkbox for every row of those cards (the big bitrate number and its graph count as one row, and so does the status label in the header). Not into OBS health today? Switch the OBS card off. Untick what you never look at and the cards shrink to match, down to a bare header; to hide the cards themselves, use their switch. Rows added in future versions show up ticked.
 
-🎨 **Dressed like your OBS.** The dock takes its colours from the OBS theme: Yami and its styles, Light, or a theme you installed yourself. The font size from **Settings → Appearance** carries over too. Pick another theme or font size in OBS and the dock follows within a second. Where an OBS colour would be hard to read in a dock (a near-black accent, a neon platform colour on a light background), the dock shifts it just enough to read. Needs the bridge and OBS 30 or newer; OBS 28 and 29 only tell the dock light from dark.
+🎨 **Dressed like your OBS.** The dock takes its colours from the OBS theme: Yami and its styles, Light, or a theme you installed yourself. The font size from **Settings → Appearance** carries over too. Pick another theme or font size in OBS and the dock follows within a second. Where an OBS colour would be hard to read in a dock (a near-black accent, a neon platform colour on a light background), the dock shifts it just enough to read; a theme whose text is hard to read on its own background gets the dock's own colours instead. If a theme still looks off in the dock, **Settings → Display → Colors** switches to the dock's own dark or light colours. Needs the bridge and OBS 30 or newer; OBS 28 and 29 only tell the dock light from dark.
 
 🌍 The interface supports **English, Russian, Spanish, German and Brazilian Portuguese**.
 
@@ -141,7 +141,7 @@ The bridge tells the dock where plugin outputs are streaming and how each of the
 
 ## ⚙️ Settings, privacy and troubleshooting
 
-Use the dock's **gear icon** to change language, show or hide the stream cards and the OBS card and choose their rows, try mock mode, check for updates and read **What's new** without leaving OBS, turn automatic updates off, turn the journal off or copy diagnostics.
+Use the dock's **gear icon** to change language and colours, show or hide the stream cards and the OBS card and choose their rows, try mock mode, check for updates and read **What's new** without leaving OBS, turn automatic updates off, turn the journal off or copy diagnostics.
 
 - To open the dock in a regular browser, copy **Dock address** from the settings and paste it there. Enter the WebSocket password again in the browser; the journal is kept only by the dock inside OBS.
 - The OBS WebSocket connection normally uses `127.0.0.1`.

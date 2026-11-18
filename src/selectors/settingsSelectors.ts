@@ -10,6 +10,8 @@ export const settingsIsShowOutputCardsSelector = (state: BaseStore) => state.set
 
 export const settingsLanguageSelector = (state: BaseStore) => state.settings.language;
 
+export const settingsThemeModeSelector = (state: BaseStore) => state.settings.themeMode;
+
 export const settingsIsMockEnabledSelector = (state: BaseStore) => state.settings.isMockEnabled;
 
 export const settingsCardOrderSelector = (state: BaseStore) => state.settings.cardOrder;

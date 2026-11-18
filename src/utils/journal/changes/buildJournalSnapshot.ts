@@ -21,6 +21,7 @@ export const buildJournalSnapshot = (state: BaseStore): JournalSnapshotDto => {
     const {
         port,
         language,
+        themeMode,
         isShowOutputCards,
         isShowGeneralCard,
         isAutoUpdateEnabled,
@@ -55,6 +56,7 @@ export const buildJournalSnapshot = (state: BaseStore): JournalSnapshotDto => {
         }),
         port,
         language,
+        themeMode,
         isShowOutputCards,
         isShowGeneralCard,
         isAutoUpdateEnabled,

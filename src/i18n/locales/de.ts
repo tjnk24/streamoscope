@@ -67,6 +67,12 @@ export const de: TranslationDto = {
         journalFolderBrowser: 'Das Protokoll führt nur das Dock in OBS',
         journalFolderBridge: 'Das Brückenskript fehlt oder ist veraltet. Prüfe, ob es in dieser Szenensammlung geladen ist, und starte OBS neu.',
         languageLabel: 'Sprache der Oberfläche',
+        themeLabel: 'Farben',
+        themeModes: {
+            obs: 'Wie in OBS',
+            dark: 'Dunkel',
+            light: 'Hell',
+        },
         updatesTitle: 'Updates',
         currentVersion: 'Version {{version}}',
         localBuild: 'Lokaler Build {{label}}',

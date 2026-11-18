@@ -67,6 +67,12 @@ export const ptBr: TranslationDto = {
         journalFolderBrowser: 'O registro é mantido apenas pelo painel dentro do OBS',
         journalFolderBridge: 'O script de ponte não está carregado ou está desatualizado. Verifique se ele está nesta coleção de cenas e reinicie o OBS.',
         languageLabel: 'Idioma da interface',
+        themeLabel: 'Cores',
+        themeModes: {
+            obs: 'Como no OBS',
+            dark: 'Escuras',
+            light: 'Claras',
+        },
         updatesTitle: 'Atualizações',
         currentVersion: 'Versão {{version}}',
         localBuild: 'Build local {{label}}',

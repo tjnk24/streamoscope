@@ -1,5 +1,11 @@
 import type {Nullable} from 'infrastructure/common';
 
+export enum ThemeModeEnum {
+    Obs = 'obs',
+    Dark = 'dark',
+    Light = 'light',
+}
+
 export type ObsThemeColorsDto = {
     window: string;
     base: string;

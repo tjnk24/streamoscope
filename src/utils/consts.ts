@@ -11,6 +11,7 @@ import {
     PlatformSourceEnum,
     SharedPlatformRuleDto,
 } from '__types/targets';
+import {ThemeModeEnum} from '__types/theme';
 import {UpdateStageEnum} from '__types/update/bridgeUpdate';
 
 const {Ru, Es, De, PtBr} = LanguageEnum;
@@ -62,6 +63,7 @@ export const DEFAULT_SETTINGS: SettingsDto = {
     isJournalEnabled: true,
     lastUpdateCheckAt: null,
     lastNotifiedVersion: null,
+    themeMode: ThemeModeEnum.Obs,
     isMockEnabled: false,
     cardOrder: [],
     cardPlatforms: {},

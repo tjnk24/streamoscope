@@ -67,6 +67,12 @@ export const es: TranslationDto = {
         journalFolderBrowser: 'El registro solo lo lleva el panel dentro de OBS',
         journalFolderBridge: 'El script puente no está cargado o está desactualizado. Comprueba que esté en esta colección de escenas y reinicia OBS.',
         languageLabel: 'Idioma de la interfaz',
+        themeLabel: 'Colores',
+        themeModes: {
+            obs: 'Como en OBS',
+            dark: 'Oscuros',
+            light: 'Claros',
+        },
         updatesTitle: 'Actualizaciones',
         currentVersion: 'Versión {{version}}',
         localBuild: 'Compilación local {{label}}',
