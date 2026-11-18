@@ -347,13 +347,6 @@ export const SLOW_DOCK_DELAY_MS = 12000;
 
 export const DOCK_LOADER_VERSION_LINE = 'document.head.appendChild(versionScript);';
 
-export const DOCK_PICTURE_METRICS: Record<string, number | boolean> = {
-    width: 420,
-    height: 900,
-    deviceScaleFactor: 1,
-    mobile: false,
-};
-
 export const SETTINGS_STORAGE_KEY = 'streamoscope.settings';
 
 export const PASSWORD_STORAGE_KEY = 'streamoscope.password';
