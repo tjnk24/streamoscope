@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/tjnk24/streamoscope/releases/latest">⬇️ Download</a> ·
+  <a href="https://github.com/tjnk24/streamoscope/releases/download/v0.15.0/streamoscope-setup-0.15.0.exe">⬇️ Download</a> ·
   <a href="#-installation">📥 Install</a> ·
   <a href="#-what-you-can-see">👀 Features</a> ·
   <a href="#-limitations">🚧 Limitations</a> ·

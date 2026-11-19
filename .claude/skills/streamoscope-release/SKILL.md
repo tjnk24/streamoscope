@@ -60,6 +60,8 @@ It checks: published and not a prerelease, GitHub's latest release is this tag, 
 
 A failure means people may get a broken update within 48 hours: tell the user at once, with the failed line.
 
+Then point the README **Download** button (the first link under the title) at `https://github.com/tjnk24/streamoscope/releases/download/vX.Y.Z/streamoscope-setup-X.Y.Z.exe`, check it answers `302` (`curl -sI`), commit `Point Download at X.Y.Z` and push: this is part of the release (user's decision), not a separate ask.
+
 If the release needs a live look in OBS (installer, uninstaller, stub), use the `live-install-check` skill.
 
 ## 6. Memory
