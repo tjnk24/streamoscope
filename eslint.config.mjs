@@ -60,6 +60,7 @@ export default [
             'release',
             '.test-stand',
             'config',
+            '.claude',
             'eslint.config.mjs',
         ],
     },
