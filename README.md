@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/tjnk24/streamoscope/releases">⬇️ Download</a> ·
+  <a href="https://github.com/tjnk24/streamoscope/releases/latest">⬇️ Download</a> ·
   <a href="#-installation">📥 Install</a> ·
   <a href="#-what-you-can-see">👀 Features</a> ·
   <a href="#-limitations">🚧 Limitations</a> ·
@@ -66,11 +66,13 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 
 ¹ Hardware readings come from the StreamoScope Lua bridge and are available on Windows.
 
-- ⏳ **Cards wait for your first stream.** One short note until something goes live; obs-multi-rtmp targets get their empty cards right away. [More](docs/FEATURES.md#-cards-wait-for-your-first-stream)
-- 🪞 **One key, two streams.** A plugin target that reuses the key of the main OBS stream gets a warning on its card. [More](docs/FEATURES.md#-one-key-two-streams)
-- 🧲 **Your streams, your order.** Drag cards by the header; the dock remembers. [More](docs/FEATURES.md#-your-streams-your-order)
-- 👓 **Only what you read.** Switch cards off and untick the rows you never look at in **Settings → Display**. [More](docs/FEATURES.md#-only-what-you-read)
-- 🎨 **Dressed like your OBS.** Colours and font size follow the OBS theme. [More](docs/FEATURES.md#-dressed-like-your-obs)
+- ⏳ **Cards wait for your first stream.** One short note until something goes live; obs-multi-rtmp targets get their empty cards right away.
+- 🪞 **One key, two streams.** A plugin target that reuses the key of the main OBS stream gets a warning on its card.
+- 🧲 **Your streams, your order.** Drag cards by the header; the dock remembers.
+- 👓 **Only what you read.** Switch cards off and untick the rows you never look at in **Settings → Display**.
+- 🎨 **Dressed like your OBS.** Colours and font size follow the OBS theme.
+
+More on each of these: [Features in detail](docs/FEATURES.md).
 
 🌍 The interface supports **English, Russian, Ukrainian, Spanish, German, French, Italian, Dutch, Polish, Brazilian Portuguese, Turkish, Vietnamese, Indonesian, Thai, Japanese, Korean and Chinese (Simplified and Traditional)**.
 

@@ -8,14 +8,16 @@ StreamoScope has two parts: the dock, which reads output statistics through OBS'
 
 ```mermaid
 flowchart LR
-  outputs["Stream outputs:<br>OBS and plugins"] -- "by name" --> websocket["obs-websocket"]
-  outputs -- "every output" --> bridge["Lua bridge"]
-  hardware["GPU and<br>memory"] --> bridge
-  bridge -- "stats, hosts,<br>fingerprints" --> websocket
-  websocket <--> dock["Dock"]
-  bridge --> updater["Updater"]
-  updater -. "signed<br>releases" .-> github["GitHub"]
-  dock -. "update<br>check" .-> github
+  subgraph pc["Your PC"]
+    outputs["Stream outputs:<br>OBS and plugins"] -- "by name" --> websocket["obs-websocket"]
+    outputs -- "every output" --> bridge["Lua bridge"]
+    hardware["GPU and<br>memory"] --> bridge
+    bridge -- "stats, hosts,<br>fingerprints" --> websocket
+    websocket <--> dock["Dock"]
+    bridge --> updater["Updater"]
+  end
+  github["GitHub Releases"] -. "new versions,<br>signed" .-> updater
+  github -. "what's new" .-> dock
 ```
 
 The bridge tells the dock where plugin outputs are streaming and how each of them is doing, reads Windows hardware metrics and starts the background updates. It hands its data to the dock through a profile parameter (`[StreamoScope]`), which the dock reads over WebSocket. The per-output numbers matter when a plugin gives all its outputs one name: obs-multi-rtmp calls every target `multi-output`, and WebSocket can only ask about an output by name, so it would answer for one of them. The bridge walks through all outputs instead, and every target gets its own card. The installer sets it up for you; the dock shows a notice whenever the bridge isn't loaded in the current scene collection. Missing metadata doesn't necessarily mean a stream isn't being monitored: some outputs may simply be labeled **Plugin**.
