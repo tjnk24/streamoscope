@@ -4,6 +4,11 @@ export enum LanguageEnum {
     Es = 'es',
     De = 'de',
     PtBr = 'pt-BR',
+    Uk = 'uk',
+    Pl = 'pl',
+    Fr = 'fr',
+    Ko = 'ko',
+    Ja = 'ja',
     Frog = 'ru-x-frog',
 }
 

@@ -5,13 +5,16 @@ import {Outlet} from 'react-router';
 import ErrorBoundary from '__components/ErrorBoundary';
 import {LanguageEnum} from '__types/i18n/language';
 
-import {ANTD_LOCALES} from './consts';
+import {ANTD_LOCALES, BUTTON_CONFIG} from './consts';
 
 const CorePage = () => {
     const {i18n} = useTranslation();
 
     return (
-        <ConfigProvider locale={ANTD_LOCALES[i18n.language as LanguageEnum]}>
+        <ConfigProvider
+            locale={ANTD_LOCALES[i18n.language as LanguageEnum]}
+            button={BUTTON_CONFIG}
+        >
             <App component={false}>
                 <ErrorBoundary>
                     <Outlet/>

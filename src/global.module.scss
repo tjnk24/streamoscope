@@ -20,6 +20,10 @@
         overflow-wrap: anywhere;
     }
 
+    html:lang(ko) body {
+        word-break: keep-all;
+    }
+
     #root {
         flex: 1;
         display: flex;

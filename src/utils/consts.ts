@@ -14,7 +14,17 @@ import {
 import {ThemeModeEnum} from '__types/theme';
 import {UpdateStageEnum} from '__types/update/bridgeUpdate';
 
-const {Ru, Es, De, PtBr} = LanguageEnum;
+const {
+    Ru,
+    Uk,
+    Es,
+    De,
+    Fr,
+    Pl,
+    PtBr,
+    Ja,
+    Ko,
+} = LanguageEnum;
 
 const {User, TargetTitle} = PlatformSourceEnum;
 
@@ -73,9 +83,14 @@ export const DEFAULT_SETTINGS: SettingsDto = {
 
 export const OBS_LANGUAGE_PREFIXES: ObsLanguagePrefixDto[] = [
     {prefix: 'ru', language: Ru},
+    {prefix: 'uk', language: Uk},
     {prefix: 'es', language: Es},
     {prefix: 'de', language: De},
+    {prefix: 'fr', language: Fr},
+    {prefix: 'pl', language: Pl},
     {prefix: 'pt', language: PtBr},
+    {prefix: 'ja', language: Ja},
+    {prefix: 'ko', language: Ko},
 ];
 
 export const MAIN_TARGET_KEY = 'main';

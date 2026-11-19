@@ -5,19 +5,29 @@ import {languageService} from '__services/languageService';
 import {storageService} from '__services/storageService';
 import {LanguageEnum} from '__types/i18n/language';
 
-import {de} from './locales/de';
+import {ja} from './locales/cjk/ja';
+import {ko} from './locales/cjk/ko';
+import {frog} from './locales/cyrillic/frog';
+import {ru} from './locales/cyrillic/ru';
+import {uk} from './locales/cyrillic/uk';
 import {en} from './locales/en';
-import {es} from './locales/es';
-import {frog} from './locales/frog';
-import {ptBr} from './locales/ptBr';
-import {ru} from './locales/ru';
+import {de} from './locales/latin/de';
+import {es} from './locales/latin/es';
+import {fr} from './locales/latin/fr';
+import {pl} from './locales/latin/pl';
+import {ptBr} from './locales/latin/ptBr';
 
 const {
     En,
     Ru,
+    Uk,
     Es,
     De,
+    Fr,
+    Pl,
     PtBr,
+    Ja,
+    Ko,
     Frog,
 } = LanguageEnum;
 
@@ -25,9 +35,14 @@ void i18n.use(initReactI18next).init({
     resources: {
         [En]: {translation: en},
         [Ru]: {translation: ru},
+        [Uk]: {translation: uk},
         [Es]: {translation: es},
         [De]: {translation: de},
+        [Fr]: {translation: fr},
+        [Pl]: {translation: pl},
         [PtBr]: {translation: ptBr},
+        [Ja]: {translation: ja},
+        [Ko]: {translation: ko},
         [Frog]: {translation: frog},
     },
     lng: languageService.resolveLanguage(storageService.loadSettings().language),
