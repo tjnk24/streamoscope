@@ -4,6 +4,20 @@
 
 ## Заглушка и загрузчик
 
+```mermaid
+flowchart TB
+  stub["Заглушка читает<br>current-version.js"] --> trial{"Идёт проба<br>этой версии?"}
+  trial -- "да, у previous<br>есть загрузчик" --> judge["Загрузчик previous"]
+  trial -- "нет" --> own["Загрузчик текущей версии"]
+  judge & own --> result{"Загрузился?"}
+  result -- "да" --> healthy(["healthy-loader.txt,<br>мост работает"])
+  result -- "ошибка или false" --> fallback{"Есть другая версия<br>с загрузчиком?"}
+  fallback -- "да: previous,<br>healthy-version.txt<br>или healthy-loader.txt" --> switch["current-version.js на неё,<br>rolled-back-version.txt,<br>пробный файл стёрт"]
+  fallback -- "нет" --> obsError(["Ошибка в журнал<br>скриптов OBS"])
+  switch -- "не удалось заменить" --> obsError
+  switch -- "заменён" --> reset(["Сброс script_path,<br>поиска модулей,<br>модулей моста и script_*,<br>загрузчик этой версии"])
+```
+
 - **Заглушка - `installer/loader/streamoscope-bridge.lua`**, с 0.7.0 установщик кладёт её в корень папки программы вместо загрузчика. OBS хранит путь к ней, поэтому она не переезжает и не меняется (обещание старым версиям, `.claude/rules/releases.md`).
   - Читает `current-version.js` и запускает через `loadstring` и `pcall` загрузчик версии `versions/<версия>/streamoscope-bridge.lua` (есть в каждой версии с 0.5.0): пока версия на пробе (`update-trial.txt` про текущую версию) - загрузчик `previous`, уже доказавший, что работает; после пробы - загрузчик самой версии.
   - Каждый загрузчик, отработавший без ошибки, записывает в `healthy-loader.txt`.
@@ -82,6 +96,29 @@
 - **Тест** - `obs-script/tests/Theme.Tests.ps1` (`harness/theme.lua`): выдуманные файлы тем в папке с кириллицей, заглушки libobs и `obs-frontend-api` для OBS 31+, 30, 28-29 и portable (`../../config` от `obs64.exe`); вариант из пользовательской папки поверх базы из папки программы, ссылки после сборки, `os_win_` и `os_mac_`, комментарий, `!editable`, `calc`, тень пользовательской темы с тем же `id`, нет темы и цикл `extends` - тема по умолчанию, кэш до смены темы, `dock/obs-theme.js` рядом со страницей панели и его обновление при смене темы, без страницы файла нет, `theme` в данных моста.
 
 ## Канал команд (параметры профиля)
+
+```mermaid
+sequenceDiagram
+  participant dock as Панель
+  participant websocket as obs-websocket
+  participant profile as Параметры профиля [StreamoScope]
+  participant bridge as Мост
+  dock->>websocket: SetProfileParameter UpdateCommand = install:X.Y.Z
+  websocket->>profile: записать, basic.ini сохранён
+  Note over dock,websocket: один параметр - не чаще раза в 750 мс
+  bridge->>profile: раз в 250 мс прочитать и стереть
+  alt install:X.Y.Z
+    bridge->>bridge: Update-Widget.ps1 -Version X.Y.Z скрытым PowerShell
+  else auto:on или auto:off
+    bridge->>bridge: auto-update.txt
+  else healthy:X.Y.Z
+    bridge->>bridge: healthy-version.txt, проба окончена
+  end
+  Note over profile,bridge: так же ходят OpenUrlCommand, JournalLines, JournalCommand
+  bridge->>profile: раз в 1 с PluginOutputs, данные моста
+  dock->>websocket: GetProfileParameter PluginOutputs в пачке опроса
+  websocket-->>dock: данные моста
+```
 
 - **Панель пишет `[StreamoScope] UpdateCommand`** (`SetProfileParameter`), мост на каждом тике читает и сразу стирает (иначе после перезапуска OBS команда сработала бы снова).
 - **Одна запись на параметр за тик**: значение у параметра одно, вторая запись до тика затёрла бы первую. Поэтому панель пишет один параметр не чаще раза в `PROFILE_PARAMETER_SPACING_MS` (750 мс, очередь `utils/requests/ProfileParameterQueue`, следующая запись - со следующим опросом).

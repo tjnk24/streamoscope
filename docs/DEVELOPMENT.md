@@ -50,6 +50,22 @@ To release a version:
 3. Run `git push --follow-tags`.
 4. When the build is done, approve the `publish` job on the page of the workflow run. Updates reach people without a click on their side, so this click is the last human check.
 
+```mermaid
+flowchart TB
+  subgraph local["On your machine"]
+    direction LR
+    notes["Release notes in<br>docs/release-notes"] --> bump["npm version:<br>commit and vX.Y.Z tag"] --> push["git push<br>--follow-tags"]
+  end
+  subgraph workflow["release.yml on GitHub Actions"]
+    direction LR
+    build["build, Windows<br>version and notes check,<br>npm test, Pester,<br>package:installer"] --> approve{{"A human<br>approves publish"}} --> publish["publish, Linux<br>minisign signs and verifies,<br>SHA256SUMS.txt,<br>compatibility comment"]
+  end
+  local --> workflow
+  workflow --> release["GitHub Release<br>StreamoScope vX.Y.Z"]
+  release -- "48 hours later" --> background["Background updates<br>on people's PCs"]
+  release -- "at once" --> manual["Update button<br>and downloads"]
+```
+
 The `v*` tag triggers the GitHub Actions release workflow: build, test, sign and publish. The `publish` job runs in the `release` environment, which needs that approval and accepts only `v*` tags. Published release assets:
 
 | Asset | Purpose |
@@ -141,6 +157,20 @@ The switch **Update automatically** is stored by the bridge in `%LOCALAPPDATA%\s
 ### Automatic rollback
 
 A freshly switched version is on trial, and `update-trial.txt` names it and the previous version. The loader of the previous version judges it: that code has already proved itself, while the new version's own loader might be as broken as the rest of it. Once the trial is over, the stub runs the new version's loader. If a loader fails to load, the stub switches to the previous version of the trial, the last healthy version or the version whose loader worked last, marks the broken one as rolled back and runs that loader instead.
+
+```mermaid
+flowchart TB
+  launch(["OBS launch,<br>a version on trial:<br>the previous version's<br>loader judges"]) --> count{"Third<br>launch?"}
+  count -- "no" --> load{"New bridge<br>starts?"}
+  count -- "yes" --> panel
+  load -- "no" --> broken["Previous version at once,<br>or from the next launch<br>if script_load failed"]
+  load -- "yes" --> report{"Dock<br>reports?"}
+  report -- "healthy:X.Y.Z" --> kept(["Trial over,<br>the version stays"])
+  report -- "silence: 60 s after<br>OBS loaded, or 90 s<br>after the bridge" --> panel{"panel=1?"}
+  panel -- "yes: the old dock reported,<br>so silence means broken" --> rolledBack["Roll back to the<br>previous version,<br>rolled-back-version.txt"]
+  panel -- "no: silence<br>proves nothing" --> dropped(["Trial dropped,<br>the version stays"])
+  rolledBack -. "the dock reports late" .-> kept
+```
 
 - The bridge fails to load: back to the previous version at once, in the same session.
 - The dock is healthy: a second after it finds the bridge, a dock inside OBS that hasn't hit a render error sends `healthy:X.Y.Z`. The bridge records it in `healthy-version.txt`, notes the OBS process in `healthy-process.txt` and ends the trial.

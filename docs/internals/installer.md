@@ -15,6 +15,27 @@
 - **JSON разбирается по уровням.** `Read-JsonValue` отдаёт вложенный объект или массив только границами: его находит одно регулярное выражение .NET `$script:JsonContainer` (балансирующие группы, строки по правилам JSON, вне строк - только символы чисел, `true`, `false`, `null` и разделители). `Get-JsonMember` раскрывает узел и найденное значение на один уровень (`Expand-JsonValue`), так что коллекция сцен разбирается только по пути корень → `modules` → `scripts-tool` → `path`. Рекурсивный разбор всего файла на PowerShell 5.1 шёл около 19 с на мегабайт: в 0.8.1 человек с 48 коллекциями по ~760 КБ ждал 8 минут на «Настройка OBS...». Теперь мегабайт - около 0,1 с. Пропущенные части проверяются только на строки, допустимые символы и баланс скобок; тип закрывающей скобки сверяется на раскрытых уровнях.
 - **С 0.7.0 `configure-obs.ps1` и `ConfigureObs/` - в архиве выпуска** (`scripts/packageRelease/copyReleaseFiles.ts`), лежат в `versions\<версия>\` и приходят с фоновым обновлением; установщик кладёт запасную копию в корень папки программы.
 - **Порядок:** OBS закрыт (`Test-ObsRunning`) → блокировка `Local\streamoscope-configure-obs` (`Enter-ConfigureLock`: второй запуск ждёт до 60 с, потом код `1` без записи; блокировку снятого процесса забирает) → пути (`Resolve-ObsPaths`: portable, `[Locations]`, `user.ini` или `global.ini` по `docs/obs-config.md`) → все правки в памяти, ошибка разбора - выход без записи → ещё раз `Test-ObsRunning`: OBS открыли во время настройки - код `2` без записи → резервные копии → запись через временный файл с проверкой и `File.Replace` → при любой ошибке все файлы восстанавливаются из копий → `install-manifest.json` в папке установки (что добавлено, для повторной установки и удаления).
+
+```mermaid
+flowchart TB
+  start(["configure-obs.ps1<br>-Mode Install или Uninstall"]) --> running{"OBS<br>открыт?"}
+  running -- "да" --> obsRunning(["2: закройте OBS"])
+  running -- "нет" --> lock{"Блокировка<br>за 60 с?"}
+  lock -- "нет" --> lockFailed(["1, ничего не тронуто"])
+  lock -- "да" --> paths{"Пути OBS?"}
+  paths -- "нет global.ini<br>и user.ini" --> notStarted(["3: OBS ещё не запускали"])
+  paths -- "формат незнаком" --> unsupported(["4, ничего не тронуто"])
+  paths -- "найдены" --> plan{"Правки<br>в памяти?"}
+  plan -- "не разобралось" --> unsupported
+  plan -- "менять нечего" --> manifest
+  plan -- "есть правки" --> again{"OBS открыли<br>за это время?"}
+  again -- "да" --> startedDuring(["2, ничего не тронуто"])
+  again -- "нет" --> save["Резервные копии<br>в backups, запись<br>через временный файл<br>и File.Replace"]
+  save -- "ошибка: все<br>файлы из копий" --> failed(["1"])
+  save -- "записано" --> manifest["install-manifest.json:<br>Install пишет,<br>Uninstall стирает"]
+  manifest --> success(["0, или 10 без<br>настроек obs-websocket"])
+```
+
 - **Повторная установка ничего не меняет.** Удаление убирает панель (по `uuid` или адресу), мост из всех коллекций и данные моста из `basic.ini` всех профилей (`[StreamoScope]` и `[ObsStatsDock]` - имя до 0.3.0, `Remove-IniSection`); сервер WebSocket не выключает.
 - **Из массивов OBS** (`scripts-tool` в коллекции, `ExtraBrowserDocks`) удаление вырезает только свой элемент с соседней запятой (`Remove-JsonArrayItem`), чужие элементы - байт в байт.
 - `user.ini` никогда не создаём, пароль obs-websocket не читаем и не пишем в журнал.
@@ -64,3 +85,23 @@
   - Ошибка или OBS, открытый между вопросом и удалением, - окно с ручной инструкцией и путём к журналу. Код `3` (нет `global.ini` и `user.ini`: OBS не запускали или настройки стёрты) - успех, убирать нечего.
   - `basic.ini` профиля, который не читается как UTF-8, удаление пропускает с записью в журнал, панель и мост всё равно убирает; нечитаемый `global.ini` - `4`, ничего не меняя.
   - Тихое удаление (`/VERYSILENT /SUPPRESSMSGBOXES`) при открытом OBS ответов не ждёт: окна получают ответы по умолчанию («отмена», затем «нет»), и удаление молча отменяется, ничего не тронув (решение пользователя). Поэтому скрипт перед ним закрывает OBS.
+
+```mermaid
+flowchart TB
+  start(["Удаление из «Приложений»"]) --> setupRunning{"Идёт<br>установщик?"}
+  setupRunning -- "да, отказ" --> cancel(["Удаление отменено,<br>ничего не тронуто"])
+  setupRunning -- "нет" --> check{"OBS<br>открыт?"}
+  check -- "да" --> retry["Окно: закройте OBS<br>и повторите"]
+  retry -- "повторить" --> check
+  retry -- "отказ" --> filesOnly{"Только<br>файлы?"}
+  filesOnly -- "нет" --> cancel
+  filesOnly -- "да" --> confirmFiles{"Inno:<br>удалить?"}
+  check -- "нет" --> confirm{"Inno:<br>удалить?"}
+  confirm -- "нет" --> cancel
+  confirmFiles -- "нет" --> cancel
+  confirm -- "да" --> uninstall["-Mode Uninstall:<br>панель и мост из OBS,<br>[StreamoScope]<br>из basic.ini профилей"]
+  uninstall --> removeData["-Mode RemoveData: журнал,<br>состояние обновлятора"]
+  confirmFiles -- "да" --> removeData
+  removeData --> files["Inno стирает файлы,<br>RemoveInstallDirectory"]
+  files --> kept(["Остаются backups<br>и configure-obs.log"])
+```

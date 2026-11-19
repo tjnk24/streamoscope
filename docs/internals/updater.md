@@ -17,6 +17,24 @@
   6. Записать `update-trial.txt` (`Write-UpdateTrial`).
   7. Атомарно заменить `current-version.js` (`Set-CurrentVersion`, `File.Replace`): всё до этого шага текущую версию не трогает.
   8. Стереть `rolled-back-version.txt`, оставить три новые версии и версию для отката (`Remove-OldVersions`), обновить `DisplayVersion` -> `done`.
+
+```mermaid
+flowchart TB
+  lock{"Блокировка<br>свободна?"} -- "нет" --> busy(["busy"])
+  lock -- "да" --> version{"Версия?"}
+  version -- "не X.Y.Z" --> invalidVersion(["invalidVersion"])
+  version -- "старше текущей" --> notNewer(["notNewer"])
+  version -- "та же" --> same(["done"])
+  version -- "новее" --> compatibility["compatibility.json:<br>скачать, подпись,<br>версия в файле,<br>OBS не старше minObsVersion"]
+  compatibility -- "не прошло" --> compatibilityFailed(["network, signature,<br>incompatible"])
+  compatibility -- "прошло" --> package["streamoscope-X.Y.Z.zip:<br>скачать с процентами,<br>подпись"]
+  package -- "не прошло" --> packageFailed(["network, signature"])
+  package -- "прошло" --> prepare["staging-X.Y.Z:<br>проверка состава,<br>перенос в versions/X.Y.Z,<br>update-trial.txt"]
+  prepare -- "всё выше текущую<br>версию не трогает" --> switch["current-version.js:<br>атомарная замена"]
+  prepare & switch -. "сбой" .-> install(["install"])
+  switch --> cleanup["Стереть<br>rolled-back-version.txt,<br>старые версии,<br>DisplayVersion"]
+  cleanup --> done(["done"])
+```
 - **Любое скачивание - `Get-UpdateFile`**: `DownloadTimeoutMilliseconds` (30 с) на ответ и на каждое чтение, целиком не дольше `DownloadDeadlineMilliseconds` (10 минут), длина должна совпасть с `Content-Length`; иначе ошибка `network`, а не `signature`.
 - **Статус** - JSON `{version, stage, percent, error, updated}`. Этапы: `preparing`, `downloading`, `verifying`, `installing`, `done`, `failed`. Коды ошибок: `invalidVersion`, `notNewer`, `network`, `signature`, `incompatible`, `install`, `unexpected`.
 - **Временные файлы** - `%TEMP%\streamoscope-update-<версия>`, удаляются всегда.
