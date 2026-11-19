@@ -140,13 +140,13 @@ Want the dock in a regular browser? Copy **Dock address** from the settings and 
 
 Where your data goes:
 
-- 🏠 The dock talks to OBS on your own PC (`127.0.0.1`).
-- 🔑 The WebSocket password stays in the dock's local storage. Stream keys never leave OBS.
-- 🌐 GitHub is the only outside contact: for updates (at OBS startup and about once a day, if turned on, or when you check by hand) and for **What's new** when you open it.
-- 📓 A journal of what the dock and the bridge do stays on your PC, up to 10 MB. It's never sent anywhere and has no passwords, keys or server addresses. Turn it off in **Settings → Diagnostics**. [What it records](docs/HOW-IT-WORKS.md#-the-journal)
-- 📋 Copied diagnostics leave out passwords, stream keys and server addresses.
-- 👤 No account, no cloud.
-- 🧹 To uninstall, close OBS and remove **StreamoScope** in **Windows Settings → Apps**. It takes the journal with it; backups of OBS files stay. [What it removes](docs/HOW-IT-WORKS.md#-uninstall)
+- The dock talks to OBS on your own PC (`127.0.0.1`).
+- The WebSocket password stays in the dock's local storage. Stream keys never leave OBS.
+- GitHub is the only outside contact: for updates (at OBS startup and about once a day, if turned on, or when you check by hand) and for **What's new** when you open it.
+- A journal of what the dock and the bridge do stays on your PC, up to 10 MB. It's never sent anywhere and has no passwords, keys or server addresses. Turn it off in **Settings → Diagnostics**. [What it records](docs/HOW-IT-WORKS.md#-the-journal)
+- Copied diagnostics leave out passwords, stream keys and server addresses.
+- No account, no cloud.
+- To uninstall, close OBS and remove **StreamoScope** in **Windows Settings → Apps**. It takes the journal with it; backups of OBS files stay. [What it removes](docs/HOW-IT-WORKS.md#-uninstall)
 
 ## 🔧 Something wrong?
 
