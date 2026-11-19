@@ -20,13 +20,13 @@
 </p>
 
 > [!WARNING]
-> 🧪 **Beta.** StreamoScope runs our streams and those of a few brave early adopters, but not every rough edge has been found yet. Spotted one? [Report it](https://github.com/tjnk24/streamoscope/issues) and it gets filed down. The installer backs up every OBS file it touches, just in case.
+> 🧪 **Beta.** It runs our streams and those of a few brave early adopters. Some rough edges are still out there. Found one? [Report it](https://github.com/tjnk24/streamoscope/issues). The installer backs up every OBS file it touches, just in case.
 >
 > 🐛 Thanks to [VideogamesSematary](https://www.twitch.tv/videogamessematary) on Twitch for helping catch the bugs.\
-> Want to see your name here too? [Report bugs](https://github.com/tjnk24/streamoscope/issues), and ye shall be rewarded in full.
+> Want your name here too? [Report bugs](https://github.com/tjnk24/streamoscope/issues), and ye shall be rewarded in full.
 
 > [!NOTE]
-> 🤖 Built with a lot of help from AI. A human set the course, tested it in real OBS and argued with the robot along the way. The bugs are a joint venture.
+> 🤖 Built with a lot of help from AI. A human set the course and tested it in real OBS. The bugs are a joint venture.
 
 ---
 
@@ -56,113 +56,123 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 
 ## 👀 What you can see
 
-| Every active streaming output | OBS and system |
-| --- | --- |
-| Current bitrate and two-minute graph | Total upload of all live streams, to hold against your internet upload speed (shown from two streams up) |
-| Dropped network frames: total and recent | FPS, highlighted when it drops, and frame time |
-| Live / dropping frames / unstable / reconnecting / offline status, with a hint on what to try | Encoding and rendering lag since the stream started, CPU usage and OBS memory |
-| Uptime and network congestion | GPU usage, encoder load, VRAM and system RAM¹ |
-| Detected platform and output source, when available | Diagnostics, mock mode, update checks and release notes right in the dock |
+**📡 For each stream**
 
-¹ Hardware readings come from the StreamoScope Lua bridge and are available on Windows.
+- Bitrate now and a two-minute graph
+- Dropped frames: total and recent
+- Status: live, dropping frames, unstable, reconnecting or offline, with a hint on what to try
+- Uptime and network congestion
+- Platform ([27 known by name](docs/FEATURES.md#-platforms)) and which plugin sent it
 
-- ⏳ **Cards wait for your first stream.** One short note until something goes live; obs-multi-rtmp targets get their empty cards right away.
-- 🪞 **One key, two streams.** A plugin target that reuses the key of the main OBS stream gets a warning on its card.
-- 🧲 **Your streams, your order.** Drag cards by the header; the dock remembers.
-- 👓 **Only what you read.** Switch cards off and untick the rows you never look at in **Settings → Display**.
-- 🎨 **Dressed like your OBS.** Colours and font size follow the OBS theme.
+**🖥️ For OBS and your PC**
 
-More on each of these: [Features in detail](docs/FEATURES.md).
+- Total upload of all streams, to compare with your internet speed (from two streams up)
+- FPS (highlighted when it drops) and frame time
+- Encoding and rendering lag
+- CPU and OBS memory
+- GPU, encoder load, video memory and RAM (Windows only, through the StreamoScope Lua bridge)
 
-🌍 The interface supports **English, Russian, Ukrainian, Spanish, German, French, Italian, Dutch, Polish, Brazilian Portuguese, Turkish, Vietnamese, Indonesian, Thai, Japanese, Korean and Chinese (Simplified and Traditional)**.
+**✨ And also**
+
+- 🛠️ **Tools in the dock:** diagnostics, mock mode, update checks and release notes.
+- ⏳ **Cards show up when streams start.** obs-multi-rtmp targets get their empty cards right away.
+- 🪞 **Same key twice?** If a plugin stream uses the key of your main OBS stream, its card warns you.
+- 🧲 **Drag cards to reorder them.** The dock remembers.
+- 👓 **Hide what you don't read** in **Settings → Display**: whole cards or single rows.
+- 🎨 **Looks like your OBS:** colours and font size follow the OBS theme.
+
+More on each: [Features in detail](docs/FEATURES.md).
+
+🌍 **Languages:** English, Russian, Ukrainian, Spanish, German, French, Italian, Dutch, Polish, Brazilian Portuguese, Turkish, Vietnamese, Indonesian, Thai, Japanese, Korean and Chinese (Simplified and Traditional).
 
 <p align="center">
   <img src="docs/images/stats-narrow.png" width="280" alt="StreamoScope compact layout showing multiple stream cards, OBS performance and red hints on the rows in trouble">
 </p>
 
 > [!NOTE]
-> StreamoScope monitors existing streams. It does **not** start streams, replace multistream plugins or fix your ISP. 🙃
+> StreamoScope only watches streams. It doesn't start them, replace your multistream plugin or fix your ISP. 🙃
 
 ## 📥 Installation
 
 ### 🪟 Windows installer (recommended)
 
-**Requirements:** OBS Studio **28+**, with the built-in **obs-websocket 5** server; **64-bit Windows 10 or 11** for the installer.
+**You need:** OBS Studio **28+** and **64-bit Windows 10 or 11**.
 
-1. Download the latest `streamoscope-setup-<version>.exe` from [Releases](https://github.com/tjnk24/streamoscope/releases).
-2. **Close OBS**, then run the installer (no administrator privileges required).
-3. Open OBS. If the dock isn't visible, go to **Docks → StreamoScope**.
-4. On first launch, enter the OBS WebSocket port and password from **Tools → WebSocket Server Settings → Show Connect Info** (port `4455` by default).
+1. [Download the latest version](https://github.com/tjnk24/streamoscope/releases/download/v0.15.0/streamoscope-setup-0.15.0.exe).
+2. **Close OBS**, then run the installer.
+3. Open OBS. No dock in sight? Go to **Docks → StreamoScope**.
+4. Enter the WebSocket port and password from **Tools → WebSocket Server Settings → Show Connect Info**.
+5. **Done.** Start your streams as usual. StreamoScope picks up whatever OBS can see.
 
-🎉 **Done.** Start your streams however you normally do. StreamoScope watches the ones it can see through OBS — no need to select a separate integration for each output plugin.
-
-The installer places files in `%LOCALAPPDATA%\Programs\streamoscope`, configures the dock and Lua bridge, keeps backups in `%LOCALAPPDATA%\streamoscope\backups`, and writes a setup log to `%LOCALAPPDATA%\streamoscope\configure-obs.log`. The log hides your Windows user folder, so you can attach it to an issue as it is; it still names your scene collections and profiles.
-
-If OBS has never been launched on your PC, open it once, close it, then rerun the installer. You might need to enable its WebSocket server manually.
-
-🔄 **Updates:** new versions download quietly in the background, signature checked, and start the next time you launch OBS. If one fails to start, the previous one comes back by itself. Prefer to stay in charge? Turn off **Update automatically** in the settings. [How updates work](docs/HOW-IT-WORKS.md#-updates)
-
-🧹 **Uninstall:** close OBS and remove **StreamoScope** via **Windows Settings → Apps**. Backups of the OBS files it changed stay, just in case. [What it removes](docs/HOW-IT-WORKS.md#-uninstall)
+🔄 **Updates install themselves** with the next OBS launch. A broken one rolls back by itself. You can turn them off in the settings. [How updates work](docs/HOW-IT-WORKS.md#-updates)
 
 ### 📦 Manual / portable installation
 
-1. Download `streamoscope-<version>.zip` from [Releases](https://github.com/tjnk24/streamoscope/releases) and extract it to a permanent folder.
-2. In OBS, enable **Tools → WebSocket Server Settings → Enable WebSocket server**.
-3. Go to **Docks → Custom Browser Docks** and point a new dock to `dock/index.html` using a `file:///` URL:
+1. Download `streamoscope-<version>.zip` from [Releases](https://github.com/tjnk24/streamoscope/releases) and unpack it somewhere permanent.
+2. In OBS, turn on **Tools → WebSocket Server Settings → Enable WebSocket server**.
+3. In **Docks → Custom Browser Docks**, add a dock with this address, using your own folder:
 
    ```text
    file:///C:/path/to/streamoscope/dock/index.html
    ```
 
-4. Under **Tools → Scripts**, add `streamoscope-bridge.lua`, keeping its `streamoscope-bridge` support folder alongside it. OBS keeps scripts per scene collection, so add it to each collection you stream from.
-5. Connect the dock using your OBS WebSocket port and password.
+4. In **Tools → Scripts**, add `streamoscope-bridge.lua`. Keep its `streamoscope-bridge` folder next to it. OBS keeps scripts per scene collection, so add it to every collection you stream from.
+5. Connect the dock with your WebSocket port and password.
 
-To update a manual installation, replace the files and refresh the dock with **Ctrl+R**.
+Manual installs don't update themselves. To update, replace the files and press **Ctrl+R** in the dock.
 
 ## 🔍 How it finds streams
 
-StreamoScope has two parts: the dock, which reads output statistics through OBS's built-in WebSocket server, and the **Lua bridge**, a small OBS script that supplies what WebSocket doesn't. It isn't tied to one particular multistream plugin or a preapproved list of destinations. The bridge passes only the protocol and host of each server and short fingerprints; stream keys stay in OBS. [How it works, with a diagram](docs/HOW-IT-WORKS.md)
+StreamoScope has two parts. The **dock** reads stream stats through OBS's built-in WebSocket server. The **Lua bridge** fills in what WebSocket can't tell. Neither cares which plugin started a stream or where it goes.
+
+Stream keys stay in OBS. The bridge passes on only server hosts and short fingerprints that can't be turned back into a key. [How it works, with a diagram](docs/HOW-IT-WORKS.md)
 
 ## 🚧 Limitations
 
-- **OBS must expose the output.** Plugin-independent does not mean API-independent: if an output plugin doesn't make an output or its statistics available to OBS, StreamoScope cannot invent the missing numbers. A plugin that only creates its output when streaming starts gets its card once that stream starts; the dock does not read private plugin configurations.
-- **Outputs of the same name need the bridge.** Without it, several outputs a plugin names alike share one card with a warning: WebSocket asks about outputs by name and answers for one. With the bridge each gets its own card, kept in place by its fingerprint. Change a target's stream key or server and its card counts as new, so drag it back once.
-- **Labels are best-effort.** The dock knows 27 platforms by name and colour: YouTube, Twitch, Kick, TikTok, Instagram, Facebook, X, Rumble, Steam, Trovo, W.TV, Rutube, VK Video Live, VK Video, OK, Boosty, GoodGame, Telegram, CHZZK, SOOP, Bilibili, niconico, Nimo TV, Picarto, Piczel.tv, Mixcloud and Vaughn Live. Any other destination still gets its card, titled with the service name or server host, and unrecognized plugin outputs can appear as **Plugin**.
-- **VK Video, OK and Boosty share ingest servers.** There only the stream key tells them apart, and the dock never reads it. An obs-multi-rtmp target named after one of them (VK, ВК, OK, Boosty and the like) gets that platform. Any other card on those servers asks **Which platform?** right in its header and remembers the answer until its server or key changes; a guess from the target name can be overruled the same way.
-- **Without the bridge, only the basics.** Bitrate, dropped frames and OBS statistics still work, but plugin outputs lose their platform names, outputs of the same name share a card, the same-key warning is gone, hardware readings (Windows only) disappear, the dock keeps its own dark colours instead of the OBS theme and updates have to be installed by hand.
-- **Manual installs update manually.** Automatic updates work only in the installed version: replace the files yourself.
+- **OBS has to see the stream.** If a plugin hides its output from OBS, StreamoScope can't make up the numbers.
+- **The rest needs the Lua bridge.** Without it you still get bitrate, dropped frames and OBS stats, but no platform names for plugin streams, no separate cards for outputs with the same name, no same-key warning, no hardware stats, no OBS theme colours and no automatic updates. The installer sets the bridge up for you.
 
 ## ⚙️ Settings and privacy
 
-Use the dock's **gear icon** to change language and colours, show or hide the stream cards and the OBS card and choose their rows, try mock mode, check for updates and read **What's new** without leaving OBS, turn automatic updates off, turn the journal off or copy diagnostics.
+The **gear icon** in the dock opens the settings: language, colours, which cards and rows to show, mock mode, updates, **What's new**, the journal and diagnostics.
 
-- To open the dock in a regular browser, copy **Dock address** from the settings and paste it there. Enter the WebSocket password again in the browser; the journal is kept only by the dock inside OBS.
-- The OBS WebSocket connection normally uses `127.0.0.1`.
-- Automatic updates, when enabled, contact `api.github.com` and download from GitHub on startup and roughly once per day; manual checks are also available. **What's new** loads the release notes from `api.github.com` when you open it.
-- The WebSocket password stays in the dock's local browser storage. Stream keys never leave OBS: the bridge only folds them into the fingerprints of an output.
-- Diagnostic exports exclude passwords, stream keys and server addresses.
-- StreamoScope keeps a journal of what the bridge and the dock inside OBS do: connections, stream starts and stops, status changes, updates, errors, the buttons you press and, while you stream or record, bitrate and OBS statistics every 10 seconds. It stays in `%LOCALAPPDATA%\streamoscope\logs`, takes up to 10 MB, is never sent anywhere and contains no passwords, stream keys, server addresses, scene names or Windows user names. Turn it off in **Settings → Diagnostics**; uninstalling removes it.
-- No separate StreamoScope account or cloud service is needed.
+Want the dock in a regular browser? Copy **Dock address** from the settings and paste it there, then enter the WebSocket password again.
 
-🔧 Something wrong with the dock, the installer or a stream? [Troubleshooting](docs/TROUBLESHOOTING.md) lists common problems and what the red icons on a card mean. Still stuck? [Open an issue](https://github.com/tjnk24/streamoscope/issues), preferably with **Settings → Diagnostics → Copy diagnostics** and the file `streamoscope.log` from **Open journal folder**.
+Where your data goes:
+
+- 🏠 The dock talks to OBS on your own PC (`127.0.0.1`).
+- 🔑 The WebSocket password stays in the dock's local storage. Stream keys never leave OBS.
+- 🌐 GitHub is the only outside contact: for updates (at OBS startup and about once a day, if turned on, or when you check by hand) and for **What's new** when you open it.
+- 📓 A journal of what the dock and the bridge do stays on your PC, up to 10 MB. It's never sent anywhere and has no passwords, keys or server addresses. Turn it off in **Settings → Diagnostics**. [What it records](docs/HOW-IT-WORKS.md#-the-journal)
+- 📋 Copied diagnostics leave out passwords, stream keys and server addresses.
+- 👤 No account, no cloud.
+- 🧹 To uninstall, close OBS and remove **StreamoScope** in **Windows Settings → Apps**. It takes the journal with it; backups of OBS files stay. [What it removes](docs/HOW-IT-WORKS.md#-uninstall)
+
+## 🔧 Something wrong?
+
+[Troubleshooting](docs/TROUBLESHOOTING.md) covers common problems and what the red icons on a card mean. Still stuck? [Open an issue](https://github.com/tjnk24/streamoscope/issues) and attach **Settings → Diagnostics → Copy diagnostics** and `streamoscope.log` from **Open journal folder**.
 
 ## ✅ Verify downloads
 
-Releases include **minisign signatures** and **SHA-256 checksums**. The Windows installer is currently **not Authenticode-signed**, so Windows SmartScreen may warn you. Verify your download before running it.
+The installer isn't Authenticode-signed yet, so Windows SmartScreen may warn you. Every release comes with **minisign signatures** and **SHA-256 checksums**, so you can check the file before running it.
 
-With the [public key](minisign.pub):
+With minisign and the [public key](minisign.pub):
 
 ```bash
 minisign -Vm streamoscope-setup-<version>.exe -p minisign.pub
 ```
 
-Or compare the file hash with the release's `SHA256SUMS.txt`:
+Or compare the hash with `SHA256SUMS.txt` from the release:
 
 ```powershell
 Get-FileHash .\streamoscope-setup-<version>.exe -Algorithm SHA256
 ```
 
-Replace `<version>` with the actual version in the download filename.
+Put your version in place of `<version>`.
+
+## 🔨 Build from source
+
+Want to build it yourself? [DEVELOPMENT.md](docs/DEVELOPMENT.md) has the steps.
 
 ## 📜 License and credits
 

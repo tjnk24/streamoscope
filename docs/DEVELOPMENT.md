@@ -53,7 +53,7 @@ To release a version:
 2. Run `npm version <major|minor|patch>` to bump `package.json`, commit and create the `v<version>` tag.
 3. Run `git push --follow-tags`.
 4. When the build is done, approve the `publish` job on the page of the workflow run. Updates reach people without a click on their side, so this click is the last human check.
-5. Once the release is published, point the README **Download** button at its installer, `https://github.com/tjnk24/streamoscope/releases/download/v<version>/streamoscope-setup-<version>.exe`, and push. GitHub has no version-free link to a versioned file, and before publication the link would lead nowhere.
+5. Once the release is published, point both README download links (the **Download** button and **Download the latest version** in the installation steps) at its installer, `https://github.com/tjnk24/streamoscope/releases/download/v<version>/streamoscope-setup-<version>.exe`, and push. GitHub has no version-free link to a versioned file, and before publication the link would lead nowhere.
 
 ```mermaid
 flowchart TB

@@ -1,6 +1,6 @@
 # StreamoScope — how it works
 
-The [main README](../README.md) covers what StreamoScope does and how to install it. This page is about what happens behind the dock: how it finds streams, what the bridge passes along, how updates arrive and what uninstalling leaves behind.
+The [main README](../README.md) covers what StreamoScope does and how to install it. This page is about what happens behind the dock: how it finds streams, what the bridge passes along, how updates arrive, what the installer puts where, what the journal records and what uninstalling leaves behind.
 
 ## 🔍 How it finds streams
 
@@ -20,7 +20,7 @@ flowchart LR
   github -. "what's new" .-> dock
 ```
 
-The bridge tells the dock where plugin outputs are streaming and how each of them is doing, reads Windows hardware metrics and starts the background updates. It hands its data to the dock through a profile parameter (`[StreamoScope]`), which the dock reads over WebSocket. The per-output numbers matter when a plugin gives all its outputs one name: obs-multi-rtmp calls every target `multi-output`, and WebSocket can only ask about an output by name, so it would answer for one of them. The bridge walks through all outputs instead, and every target gets its own card. The installer sets it up for you; the dock shows a notice whenever the bridge isn't loaded in the current scene collection. Missing metadata doesn't necessarily mean a stream isn't being monitored: some outputs may simply be labeled **Plugin**.
+The bridge tells the dock where plugin outputs are streaming and how each of them is doing, reads Windows hardware metrics and starts the background updates. It hands its data to the dock through a profile parameter (`[StreamoScope]`), which the dock reads over WebSocket. The per-output numbers matter when a plugin gives all its outputs one name: obs-multi-rtmp calls every target `multi-output`, and WebSocket can only ask about an output by name, so it would answer for one of them. The bridge walks through all outputs instead, and every target gets its own card. The installer sets it up for you; the dock shows a notice whenever the bridge isn't loaded in the current scene collection. Missing metadata doesn't necessarily mean a stream isn't being monitored: some outputs may simply be labeled **Plugin**. Change a target's stream key or server and its card counts as new, so drag it back into place once.
 
 🔒 For platform detection, the bridge passes only the protocol and host of each server, never stream keys or URL paths. To tell outputs of the same name apart and keep their cards in place, it works out a short fingerprint from the server address and the stream key right inside OBS and passes only that. For obs-multi-rtmp targets that haven't started yet, it does the same with the server and key from the plugin's own settings in your profile. To spot a target that reuses the key of the main stream, it adds a second fingerprint made the same way from the key alone. Nothing is sent anywhere: the key stays in OBS, and the fingerprints can't be turned back into it. For the curious: HMAC-SHA256 cut to 8 characters, keyed with the ID Windows already keeps for this computer, so the same key gives a different fingerprint on any other machine.
 
@@ -36,9 +36,17 @@ flowchart LR
   launch -- "fails to start" --> back["The previous version<br>comes back by itself"]
 ```
 
+## 📂 What the installer puts where
+
+The installer places files in `%LOCALAPPDATA%\Programs\streamoscope`, configures the dock and the Lua bridge, keeps backups of the OBS files it changes in `%LOCALAPPDATA%\streamoscope\backups` and writes a setup log to `%LOCALAPPDATA%\streamoscope\configure-obs.log`. The log hides your Windows user folder, so you can attach it to an issue as it is; it still names your scene collections and profiles.
+
 ## 🧰 The installer still has a job
 
 Two tiny files that OBS points at, the dock and bridge loaders, and the uninstaller live outside the updates and only change when you run the installer. Running the latest installer over your install is safe at any time: it keeps your settings and the journal. Since 0.7.0 the uninstaller takes its instructions from the version you have, so it rarely needs that. If a release does need the installer, its release notes say so first thing, and installs from before 0.7.0 get one polite request in the dock settings.
+
+## 📓 The journal
+
+StreamoScope keeps a journal of what the bridge and the dock inside OBS do: connections, stream starts and stops, status changes, updates, errors, the buttons you press and, while you stream or record, bitrate and OBS statistics every 10 seconds. It stays in `%LOCALAPPDATA%\streamoscope\logs`, takes up to 10 MB, is never sent anywhere and contains no passwords, stream keys, server addresses, scene names or Windows user names. A dock opened in a regular browser keeps no journal. Turn it off in **Settings → Diagnostics**; uninstalling removes it.
 
 ## 🧹 Uninstall
 
