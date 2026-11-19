@@ -70,6 +70,10 @@ Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl"
 Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
 Name: "ko"; MessagesFile: "compiler:Languages\Korean.isl"
 Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl"
+Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"
+Name: "nl"; MessagesFile: "compiler:Languages\Dutch.isl"
+Name: "tr"; MessagesFile: "compiler:Languages\Turkish.isl"
+Name: "th"; MessagesFile: "compiler:Languages\Thai.isl"
 
 [InstallDelete]
 Type: filesandordirs; Name: "{app}\dock"
@@ -125,6 +129,10 @@ pl.SetupAppRunningError=StreamoScope jest już instalowany lub usuwany w innym o
 fr.SetupAppRunningError=StreamoScope est déjà en cours d'installation ou de suppression dans une autre fenêtre. Attendez la fin et réessayez.%n%nSi vous annulez, cet installateur se ferme.
 ko.SetupAppRunningError=다른 창에서 StreamoScope를 이미 설치하거나 제거하고 있습니다. 끝날 때까지 기다린 뒤 다시 시도하세요.%n%n취소하면 이 설치 프로그램이 닫힙니다.
 ja.SetupAppRunningError=StreamoScopeは別のウィンドウでインストールまたはアンインストール中です。終わるまで待ってから、もう一度試してください。%n%nキャンセルすると、このセットアップは終了します。
+it.SetupAppRunningError=StreamoScope è già in fase di installazione o rimozione in un'altra finestra. Aspetta che finisca e riprova.%n%nSe annulli, questa installazione si chiude.
+nl.SetupAppRunningError=StreamoScope wordt al in een ander venster geïnstalleerd of verwijderd. Wacht tot dat klaar is en probeer het opnieuw.%n%nAls je annuleert, sluit deze installatie.
+tr.SetupAppRunningError=StreamoScope başka bir pencerede zaten kuruluyor ya da kaldırılıyor. Bitmesini bekleyip yeniden deneyin.%n%nİptal ederseniz bu kurulum kapanır.
+th.SetupAppRunningError=StreamoScope กำลังติดตั้งหรือถอนการติดตั้งอยู่ในหน้าต่างอื่น รอให้เสร็จแล้วลองอีกครั้ง%n%nถ้ายกเลิก การติดตั้งนี้จะปิดลง
 
 [CustomMessages]
 en.ConfiguringObs=Setting up OBS...
@@ -276,6 +284,66 @@ ja.UninstallSetupRunning=StreamoScopeのセットアップを実行中です。�
 ja.UninstallFilesOnly=ファイルだけを削除し、ドックとスクリプトはOBSの設定に残しますか？
 ja.UninstallFailed=ドックとスクリプトをOBSから自動で取り除けませんでした。ドックは「ドック」メニューで、スクリプトは ツール → スクリプト で削除してください。
 ja.Details=詳細:
+
+it.ConfiguringObs=Configurazione di OBS...
+it.ObsRunning=OBS è aperto. Chiudi OBS e riprova.%n%nSe annulli, l'installazione termina senza configurare OBS.
+it.SetupSkipped=Il pannello e lo script non sono stati aggiunti a OBS. Chiudi OBS ed esegui di nuovo l'installazione, oppure aggiungili a mano seguendo la guida:
+it.ObsNotStarted=OBS non è mai stato avviato su questo computer. Avvia OBS una volta, chiudilo ed esegui di nuovo l'installazione.
+it.SetupFailed=Non è stato possibile aggiungere automaticamente il pannello e lo script a OBS, e in OBS non è cambiato nulla. Aggiungili a mano seguendo la guida:
+it.SetupStopped=La configurazione di OBS ci ha messo troppo ed è stata interrotta. Esegui di nuovo l'installazione, oppure aggiungi il pannello e lo script a mano seguendo la guida:
+it.ScriptSlow=La configurazione di OBS ci sta mettendo più del solito. Continuare ad aspettare?%n%nAltrimenti la configurazione si interrompe.
+it.WebSocketNotConfigured=Accendi il server WebSocket: Strumenti → Impostazioni server WebSocket → Abilita il server WebSocket.
+it.FinishedHowTo=Avvia OBS e apri Pannelli → StreamoScope. Al primo avvio il pannello chiede la password di WebSocket: Strumenti → Impostazioni server WebSocket → Visualizza informazioni di connessione.
+it.UninstallObsRunning=OBS è aperto. Chiudi OBS e riprova, così il pannello e lo script vengono tolti anche da OBS.
+it.UninstallSetupRunning=L'installazione di StreamoScope è in corso. Aspetta che finisca e riprova.
+it.UninstallFilesOnly=Eliminare solo i file e lasciare il pannello e lo script nelle impostazioni di OBS?
+it.UninstallFailed=Non è stato possibile togliere automaticamente il pannello e lo script da OBS. Togli il pannello in Pannelli e lo script in Strumenti → Script.
+it.Details=Dettagli:
+
+nl.ConfiguringObs=OBS instellen...
+nl.ObsRunning=OBS is geopend. Sluit OBS en probeer het opnieuw.%n%nAls je annuleert, rondt de installatie af zonder OBS in te stellen.
+nl.SetupSkipped=Het dock en het script zijn niet aan OBS toegevoegd. Sluit OBS en voer de installatie opnieuw uit, of voeg ze met de hand toe volgens de handleiding:
+nl.ObsNotStarted=OBS is op deze computer nog nooit gestart. Start OBS één keer, sluit het en voer de installatie opnieuw uit.
+nl.SetupFailed=Het dock en het script konden niet automatisch aan OBS worden toegevoegd, en er is niets in OBS veranderd. Voeg ze met de hand toe volgens de handleiding:
+nl.SetupStopped=Het instellen van OBS duurde te lang en is gestopt. Voer de installatie opnieuw uit, of voeg het dock en het script met de hand toe volgens de handleiding:
+nl.ScriptSlow=Het instellen van OBS duurt langer dan normaal. Blijven wachten?%n%nZo niet, dan stopt het instellen.
+nl.WebSocketNotConfigured=Zet de WebSocket-server aan: Tools → WebSocket Server Instellingen → WebSocket server inschakelen.
+nl.FinishedHowTo=Start OBS en open Docks → StreamoScope. Bij de eerste start vraagt het dock om het WebSocket-wachtwoord: Tools → WebSocket Server Instellingen → Toon verbindingsinformatie.
+nl.UninstallObsRunning=OBS is geopend. Sluit OBS en probeer het opnieuw, zodat het dock en het script ook uit OBS verdwijnen.
+nl.UninstallSetupRunning=De installatie van StreamoScope loopt. Wacht tot die klaar is en probeer het opnieuw.
+nl.UninstallFilesOnly=Alleen de bestanden verwijderen en het dock en het script in de instellingen van OBS laten staan?
+nl.UninstallFailed=Het dock en het script konden niet automatisch uit OBS worden verwijderd. Verwijder het dock in Docks en het script in Tools → Scripts.
+nl.Details=Details:
+
+tr.ConfiguringObs=OBS ayarlanıyor...
+tr.ObsRunning=OBS açık. OBS'yi kapatıp yeniden deneyin.%n%nİptal ederseniz kurulum OBS ayarlanmadan tamamlanır.
+tr.SetupSkipped=Panel ve betik OBS'ye eklenmedi. OBS'yi kapatıp kurulumu yeniden çalıştırın ya da kılavuza göre elle ekleyin:
+tr.ObsNotStarted=OBS bu bilgisayarda henüz hiç açılmadı. OBS'yi bir kez açıp kapatın ve kurulumu yeniden çalıştırın.
+tr.SetupFailed=Panel ve betik OBS'ye otomatik olarak eklenemedi, OBS'de hiçbir şey değişmedi. Kılavuza göre elle ekleyin:
+tr.SetupStopped=OBS'yi ayarlamak çok uzun sürdü ve durduruldu. Kurulumu yeniden çalıştırın ya da paneli ve betiği kılavuza göre elle ekleyin:
+tr.ScriptSlow=OBS'yi ayarlamak her zamankinden uzun sürüyor. Beklemeye devam edilsin mi?%n%nEdilmezse ayarlama durdurulur.
+tr.WebSocketNotConfigured=WebSocket sunucusunu açın: Araçlar → WebSocket Suncusu Ayarları → WebSocket sunucuyu etkinleştir.
+tr.FinishedHowTo=OBS'yi açın ve Paneller → StreamoScope'u seçin. İlk açılışta panel WebSocket parolasını sorar: Araçlar → WebSocket Suncusu Ayarları → Bağlanma Bilgilerini Göster.
+tr.UninstallObsRunning=OBS açık. Panel ve betik OBS'den de kaldırılsın diye OBS'yi kapatıp yeniden deneyin.
+tr.UninstallSetupRunning=StreamoScope kurulumu sürüyor. Bitmesini bekleyip yeniden deneyin.
+tr.UninstallFilesOnly=Yalnızca dosyalar silinsin, panel ve betik OBS ayarlarında kalsın mı?
+tr.UninstallFailed=Panel ve betik OBS'den otomatik olarak kaldırılamadı. Paneli Paneller menüsünden, betiği Araçlar → Betikler'den kaldırın.
+tr.Details=Ayrıntılar:
+
+th.ConfiguringObs=กำลังตั้งค่า OBS...
+th.ObsRunning=OBS เปิดอยู่ ปิด OBS แล้วลองอีกครั้ง%n%nถ้ายกเลิก การติดตั้งจะจบโดยไม่ตั้งค่า OBS
+th.SetupSkipped=ยังไม่ได้เพิ่มแผงและสคริปต์ลงใน OBS ปิด OBS แล้วเรียกใช้การติดตั้งอีกครั้ง หรือเพิ่มเองตามคู่มือ:
+th.ObsNotStarted=ยังไม่เคยเปิด OBS บนคอมพิวเตอร์เครื่องนี้ เปิด OBS หนึ่งครั้ง ปิดลง แล้วเรียกใช้การติดตั้งอีกครั้ง
+th.SetupFailed=เพิ่มแผงและสคริปต์ลงใน OBS โดยอัตโนมัติไม่ได้ และไม่มีอะไรเปลี่ยนใน OBS เพิ่มเองตามคู่มือ:
+th.SetupStopped=การตั้งค่า OBS ใช้เวลานานเกินไปและถูกหยุด เรียกใช้การติดตั้งอีกครั้ง หรือเพิ่มแผงและสคริปต์เองตามคู่มือ:
+th.ScriptSlow=การตั้งค่า OBS ใช้เวลานานกว่าปกติ รอต่อไหม?%n%nถ้าไม่รอ การตั้งค่าจะหยุด
+th.WebSocketNotConfigured=เปิดเซิร์ฟเวอร์ WebSocket: เครื่องมือ → การตั้งค่าเซิร์ฟเวอร์ WebSocket → เปิดใช้งานเซิร์ฟเวอร์ WebSocket
+th.FinishedHowTo=เปิด OBS แล้วไปที่ ถาดงาน → StreamoScope เมื่อเปิดครั้งแรก แผงจะขอรหัสผ่าน WebSocket: เครื่องมือ → การตั้งค่าเซิร์ฟเวอร์ WebSocket → แสดงข้อมูลการเชื่อมต่อ
+th.UninstallObsRunning=OBS เปิดอยู่ ปิด OBS แล้วลองอีกครั้ง เพื่อให้แผงและสคริปต์ถูกนำออกจาก OBS ด้วย
+th.UninstallSetupRunning=การติดตั้ง StreamoScope กำลังทำงานอยู่ รอให้เสร็จแล้วลองอีกครั้ง
+th.UninstallFilesOnly=ลบเฉพาะไฟล์ และเก็บแผงกับสคริปต์ไว้ในการตั้งค่า OBS ไหม?
+th.UninstallFailed=นำแผงและสคริปต์ออกจาก OBS โดยอัตโนมัติไม่ได้ นำแผงออกในเมนู ถาดงาน และนำสคริปต์ออกใน เครื่องมือ → Scripts
+th.Details=รายละเอียด:
 
 [Code]
 const

@@ -23,6 +23,8 @@ describe('getNotesForLanguage', () => {
         ['French', 'fr', ENGLISH_NOTES],
         ['Korean', 'ko', ENGLISH_NOTES],
         ['Japanese', 'ja', ENGLISH_NOTES],
+        ['Simplified Chinese', 'zh-CN', ENGLISH_NOTES],
+        ['Thai', 'th', ENGLISH_NOTES],
     ])('takes the right part for %s', (_name, language, notes) => {
         expect(getNotesForLanguage(NOTES, language)).toBe(notes);
     });

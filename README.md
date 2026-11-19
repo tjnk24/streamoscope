@@ -75,7 +75,7 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 
 🎨 **Dressed like your OBS.** The dock takes its colours from the OBS theme: Yami and its styles, Light, or a theme you installed yourself. The **Font Size** from OBS's own **Settings → Appearance** carries over too. Pick another theme or font size in OBS and the dock follows within a second. Where an OBS colour would be hard to read in a dock (a near-black accent, a neon platform colour on a light background), the dock shifts it just enough to read; a theme whose text is hard to read on its own background gets the dock's own colours instead. If a theme still looks off in the dock, **Display → Colors** in the dock's own settings (the gear icon) switches to the dock's own dark or light colours. Needs the bridge and OBS 30 or newer; OBS 28 and 29 only tell the dock light from dark.
 
-🌍 The interface supports **English, Russian, Ukrainian, Spanish, German, French, Polish, Brazilian Portuguese, Japanese and Korean**.
+🌍 The interface supports **English, Russian, Ukrainian, Spanish, German, French, Italian, Dutch, Polish, Brazilian Portuguese, Turkish, Vietnamese, Indonesian, Thai, Japanese, Korean and Chinese (Simplified and Traditional)**.
 
 <p align="center">
   <img src="docs/images/stats-narrow.png" width="280" alt="StreamoScope compact layout showing multiple stream cards, OBS performance and red hints on the rows in trouble">

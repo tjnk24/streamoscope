@@ -20,10 +20,18 @@ const {
     Es,
     De,
     Fr,
+    It,
+    Nl,
     Pl,
     PtBr,
+    Tr,
+    Vi,
+    Id,
+    Th,
     Ja,
     Ko,
+    ZhCn,
+    ZhTw,
 } = LanguageEnum;
 
 const {User, TargetTitle} = PlatformSourceEnum;
@@ -87,10 +95,21 @@ export const OBS_LANGUAGE_PREFIXES: ObsLanguagePrefixDto[] = [
     {prefix: 'es', language: Es},
     {prefix: 'de', language: De},
     {prefix: 'fr', language: Fr},
+    {prefix: 'it', language: It},
+    {prefix: 'nl', language: Nl},
     {prefix: 'pl', language: Pl},
     {prefix: 'pt', language: PtBr},
+    {prefix: 'tr', language: Tr},
+    {prefix: 'vi', language: Vi},
+    {prefix: 'id', language: Id},
+    {prefix: 'th', language: Th},
     {prefix: 'ja', language: Ja},
     {prefix: 'ko', language: Ko},
+    {prefix: 'zh-tw', language: ZhTw},
+    {prefix: 'zh-hk', language: ZhTw},
+    {prefix: 'zh-mo', language: ZhTw},
+    {prefix: 'zh-hant', language: ZhTw},
+    {prefix: 'zh', language: ZhCn},
 ];
 
 export const MAIN_TARGET_KEY = 'main';

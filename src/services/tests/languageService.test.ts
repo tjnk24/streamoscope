@@ -17,8 +17,16 @@ const {
     Fr,
     Pl,
     PtBr,
+    It,
+    Nl,
+    Tr,
+    Vi,
+    Id,
+    Th,
     Ja,
     Ko,
+    ZhCn,
+    ZhTw,
 } = LanguageEnum;
 
 vi.mock('__actions', () => ({commonActions: {}}));
@@ -36,7 +44,18 @@ describe('languageService.resolveLanguage', () => {
         ['pt-BR', PtBr],
         ['ja-JP', Ja],
         ['ko-KR', Ko],
-        ['zh-CN', En],
+        ['it-IT', It],
+        ['nl-NL', Nl],
+        ['tr-TR', Tr],
+        ['vi-VN', Vi],
+        ['id-ID', Id],
+        ['th-TH', Th],
+        ['zh-CN', ZhCn],
+        ['zh-SG', ZhCn],
+        ['zh-TW', ZhTw],
+        ['zh-HK', ZhTw],
+        ['zh-Hant', ZhTw],
+        ['ar-SA', En],
     ])('takes the OBS language %s when none is chosen', (obsLanguage, language) => {
         vi.stubGlobal('navigator', {language: obsLanguage});
 
