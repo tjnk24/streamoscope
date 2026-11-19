@@ -9,9 +9,13 @@ This document covers the build system, tests, installer and updater. If you just
 - OBS Studio 28+ for integration testing.
 
 ```bash
+git clone https://github.com/tjnk24/streamoscope.git
+cd streamoscope
 npm install
 npm run start:dev
 ```
+
+`npm run build:prod` puts the built dock into `build/`; the bridge is in `obs-script/streamoscope-bridge.lua`.
 
 The development server uses `http://localhost:3062` by default. Set `PORT` in `.env` to choose another port. When OBS is available, the dev server can read WebSocket credentials from the OBS configuration and serve them locally. Mock mode allows interface development without a live stream.
 
@@ -158,6 +162,9 @@ The switch **Update automatically** is stored by the bridge in `%LOCALAPPDATA%\s
 
 A freshly switched version is on trial, and `update-trial.txt` names it and the previous version. The loader of the previous version judges it: that code has already proved itself, while the new version's own loader might be as broken as the rest of it. Once the trial is over, the stub runs the new version's loader. If a loader fails to load, the stub switches to the previous version of the trial, the last healthy version or the version whose loader worked last, marks the broken one as rolled back and runs that loader instead.
 
+<details>
+<summary>Diagram</summary>
+
 ```mermaid
 flowchart TB
   launch(["OBS launch,<br>a version on trial:<br>the previous version's<br>loader judges"]) --> count{"Third<br>launch?"}
@@ -171,6 +178,8 @@ flowchart TB
   panel -- "no: silence<br>proves nothing" --> dropped(["Trial dropped,<br>the version stays"])
   rolledBack -. "the dock reports late" .-> kept
 ```
+
+</details>
 
 - The bridge fails to load: back to the previous version at once, in the same session.
 - The dock is healthy: a second after it finds the bridge, a dock inside OBS that hasn't hit a render error sends `healthy:X.Y.Z`. The bridge records it in `healthy-version.txt`, notes the OBS process in `healthy-process.txt` and ends the trial.

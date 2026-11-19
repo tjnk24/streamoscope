@@ -30,8 +30,8 @@ paths:
 
 ## Node.js
 
-- **Минимум - 24**: `.nvmrc` (по нему ставят Node и GitHub Actions) и `engines` в `package.json` (`^24 || >=26`: нечётную 25 исключает http-proxy-middleware из webpack-dev-server). Это наше решение: зависимостям сейчас хватает 22.22.1 (lint-staged, react-router), ниже 24 не опускаем. Меняем - в `.nvmrc`, `engines`, README и `docs/DEVELOPMENT.md`.
+- **Минимум - 24**: `.nvmrc` (по нему ставят Node и GitHub Actions) и `engines` в `package.json` (`^24 || >=26`: нечётную 25 исключает http-proxy-middleware из webpack-dev-server). Это наше решение: зависимостям сейчас хватает 22.22.1 (lint-staged, react-router), ниже 24 не опускаем. Меняем - в `.nvmrc`, `engines` и `docs/DEVELOPMENT.md`.
 - **После каждого `npm install`/`npm update`, который меняет `package-lock.json`**, проверяем `engines.node` всех пакетов в нём (и вложенных, и dev): самая высокая нижняя граница и исключённые ветки.
-  - Строже нашего `engines` (выше 24 или исключает нашу ветку) - в том же изменении поднимаем минимум в `engines`, `.nvmrc`, README и `docs/DEVELOPMENT.md`, в пункте выше пишем, какой пакет его задаёт, и проверяем на новой минимальной версии из `nvm` (её `node.exe` напрямую, без `nvm use`): `npm run build:prod`, `npm run package:release`, `npm run lint`, dev-сервер.
+  - Строже нашего `engines` (выше 24 или исключает нашу ветку) - в том же изменении поднимаем минимум в `engines`, `.nvmrc` и `docs/DEVELOPMENT.md`, в пункте выше пишем, какой пакет его задаёт, и проверяем на новой минимальной версии из `nvm` (её `node.exe` напрямую, без `nvm use`): `npm run build:prod`, `npm run package:release`, `npm run lint`, dev-сервер.
   - Пакет перестал поддерживать и 24 - сначала обсуждаем с пользователем: откатить пакет или перейти на новую ветку Node.
   - Что нашли и подняли ли минимум - пишем в ответе.

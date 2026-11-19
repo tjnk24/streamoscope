@@ -16,6 +16,9 @@
 - **С 0.7.0 `configure-obs.ps1` и `ConfigureObs/` - в архиве выпуска** (`scripts/packageRelease/copyReleaseFiles.ts`), лежат в `versions\<версия>\` и приходят с фоновым обновлением; установщик кладёт запасную копию в корень папки программы.
 - **Порядок:** OBS закрыт (`Test-ObsRunning`) → блокировка `Local\streamoscope-configure-obs` (`Enter-ConfigureLock`: второй запуск ждёт до 60 с, потом код `1` без записи; блокировку снятого процесса забирает) → пути (`Resolve-ObsPaths`: portable, `[Locations]`, `user.ini` или `global.ini` по `docs/obs-config.md`) → все правки в памяти, ошибка разбора - выход без записи → ещё раз `Test-ObsRunning`: OBS открыли во время настройки - код `2` без записи → резервные копии → запись через временный файл с проверкой и `File.Replace` → при любой ошибке все файлы восстанавливаются из копий → `install-manifest.json` в папке установки (что добавлено, для повторной установки и удаления).
 
+<details>
+<summary>Схема</summary>
+
 ```mermaid
 flowchart TB
   start(["configure-obs.ps1<br>-Mode Install или Uninstall"]) --> running{"OBS<br>открыт?"}
@@ -35,6 +38,8 @@ flowchart TB
   save -- "записано" --> manifest["install-manifest.json:<br>Install пишет,<br>Uninstall стирает"]
   manifest --> success(["0, или 10 без<br>настроек obs-websocket"])
 ```
+
+</details>
 
 - **Повторная установка ничего не меняет.** Удаление убирает панель (по `uuid` или адресу), мост из всех коллекций и данные моста из `basic.ini` всех профилей (`[StreamoScope]` и `[ObsStatsDock]` - имя до 0.3.0, `Remove-IniSection`); сервер WebSocket не выключает.
 - **Из массивов OBS** (`scripts-tool` в коллекции, `ExtraBrowserDocks`) удаление вырезает только свой элемент с соседней запятой (`Remove-JsonArrayItem`), чужие элементы - байт в байт.
@@ -86,6 +91,9 @@ flowchart TB
   - `basic.ini` профиля, который не читается как UTF-8, удаление пропускает с записью в журнал, панель и мост всё равно убирает; нечитаемый `global.ini` - `4`, ничего не меняя.
   - Тихое удаление (`/VERYSILENT /SUPPRESSMSGBOXES`) при открытом OBS ответов не ждёт: окна получают ответы по умолчанию («отмена», затем «нет»), и удаление молча отменяется, ничего не тронув (решение пользователя). Поэтому скрипт перед ним закрывает OBS.
 
+<details>
+<summary>Схема</summary>
+
 ```mermaid
 flowchart TB
   start(["Удаление из «Приложений»"]) --> setupRunning{"Идёт<br>установщик?"}
@@ -105,3 +113,5 @@ flowchart TB
   removeData --> files["Inno стирает файлы,<br>RemoveInstallDirectory"]
   files --> kept(["Остаются backups<br>и configure-obs.log"])
 ```
+
+</details>

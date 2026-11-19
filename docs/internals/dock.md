@@ -149,7 +149,7 @@
   - у OBS: `rendering` и `encoding` - за минуту отставание не меньше `ADVICE_LAG_SHARE` (0,5 % кадров), строки отставания.
   - Каждый совет проходит `utils/stats/AdviceTracker`: иконка загорается, когда условие держится `ADVICE_DELAY_MS` (3 с), и гаснет через 3 с после него - против мигания у порога; у строк «за минуту» - вместе с числом.
   - Иконка - контейнер `pages/Stats/containers/advice-icon` (`ExclamationCircleFilled` цвета ошибки перед значением): тултип с текстом совета и «Что делать?», которая открывает модалку `advice-modal` по центру с заголовком, пояснением и шагами (ключи - `ADVICE_TEXTS` в `pages/Stats/consts.ts`, разделы настроек - из раздела `obs` словаря). Модалка - слайс `adviceModal` (`{isVisible, advice}`), «Понятно» и крестик вызывают `reset`.
-  - Таблица в README «Stream problems» повторяет эти советы: меняем вместе.
+  - Таблица «Stream problems» в `docs/TROUBLESHOOTING.md` повторяет эти советы: меняем вместе.
 
 ## Тема из OBS
 

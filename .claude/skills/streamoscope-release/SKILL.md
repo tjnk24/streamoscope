@@ -27,7 +27,7 @@ Update this skill in the same change whenever the conversation shows it is outda
   - The test stand screenshot (`npm run stand -- screenshot`) is 420x900 and only for checking the stand, not for README. Do not touch the user's OBS for screenshots.
 - Check the browser at 300 and 670 px before committing.
 - In Codex, use its available browser tools instead of Claude-only preview tools. Resolve this skill directory explicitly instead of relying on `CLAUDE_SKILL_DIR`; keep logs and downloaded verification artifacts in the current chat's scratch directory. Monitor CI with one bounded local process and a log, not repeated model wake-ups.
-- README and `docs/DEVELOPMENT.md` already describe every user-visible change of this release.
+- README, the user pages `docs/FEATURES.md`, `docs/HOW-IT-WORKS.md`, `docs/TROUBLESHOOTING.md` and `docs/DEVELOPMENT.md` already describe every user-visible change of this release.
 - Raised requirements are in `config/compatibility.json`.
 
 ## 3. Release notes

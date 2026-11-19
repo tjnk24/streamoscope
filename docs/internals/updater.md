@@ -18,6 +18,9 @@
   7. Атомарно заменить `current-version.js` (`Set-CurrentVersion`, `File.Replace`): всё до этого шага текущую версию не трогает.
   8. Стереть `rolled-back-version.txt`, оставить три новые версии и версию для отката (`Remove-OldVersions`), обновить `DisplayVersion` -> `done`.
 
+<details>
+<summary>Схема</summary>
+
 ```mermaid
 flowchart TB
   lock{"Блокировка<br>свободна?"} -- "нет" --> busy(["busy"])
@@ -35,6 +38,8 @@ flowchart TB
   switch --> cleanup["Стереть<br>rolled-back-version.txt,<br>старые версии,<br>DisplayVersion"]
   cleanup --> done(["done"])
 ```
+
+</details>
 - **Любое скачивание - `Get-UpdateFile`**: `DownloadTimeoutMilliseconds` (30 с) на ответ и на каждое чтение, целиком не дольше `DownloadDeadlineMilliseconds` (10 минут), длина должна совпасть с `Content-Length`; иначе ошибка `network`, а не `signature`.
 - **Статус** - JSON `{version, stage, percent, error, updated}`. Этапы: `preparing`, `downloading`, `verifying`, `installing`, `done`, `failed`. Коды ошибок: `invalidVersion`, `notNewer`, `network`, `signature`, `incompatible`, `install`, `unexpected`.
 - **Временные файлы** - `%TEMP%\streamoscope-update-<версия>`, удаляются всегда.

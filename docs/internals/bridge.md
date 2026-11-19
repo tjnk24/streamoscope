@@ -4,6 +4,9 @@
 
 ## Заглушка и загрузчик
 
+<details>
+<summary>Схема</summary>
+
 ```mermaid
 flowchart TB
   stub["Заглушка читает<br>current-version.js"] --> trial{"Идёт проба<br>этой версии?"}
@@ -17,6 +20,8 @@ flowchart TB
   switch -- "не удалось заменить" --> obsError
   switch -- "заменён" --> reset(["Сброс script_path,<br>поиска модулей,<br>модулей моста и script_*,<br>загрузчик этой версии"])
 ```
+
+</details>
 
 - **Заглушка - `installer/loader/streamoscope-bridge.lua`**, с 0.7.0 установщик кладёт её в корень папки программы вместо загрузчика. OBS хранит путь к ней, поэтому она не переезжает и не меняется (обещание старым версиям, `.claude/rules/releases.md`).
   - Читает `current-version.js` и запускает через `loadstring` и `pcall` загрузчик версии `versions/<версия>/streamoscope-bridge.lua` (есть в каждой версии с 0.5.0): пока версия на пробе (`update-trial.txt` про текущую версию) - загрузчик `previous`, уже доказавший, что работает; после пробы - загрузчик самой версии.
@@ -97,6 +102,9 @@ flowchart TB
 
 ## Канал команд (параметры профиля)
 
+<details>
+<summary>Схема</summary>
+
 ```mermaid
 sequenceDiagram
   participant dock as Панель
@@ -119,6 +127,8 @@ sequenceDiagram
   dock->>websocket: GetProfileParameter PluginOutputs в пачке опроса
   websocket-->>dock: данные моста
 ```
+
+</details>
 
 - **Панель пишет `[StreamoScope] UpdateCommand`** (`SetProfileParameter`), мост на каждом тике читает и сразу стирает (иначе после перезапуска OBS команда сработала бы снова).
 - **Одна запись на параметр за тик**: значение у параметра одно, вторая запись до тика затёрла бы первую. Поэтому панель пишет один параметр не чаще раза в `PROFILE_PARAMETER_SPACING_MS` (750 мс, очередь `utils/requests/ProfileParameterQueue`, следующая запись - со следующим опросом).
