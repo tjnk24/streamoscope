@@ -3,21 +3,22 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import {
-    FAKE_MULTI_RTMP_CONFIG,
-    FAKE_MULTI_RTMP_CONFIG_PATH,
+    MULTI_RTMP_CONFIG,
+    MULTI_RTMP_CONFIG_PATH,
     FAKE_MULTI_RTMP_SCRIPT_PATH,
     OBS_CONFIG_DIRECTORY,
     OBS_PORTABLE_MARKER,
     OBS_VERSION_NUMBER,
     OBS_WEBSOCKET_CONFIG_PATH,
     STAND_COLLECTION_NAME,
+    STAND_MAIN_BITRATE,
     STAND_RTMP_SERVER,
     STAND_STREAM_KEY,
     STAND_WEBSOCKET_PORT,
     UTF8_BOM,
 } from '../consts.ts';
 
-export const writeObsConfig = () => {
+export const writeObsConfig = (isPluginInstalled: boolean) => {
     const profileDirectory = path.join(OBS_CONFIG_DIRECTORY, 'basic', 'profiles', STAND_COLLECTION_NAME);
     const scenesDirectory = path.join(OBS_CONFIG_DIRECTORY, 'basic', 'scenes');
 
@@ -60,7 +61,7 @@ export const writeObsConfig = () => {
         'Mode=Simple',
         '',
         '[SimpleOutput]',
-        'VBitrate=800',
+        `VBitrate=${STAND_MAIN_BITRATE}`,
         'ABitrate=96',
         'StreamEncoder=x264',
         'Preset=ultrafast',
@@ -87,7 +88,7 @@ export const writeObsConfig = () => {
         current_program_scene: STAND_COLLECTION_NAME,
         name: STAND_COLLECTION_NAME,
         scene_order: [{name: STAND_COLLECTION_NAME}],
-        modules: {'scripts-tool': [fakeMultiRtmpScript]},
+        modules: {'scripts-tool': isPluginInstalled ? [] : [fakeMultiRtmpScript]},
         sources: [{
             id: 'scene',
             versioned_id: 'scene',
@@ -113,7 +114,7 @@ export const writeObsConfig = () => {
     fs.writeFileSync(path.join(OBS_CONFIG_DIRECTORY, 'user.ini'), `${UTF8_BOM}${userIniLines.join('\n')}`);
     fs.writeFileSync(path.join(profileDirectory, 'basic.ini'), profileIniLines.join('\n'));
     fs.writeFileSync(path.join(profileDirectory, 'service.json'), JSON.stringify(service));
-    fs.writeFileSync(FAKE_MULTI_RTMP_CONFIG_PATH, JSON.stringify(FAKE_MULTI_RTMP_CONFIG, null, 4));
+    fs.writeFileSync(MULTI_RTMP_CONFIG_PATH, JSON.stringify(MULTI_RTMP_CONFIG, null, 4));
     fs.writeFileSync(path.join(scenesDirectory, `${STAND_COLLECTION_NAME}.json`), JSON.stringify(collection, null, 4));
     fs.writeFileSync(OBS_WEBSOCKET_CONFIG_PATH, JSON.stringify(webSocketConfig, null, 4));
 };

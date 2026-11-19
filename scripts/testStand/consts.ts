@@ -3,7 +3,7 @@ import path from 'node:path';
 import {ROOT_DIRECTORY} from '../packageRelease/consts.ts';
 
 import type {BrokenFileDto, BrokenPartType} from './types/brokenRelease.ts';
-import type {FakeMultiRtmpConfigDto} from './types/rtmp.ts';
+import type {MultiRtmpConfigDto, MultiRtmpVideoParamDto} from './types/rtmp.ts';
 import type {ScenarioVersionsDto} from './types/ScenarioVersionsDto.ts';
 import type {StandArchiveDto} from './types/StandArchiveDto.ts';
 
@@ -81,6 +81,18 @@ export const MEDIAMTX_CONFIG_PATH = path.join(MEDIAMTX_DIRECTORY, 'stand.yml');
 
 export const MEDIAMTX_PATHS_URL = 'http://127.0.0.1:9997/v3/paths/list';
 
+export const MULTI_RTMP_KEY_PREFIX = 'stand-multi-key-';
+
+const MULTI_RTMP_SRT_PATH = 'multi/srt';
+
+const MULTI_RTMP_SRT_PASSPHRASE = `${MULTI_RTMP_KEY_PREFIX}srt`;
+
+export const MULTI_RTMP_SRT_SERVER_ORIGIN = 'srt://127.0.0.1:8890';
+
+const MULTI_RTMP_SRT_SERVER = `${MULTI_RTMP_SRT_SERVER_ORIGIN}?streamid=publish:${MULTI_RTMP_SRT_PATH}&passphrase=${MULTI_RTMP_SRT_PASSPHRASE}&pkt_size=1316`;
+
+export const MULTI_RTMP_SRT_TITLE = 'Stand SRT';
+
 export const MEDIAMTX_CONFIG = [
     'logLevel: warn',
     'logDestinations: [stdout]',
@@ -91,8 +103,11 @@ export const MEDIAMTX_CONFIG = [
     'rtsp: no',
     'hls: no',
     'webrtc: no',
-    'srt: no',
+    'srt: yes',
+    'srtAddress: 127.0.0.1:8890',
     'paths:',
+    `  ${MULTI_RTMP_SRT_PATH}:`,
+    `    srtPublishPassphrase: ${MULTI_RTMP_SRT_PASSPHRASE}`,
     '  all_others:',
     '',
 ].join('\n');
@@ -101,83 +116,133 @@ export const STAND_RTMP_SERVER = 'rtmp://127.0.0.1:1935/stand';
 
 export const STAND_STREAM_KEY = 'stand';
 
-export const FAKE_MULTI_RTMP_SCRIPT_PATH = path.join(ROOT_DIRECTORY, 'scripts', 'testStand', 'obs', 'fake-multi-rtmp.lua');
+export const STAND_MAIN_BITRATE = 800;
 
-export const FAKE_MULTI_RTMP_PARAMETER: Record<string, string> = {
-    parameterCategory: 'StreamoScopeStand',
-    parameterName: 'FakeMultiRtmp',
+export const MULTI_RTMP_VERSION = '0.7.4.5';
+
+export const MULTI_RTMP_ARCHIVE: StandArchiveDto = {
+    name: `obs-multi-rtmp-${MULTI_RTMP_VERSION}-windows-x64.zip`,
+    url: `https://github.com/sorayuki/obs-multi-rtmp/releases/download/${MULTI_RTMP_VERSION}/obs-multi-rtmp-${MULTI_RTMP_VERSION}-windows-x64.zip`,
+    sha256: '5ddff9bedf9cf09534db6157a5c01f5eb0115ada042ad0c3fefb7ddc1e9af801',
 };
 
-export const FAKE_MULTI_RTMP_KEY_PREFIX = 'stand-multi-key-';
+export const MULTI_RTMP_LATEST_RELEASE_URL = 'https://api.github.com/repos/sorayuki/obs-multi-rtmp/releases/latest';
 
-export const FAKE_MULTI_RTMP_PATH_PREFIX = 'multi/';
+export const MULTI_RTMP_BINARY_DIRECTORY = path.join(OBS_DIRECTORY, 'obs-plugins');
 
-const FAKE_MULTI_RTMP_SERVER = 'rtmp://127.0.0.1:1935/multi';
+export const MULTI_RTMP_DATA_DIRECTORY = path.join(OBS_DIRECTORY, 'data', 'obs-plugins', 'obs-multi-rtmp');
 
-export const FAKE_MULTI_RTMP_MAIN_COPY_TITLE = 'Stand copy of main';
+export const MULTI_RTMP_PLUGIN_LIBRARY = path.join(MULTI_RTMP_BINARY_DIRECTORY, '64bit', 'obs-multi-rtmp.dll');
 
-export const FAKE_MULTI_RTMP_CONFIG_PATH = path.join(OBS_CONFIG_DIRECTORY, 'basic', 'profiles', STAND_COLLECTION_NAME, 'obs-multi-rtmp.json');
+export const MULTI_RTMP_FAKE_FLAG = '--fake-multi-rtmp';
 
-export const FAKE_MULTI_RTMP_CONFIG: FakeMultiRtmpConfigDto = {
+export const MULTI_RTMP_LOADED_TEXT = `[obs-multi-rtmp] version: ${MULTI_RTMP_VERSION} `;
+
+export const MULTI_RTMP_CONFIG_LOADED_PATTERN = /\[obs-multi-rtmp\] Load (\d+) targets, (\d+) video configs/;
+
+export const JOURNAL_MULTI_RTMP_UNREADABLE_TEXT = 'obs-multi-rtmp settings not understood';
+
+export const FAKE_MULTI_RTMP_SCRIPT_PATH = path.join(ROOT_DIRECTORY, 'scripts', 'testStand', 'multiRtmp', 'fake-multi-rtmp.lua');
+
+export const MULTI_RTMP_PATH_PREFIX = 'multi/';
+
+const MULTI_RTMP_SERVER = 'rtmp://127.0.0.1:1935/multi';
+
+export const MULTI_RTMP_MAIN_COPY_TITLE = 'Stand copy of main';
+
+export const MULTI_RTMP_CONFIG_PATH = path.join(OBS_CONFIG_DIRECTORY, 'basic', 'profiles', STAND_COLLECTION_NAME, 'obs-multi-rtmp.json');
+
+const MULTI_RTMP_VIDEO_ENCODER = 'obs_x264';
+
+const MULTI_RTMP_VIDEO_PARAM: Omit<MultiRtmpVideoParamDto, 'bitrate'> = {
+    rate_control: 'CBR',
+    preset: 'ultrafast',
+    keyint_sec: 2,
+};
+
+export const MULTI_RTMP_CONFIG: MultiRtmpConfigDto = {
     targets: [
         {
             'id': '1',
             'name': 'Stand low',
             'enabled': true,
+            'sync-start': true,
+            'sync-stop': true,
             'protocol': 'RTMP',
-            'service-param': {server: FAKE_MULTI_RTMP_SERVER, key: `${FAKE_MULTI_RTMP_KEY_PREFIX}0`},
+            'service-param': {server: MULTI_RTMP_SERVER, key: `${MULTI_RTMP_KEY_PREFIX}0`},
             'video-config': 'video-400',
         },
         {
             'id': '2',
             'name': 'Stand middle',
             'enabled': true,
+            'sync-start': true,
+            'sync-stop': true,
             'protocol': 'RTMP',
-            'service-param': {server: FAKE_MULTI_RTMP_SERVER, key: `${FAKE_MULTI_RTMP_KEY_PREFIX}1`},
+            'service-param': {server: MULTI_RTMP_SERVER, key: `${MULTI_RTMP_KEY_PREFIX}1`},
             'video-config': 'video-800',
         },
         {
             'id': '3',
             'name': 'Stand high',
             'enabled': true,
+            'sync-start': true,
+            'sync-stop': true,
             'protocol': 'RTMP',
-            'service-param': {server: FAKE_MULTI_RTMP_SERVER, key: `${FAKE_MULTI_RTMP_KEY_PREFIX}2`},
+            'service-param': {server: MULTI_RTMP_SERVER, key: `${MULTI_RTMP_KEY_PREFIX}2`},
             'video-config': 'video-1200',
         },
         {
             'id': '5',
-            'name': FAKE_MULTI_RTMP_MAIN_COPY_TITLE,
+            'name': MULTI_RTMP_MAIN_COPY_TITLE,
             'enabled': true,
+            'sync-start': true,
+            'sync-stop': true,
             'protocol': 'RTMP',
-            'service-param': {server: FAKE_MULTI_RTMP_SERVER, key: STAND_STREAM_KEY},
+            'service-param': {server: MULTI_RTMP_SERVER, key: STAND_STREAM_KEY},
             'video-config': 'video-400',
+        },
+        {
+            'id': '6',
+            'name': MULTI_RTMP_SRT_TITLE,
+            'enabled': true,
+            'sync-start': true,
+            'sync-stop': true,
+            'protocol': 'SRT_RIST',
+            'service-param': {server: MULTI_RTMP_SRT_SERVER, key: ''},
+            'video-config': 'video-800',
         },
         {
             'id': '4',
             'name': 'Stand switched off',
             'enabled': false,
+            'sync-start': true,
+            'sync-stop': true,
             'protocol': 'RTMP',
-            'service-param': {server: FAKE_MULTI_RTMP_SERVER, key: `${FAKE_MULTI_RTMP_KEY_PREFIX}3`},
+            'service-param': {server: MULTI_RTMP_SERVER, key: `${MULTI_RTMP_KEY_PREFIX}3`},
             'video-config': 'video-400',
         },
     ],
     video_configs: [
         {
             id: 'video-400',
-            param: {bitrate: 400},
+            encoder: MULTI_RTMP_VIDEO_ENCODER,
+            param: {...MULTI_RTMP_VIDEO_PARAM, bitrate: 400},
         },
         {
             id: 'video-800',
-            param: {bitrate: 800},
+            encoder: MULTI_RTMP_VIDEO_ENCODER,
+            param: {...MULTI_RTMP_VIDEO_PARAM, bitrate: 800},
         },
         {
             id: 'video-1200',
-            param: {bitrate: 1200},
+            encoder: MULTI_RTMP_VIDEO_ENCODER,
+            param: {...MULTI_RTMP_VIDEO_PARAM, bitrate: 1200},
         },
     ],
 };
 
-export const FAKE_MULTI_RTMP_ENABLED_TARGETS = FAKE_MULTI_RTMP_CONFIG.targets.filter(({enabled}) => enabled);
+export const MULTI_RTMP_ENABLED_TARGETS = MULTI_RTMP_CONFIG.targets.filter(({enabled}) => enabled);
 
 export const PLUGIN_BITRATE_TOLERANCE = 0.35;
 
@@ -198,7 +263,7 @@ export const INSTALL_DIRECTORY = path.join(LOCAL_APP_DATA_DIRECTORY, 'Programs',
 
 export const JOURNAL_PATH = path.join(DATA_DIRECTORY, 'logs', 'streamoscope.log');
 
-export const JOURNAL_FORBIDDEN_TEXTS = ['rtmp://', '127.0.0.1:1935', 'Users\\', 'file:///'];
+export const JOURNAL_FORBIDDEN_TEXTS = ['rtmp://', 'srt://', '127.0.0.1:1935', '127.0.0.1:8890', 'Users\\', 'file:///'];
 
 export const JOURNAL_SILENCE_MS = 3000;
 
@@ -353,7 +418,8 @@ export const PASSWORD_STORAGE_KEY = 'streamoscope.password';
 
 export const USAGE = `Usage: npm run stand -- <command>
 
-setup                         download OBS and the RTMP server, write their settings
+setup [--fake-multi-rtmp]     download OBS, the RTMP server and obs-multi-rtmp, write their settings;
+                              --fake-multi-rtmp or a failed download puts the stand script fake-multi-rtmp.lua in its place
 install                       build the current code with the test updater and install it into the stand
 release <version> [--broken|--broken-loader]
                               build a signed newer release for the test server; --broken ships a dock that throws,
@@ -361,10 +427,10 @@ release <version> [--broken|--broken-loader]
 start                         start the RTMP server, the test release server and OBS
 stop                          close them
 status                        show the versions, the update files, the dock and the stream
-stream <on|off>               start or stop the stream to the local RTMP server
-multi <on|off>                start or stop four outputs named multi-output with their own bitrates (an imitation of obs-multi-rtmp)
+stream <on|off>               start or stop the stream to the local RTMP server, the obs-multi-rtmp targets follow it
 update <version>              send the bridge install:<version>
 open-settings                 open the settings page of the dock
 evaluate <expression>         run an expression in the dock and print the result
 screenshot <file.png>         save a picture of the dock
-scenario                      run everything above and check the results`;
+check-plugin                  compare the pinned obs-multi-rtmp with its latest release on GitHub
+scenario [--fake-multi-rtmp]  run everything above and check the results`;

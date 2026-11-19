@@ -7,30 +7,48 @@ export type RtmpPathsDto = {
     items: RtmpPathDto[];
 };
 
-type FakeMultiRtmpServiceDto = {
+type MultiRtmpServiceDto = {
     server: string;
     key: string;
 };
 
-type FakeMultiRtmpTargetDto = {
+type MultiRtmpTargetDto = {
     'id': string;
     'name': string;
     'enabled': boolean;
+    'sync-start': boolean;
+    'sync-stop': boolean;
     'protocol': string;
-    'service-param': FakeMultiRtmpServiceDto;
+    'service-param': MultiRtmpServiceDto;
     'video-config': string;
 };
 
-type FakeMultiRtmpVideoParamDto = {
+export type MultiRtmpVideoParamDto = {
     bitrate: number;
+    rate_control: string;
+    preset: string;
+    keyint_sec: number;
 };
 
-type FakeMultiRtmpVideoConfigDto = {
+type MultiRtmpVideoConfigDto = {
     id: string;
-    param: FakeMultiRtmpVideoParamDto;
+    encoder: string;
+    param: MultiRtmpVideoParamDto;
 };
 
-export type FakeMultiRtmpConfigDto = {
-    targets: FakeMultiRtmpTargetDto[];
-    video_configs: FakeMultiRtmpVideoConfigDto[];
+export type MultiRtmpConfigDto = {
+    targets: MultiRtmpTargetDto[];
+    video_configs: MultiRtmpVideoConfigDto[];
+};
+
+type MultiRtmpReleaseAssetDto = {
+    name: string;
+    size: number;
+    digest: string | null;
+};
+
+export type MultiRtmpReleaseDto = {
+    tag_name: string;
+    html_url: string;
+    assets: MultiRtmpReleaseAssetDto[];
 };

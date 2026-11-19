@@ -29,12 +29,14 @@ type BridgeOutputDto = {
     name: string;
     id?: string;
     keyId?: string;
+    server?: string;
     stats?: Record<string, unknown>;
 };
 
 type BridgeConfiguredTargetDto = {
     id: string;
     keyId?: string;
+    server?: string;
     title?: string;
 };
 

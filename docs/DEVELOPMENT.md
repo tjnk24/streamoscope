@@ -26,6 +26,7 @@ The development server uses `http://localhost:3062` by default. Set `PORT` in `.
 | `npm run test:bridge` | Run the Lua bridge and its rollback on the real LuaJIT from an OBS archive, with Pester 5 |
 | `npm run test:stand` | Run the dock, a stream, updates and a rollback in a real portable OBS, see below |
 | `npm run stand -- <command>` | Drive that OBS by hand; without a command it lists them |
+| `npm run stand -- check-plugin` | Warn when obs-multi-rtmp has a newer release than the one the stand pins |
 | `npm run lint` | TypeScript, ESLint, Stylelint and Knip checks |
 | `npm run test:unit` | Run Vitest |
 | `npm test` | Lint and unit tests |
@@ -89,7 +90,9 @@ The bridge writes `%LOCALAPPDATA%\streamoscope\logs\streamoscope.log`. At 5 MB t
 
 `npm run test:stand` downloads a portable OBS and a local RTMP server (MediaMTX) into `.test-stand`, checks both against pinned SHA-256 hashes, and needs no OBS of your own. It leaves your OBS, scenes and stream keys alone: the portable copy keeps its settings in its own folder and streams only to `127.0.0.1`.
 
-It installs the current code with the real `configure-obs.ps1` into a folder with Cyrillic in its path, then checks in OBS: empty cards for the obs-multi-rtmp targets before the first stream, the login, the health report, a stream with its bitrate in the dock, four outputs named `multi-output` filling those cards with a bitrate each, one of them reusing the main stream's key so the dock must warn about it (a stand script imitates obs-multi-rtmp from an `obs-multi-rtmp.json` in the stand profile, `npm run stand -- multi on|off` by hand), the **Update** button, a rollback from a broken dock and the background update. It takes about three minutes, opens an OBS window, and stops everything at the end. Windows may ask about the firewall for this OBS; you can decline, since everything goes through `127.0.0.1`.
+It installs the current code with the real `configure-obs.ps1` into a folder with Cyrillic in its path, then checks in OBS: empty cards for the obs-multi-rtmp targets before the first stream, the login, the health report, a stream with its bitrate in the dock, five outputs named `multi-output` filling those cards with a bitrate each, one of them reusing the main stream's key so the dock must warn about it and one going over SRT with its secrets in the address, which must never leave OBS, the **Update** button, a rollback from a broken dock and the background update. It takes about five minutes, opens an OBS window, and stops everything at the end.
+
+The obs-multi-rtmp targets come from the real plugin: the stand downloads one pinned release from GitHub, checks its SHA-256 and puts it into the portable OBS only (`obs-plugins/64bit` and `data/obs-plugins` of that copy; the plugin's own installer would put it into `ProgramData`, which every OBS on the machine shares), with an `obs-multi-rtmp.json` in the stand profile whose targets start and stop with the main stream (`sync-start`) and stream to `127.0.0.1` with test keys. If the download fails or the hash doesn't match, the stand says so and falls back to its own script that imitates the plugin; `npm run test:stand -- --fake-multi-rtmp` does that on purpose. A newer plugin release is a reason to raise the pinned version and run the stand again: `npm run stand -- check-plugin` tells you when. Windows may ask about the firewall for this OBS; you can decline, since everything goes through `127.0.0.1`.
 
 It reads the dock through the Chromium debugging port, so `npm run stand -- status`, `evaluate` and `screenshot` need neither the mouse nor the screen. The stand takes releases from a local test server: it doesn't replace a look at the real GitHub release or at the real installer.
 

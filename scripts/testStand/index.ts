@@ -1,13 +1,14 @@
 import {
     BROKEN_PART_FLAGS,
+    MULTI_RTMP_FAKE_FLAG,
     OPEN_SETTINGS_EXPRESSION,
     USAGE,
 } from './consts.ts';
 import {captureDock} from './dock/captureDock.ts';
 import {evaluateInDock} from './dock/evaluateInDock.ts';
+import {checkMultiRtmpRelease} from './multiRtmp/checkMultiRtmpRelease.ts';
 import {sendBridgeCommand} from './obs/sendBridgeCommand.ts';
 import {sendObsRequest} from './obs/sendObsRequest.ts';
-import {setFakeMultiRtmp} from './obs/setFakeMultiRtmp.ts';
 import {buildNewerRelease} from './packaging/buildNewerRelease.ts';
 import {installCurrentVersion} from './packaging/installCurrentVersion.ts';
 import {printStatus} from './printStatus.ts';
@@ -20,7 +21,7 @@ const [command, argument, flag] = process.argv.slice(2);
 
 switch (command) {
     case 'setup':
-        await setupStand();
+        await setupStand(argument === MULTI_RTMP_FAKE_FLAG);
         break;
     case 'install':
         await installCurrentVersion();
@@ -40,9 +41,6 @@ switch (command) {
     case 'stream':
         await sendObsRequest(argument === 'off' ? 'StopStream' : 'StartStream');
         break;
-    case 'multi':
-        await setFakeMultiRtmp(argument !== 'off');
-        break;
     case 'update':
         await sendBridgeCommand(`install:${argument}`);
         break;
@@ -55,8 +53,11 @@ switch (command) {
     case 'screenshot':
         await captureDock(argument);
         break;
+    case 'check-plugin':
+        await checkMultiRtmpRelease();
+        break;
     case 'scenario':
-        await runScenario();
+        await runScenario(argument === MULTI_RTMP_FAKE_FLAG);
         break;
     default:
         console.log(USAGE);

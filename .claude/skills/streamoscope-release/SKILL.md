@@ -17,6 +17,7 @@ Update this skill in the same change whenever the conversation shows it is outda
 
 ## 2. Preparation
 
+- Run `npm run stand -- check-plugin`: it compares the obs-multi-rtmp version pinned for the test stand with its latest release on GitHub. On a `WARNING` (exit code 1) tell the user, raise `MULTI_RTMP_VERSION` and the SHA-256 of `MULTI_RTMP_ARCHIVE` in `scripts/testStand/consts.ts` (it prints the new digest; tell the user the file name, source and size before the first download), check the plugin sources for a changed `obs-multi-rtmp.json` format (`src/output-config.cpp`) and run `npm run test:stand`: it has to end with `ALL PASSED`, not with the imitation.
 - Run `npm test` once: it already includes the full `npm run lint` and unit tests. Do not run lint separately again unless a subsequent change needs it. Keep mandatory commit hooks enabled; the release workflow runs its own checks.
 - If the dock looks different: retake the README screenshots and update the matching README text. Capture sizes are not the display sizes and not the 300/670 px check widths:
   - `docs/images/stats-wide.png` - viewport 953x506 (482 before 0.14.0 added the **Total upload** row), the main card at **Live for 00:10:25**, shown in README at 700 px;

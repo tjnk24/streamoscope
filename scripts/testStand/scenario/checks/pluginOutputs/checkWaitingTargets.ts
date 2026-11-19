@@ -4,10 +4,12 @@ import {
     DOCK_SAME_KEY_WARNING_TEXT,
     DOCK_WAITING_FOR_FIRST_STREAM_TEXT,
     DOCK_WAITING_FOR_STREAM_TEXT,
-    FAKE_MULTI_RTMP_CONFIG,
-    FAKE_MULTI_RTMP_ENABLED_TARGETS,
-    FAKE_MULTI_RTMP_KEY_PREFIX,
-    FAKE_MULTI_RTMP_MAIN_COPY_TITLE,
+    MULTI_RTMP_CONFIG,
+    MULTI_RTMP_ENABLED_TARGETS,
+    MULTI_RTMP_KEY_PREFIX,
+    MULTI_RTMP_MAIN_COPY_TITLE,
+    MULTI_RTMP_SRT_SERVER_ORIGIN,
+    MULTI_RTMP_SRT_TITLE,
     OUTPUT_FINGERPRINT_PATTERN,
 } from '../../../consts.ts';
 import {getDockText} from '../../../dock/getDockText.ts';
@@ -17,9 +19,9 @@ import type {BridgeDataDto} from '../../../types/obs.ts';
 import {checkStep} from '../checkStep.ts';
 
 export const checkWaitingTargets = async () => {
-    const enabledTitles = FAKE_MULTI_RTMP_ENABLED_TARGETS.map(({name}) => name);
+    const enabledTitles = MULTI_RTMP_ENABLED_TARGETS.map(({name}) => name);
 
-    const switchedOffTitles = FAKE_MULTI_RTMP_CONFIG.targets
+    const switchedOffTitles = MULTI_RTMP_CONFIG.targets
         .filter(({enabled}) => !enabled)
         .map(({name}) => name);
 
@@ -49,6 +51,7 @@ export const checkWaitingTargets = async () => {
 
     checkStep('the bridge passes a fingerprint of each enabled target', new Set(configuredIds).size, enabledTitles.length);
     checkStep('the bridge passes the key fingerprint of the main stream before the first stream', OUTPUT_FINGERPRINT_PATTERN.test(mainKeyId), true);
-    checkStep('only the copy of the main stream has its key fingerprint', mainKeyTitles.join(','), FAKE_MULTI_RTMP_MAIN_COPY_TITLE);
-    checkStep('the bridge passes no stream key of a target', bridgeText.includes(FAKE_MULTI_RTMP_KEY_PREFIX), false);
+    checkStep('only the copy of the main stream has its key fingerprint', mainKeyTitles.join(','), MULTI_RTMP_MAIN_COPY_TITLE);
+    checkStep('the bridge passes no stream key of a target', bridgeText.includes(MULTI_RTMP_KEY_PREFIX), false);
+    checkStep('the bridge cuts the SRT address of a target to its scheme and host', configuredTargets.find(({title}) => title === MULTI_RTMP_SRT_TITLE)?.server, MULTI_RTMP_SRT_SERVER_ORIGIN);
 };
