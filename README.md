@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/tjnk24/streamoscope/releases/download/v0.15.0/streamoscope-setup-0.15.0.exe">⬇️ Download</a> ·
+  <a href="https://github.com/tjnk24/streamoscope/releases/download/v0.15.1/streamoscope-setup-0.15.1.exe">⬇️ Download</a> ·
   <a href="#-installation">📥 Install</a> ·
   <a href="#-what-you-can-see">👀 Features</a> ·
   <a href="#-limitations">🚧 Limitations</a> ·
@@ -98,7 +98,7 @@ More on each: [Features in detail](docs/FEATURES.md).
 
 **You need:** OBS Studio **28+** and **64-bit Windows 10 or 11**.
 
-1. [Download the latest version](https://github.com/tjnk24/streamoscope/releases/download/v0.15.0/streamoscope-setup-0.15.0.exe).
+1. [Download the latest version](https://github.com/tjnk24/streamoscope/releases/download/v0.15.1/streamoscope-setup-0.15.1.exe).
 2. **Close OBS**, then run the installer.
 3. Open OBS. No dock in sight? Go to **Docks → StreamoScope**.
 4. Enter the WebSocket port and password from **Tools → WebSocket Server Settings → Show Connect Info**.
