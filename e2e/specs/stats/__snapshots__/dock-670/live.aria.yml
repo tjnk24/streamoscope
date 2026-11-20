@@ -1,0 +1,198 @@
+- text: OBS connected
+- button "Settings":
+  - img "setting"
+- alert:
+  - img "exclamation-circle"
+  - text: "Mocks are on: the stats are not real"
+  - button "Turn off"
+- img "holder"
+- text: /YouTube Live \d+,\d+ kbps/
+- table:
+  - rowgroup:
+    - row "Source question-circle Main":
+      - cell "Source question-circle Main":
+        - text: ""
+        - img "question-circle"
+        - text: ""
+    - row /Live for \d+:\d+:\d+/:
+      - cell /Live for \d+:\d+:\d+/
+    - row "Dropped frames question-circle 0 (0.0%)":
+      - cell "Dropped frames question-circle 0 (0.0%)":
+        - text: ""
+        - img "question-circle"
+        - text: ""
+    - row "Dropped per minute question-circle 0":
+      - cell "Dropped per minute question-circle 0":
+        - text: ""
+        - img "question-circle"
+        - text: ""
+    - row "Network congestion question-circle 2":
+      - cell "Network congestion question-circle 2":
+        - text: ""
+        - img "question-circle"
+        - progressbar: 2%
+- img "holder"
+- text: /GoodGame Night show Live \d+,\d+ kbps/
+- table:
+  - rowgroup:
+    - row "Source question-circle multi-rtmp":
+      - cell "Source question-circle multi-rtmp":
+        - text: ""
+        - img "question-circle"
+        - text: ""
+    - row /Live for \d+:\d+:\d+/:
+      - cell /Live for \d+:\d+:\d+/
+    - row "Dropped frames question-circle 0 (0.0%)":
+      - cell "Dropped frames question-circle 0 (0.0%)":
+        - text: ""
+        - img "question-circle"
+        - text: ""
+    - row "Dropped per minute question-circle 0":
+      - cell "Dropped per minute question-circle 0":
+        - text: ""
+        - img "question-circle"
+        - text: ""
+    - row "Network congestion question-circle 2":
+      - cell "Network congestion question-circle 2":
+        - text: ""
+        - img "question-circle"
+        - progressbar: 2%
+- img "holder"
+- text: /Twitch Main channel Unstable \d+,\d+ kbps/
+- table:
+  - rowgroup:
+    - row "Source question-circle multi-rtmp":
+      - cell "Source question-circle multi-rtmp":
+        - text: ""
+        - img "question-circle"
+        - text: ""
+    - row /Live for \d+:\d+:\d+/:
+      - cell /Live for \d+:\d+:\d+/
+    - row /Dropped frames question-circle \d+ \(3\.7%\)/:
+      - cell /Dropped frames question-circle \d+ \(3\.7%\)/:
+        - text: ""
+        - img "question-circle"
+        - text: ""
+    - row /Dropped per minute question-circle exclamation-circle \d+ \(4\.2%\)/:
+      - cell /Dropped per minute question-circle exclamation-circle \d+ \(4\.2%\)/:
+        - text: ""
+        - img "question-circle"
+        - img "exclamation-circle"
+        - text: ""
+    - row /Network congestion question-circle \d+/:
+      - cell /Network congestion question-circle \d+/:
+        - text: ""
+        - img "question-circle"
+        - progressbar: /\d+%/
+- img "holder"
+- text: YouTube Copy of main Offline
+- img "No data"
+- text: Statistics will appear when you start streaming to this platform.
+- table:
+  - rowgroup:
+    - row "Source question-circle multi-rtmp":
+      - cell "Source question-circle multi-rtmp":
+        - text: ""
+        - img "question-circle"
+        - text: ""
+- alert: The key of this stream is already taken by the main OBS stream. Delete it in the plugin or change its key.
+- img "holder"
+- text: Which platform?
+- combobox
+- text: /Live \d+,\d+ kbps/
+- table:
+  - rowgroup:
+    - row "Source question-circle Plugin":
+      - cell "Source question-circle Plugin":
+        - text: ""
+        - img "question-circle"
+        - text: ""
+    - row /Live for \d+:\d+:\d+/:
+      - cell /Live for \d+:\d+:\d+/
+    - row "Dropped frames question-circle 0 (0.0%)":
+      - cell "Dropped frames question-circle 0 (0.0%)":
+        - text: ""
+        - img "question-circle"
+        - text: ""
+    - row "Dropped per minute question-circle 0":
+      - cell "Dropped per minute question-circle 0":
+        - text: ""
+        - img "question-circle"
+        - text: ""
+    - row "Network congestion question-circle 4":
+      - cell "Network congestion question-circle 4":
+        - text: ""
+        - img "question-circle"
+        - progressbar: 4%
+- img "holder"
+- text: /VK Video Live 💩 Live \d+,\d+ kbps/
+- table:
+  - rowgroup:
+    - row "Source question-circle Plugin":
+      - cell "Source question-circle Plugin":
+        - text: ""
+        - img "question-circle"
+        - text: ""
+    - row /Live for \d+:\d+:\d+/:
+      - cell /Live for \d+:\d+:\d+/
+    - row "Dropped frames question-circle 0 (0.0%)":
+      - cell "Dropped frames question-circle 0 (0.0%)":
+        - text: ""
+        - img "question-circle"
+        - text: ""
+    - row "Dropped per minute question-circle 0":
+      - cell "Dropped per minute question-circle 0":
+        - text: ""
+        - img "question-circle"
+        - text: ""
+    - row "Network congestion question-circle 3":
+      - cell "Network congestion question-circle 3":
+        - text: ""
+        - img "question-circle"
+        - progressbar: 3%
+- status
+- text: OBS
+- table:
+  - rowgroup:
+    - row /Total upload question-circle \d+\.\d+ Mbps FPS question-circle \d+\.\d+/:
+      - cell /Total upload question-circle \d+\.\d+ Mbps/:
+        - text: ""
+        - img "question-circle"
+        - text: ""
+      - cell /FPS question-circle \d+\.\d+/:
+        - text: ""
+        - img "question-circle"
+        - text: ""
+    - row /Frame time 0\.9 ms Encoder skipped question-circle exclamation-circle \d+ \(1\.3%\) · \+\d+ per min/:
+      - cell "Frame time 0.9 ms"
+      - cell /Encoder skipped question-circle exclamation-circle \d+ \(1\.3%\) · \+\d+ per min/:
+        - text: ""
+        - img "question-circle"
+        - img "exclamation-circle"
+        - text: ""
+    - row "Rendering missed question-circle 0 (0.0%) CPU 5.4%":
+      - cell "Rendering missed question-circle 0 (0.0%)":
+        - text: ""
+        - img "question-circle"
+        - text: ""
+      - cell "CPU 5.4%"
+    - row /OBS memory question-circle \d+ MB GPU \(NVIDIA GeForce RTX \d+ SUPER\) question-circle \d+\.\d+%/:
+      - cell /OBS memory question-circle \d+ MB/:
+        - text: ""
+        - img "question-circle"
+        - text: ""
+      - cell /GPU \(NVIDIA GeForce RTX \d+ SUPER\) question-circle \d+\.\d+%/:
+        - text: ""
+        - img "question-circle"
+        - text: ""
+    - row /GPU encoding question-circle \d+\.\d+% Video memory 5\.3 GB/:
+      - cell /GPU encoding question-circle \d+\.\d+%/:
+        - text: ""
+        - img "question-circle"
+        - text: ""
+      - cell "Video memory 5.3 GB"
+    - row /System memory \d+\.\d+ of \d+\.\d+ GB/:
+      - cell /System memory \d+\.\d+ of \d+\.\d+ GB/
+- button "reload Reset graphs":
+  - img "reload"
+  - text: ""

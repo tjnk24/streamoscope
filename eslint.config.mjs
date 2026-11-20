@@ -42,6 +42,8 @@ export default [
             'build',
             'release',
             '.test-stand',
+            'test-results',
+            'playwright-report',
             'config',
             '.claude',
             'eslint.config.mjs',
@@ -72,7 +74,7 @@ export default [
                 },
 
                 warnOnUnsupportedTypeScriptVersion: false,
-                project: ["./tsconfig.json", "./tsconfig.node.json"],
+                project: ["./tsconfig.json", "./tsconfig.node.json", "./e2e/tsconfig.json"],
             },
         },
 
@@ -339,6 +341,13 @@ export default [
 
         rules: {
             "no-console": 0,
+        },
+    },
+    {
+        files: ["e2e/**/*.ts"],
+
+        rules: {
+            "react-hooks/rules-of-hooks": 0,
         },
     },
 ];

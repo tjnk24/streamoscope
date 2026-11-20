@@ -33,6 +33,8 @@ The development server uses `http://localhost:3062` by default. Set `PORT` in `.
 | `npm run stand -- check-plugin` | Warn when obs-multi-rtmp has a newer release than the one the stand pins |
 | `npm run lint` | TypeScript, ESLint, Stylelint and Knip checks |
 | `npm run test:unit` | Run Vitest |
+| `npm run test:e2e` | Build the dock and run the Playwright end-to-end tests in Docker, see below |
+| `npm run test:e2e:update` | The same, but retake the reference screenshots and ARIA snapshots |
 | `npm test` | Lint and unit tests |
 
 The development server keeps its files in memory and leaves `build/` alone. Builds are cached in `node_modules/.cache/webpack`, so a repeat build takes a few seconds; delete that folder if a build ever looks stale.
@@ -45,7 +47,15 @@ The project uses React 19, antd 6, Redux Toolkit, React Router 8, i18next, CSS m
 
 The main OBS destination and plugin outputs already exposed by OBS have cards before streaming starts. Offline cards show a waiting message and their source; live and reconnecting outputs show statistics. The same `main` and `plugin:<output name>` keys keep the saved drag order across state changes. Plugins that create outputs only when streaming starts cannot appear earlier. **Settings → Display** has a switch for the stream cards (`settings.isShowOutputCards`) and one for the OBS card (`settings.isShowGeneralCard`), both on by default; under each switch, while it is on, are checkboxes for the rows of those cards. `settings.hiddenOutputStats` and `settings.hiddenGeneralStats` store the unticked rows (default `[]`, no settings migration), so rows added later appear ticked. The cards themselves have no close button. The drag handle has no hover tooltip.
 
-Before committing UI changes, build with `npm run build:prod`, serve `build/` with the `dock-prod` configuration in `.claude/launch.json`, enable mocks in the isolated browser, and check at 300 and 670 px. Leave the user's running OBS alone.
+Before committing UI changes, run `npm run test:e2e`. For a look of your own, build with `npm run build:prod`, serve `build/` with the `dock-prod` configuration in `.claude/launch.json`, enable mocks in the isolated browser, and check at 300 and 670 px. Leave the user's running OBS alone.
+
+## End-to-end tests
+
+`npm run test:e2e` builds the production dock and opens `build/index.html` from disk, the way OBS does, in Playwright's Chromium at 300 and 670 px. The tests know nothing about the bundler: they need only what `npm run build:prod` leaves in `build/`. Before the page loads they put mock mode, English and the dark colors into its settings, stop the clock and seed `Math.random`, so the mock streams draw the same numbers and graphs on every run. They check that the dock connects to the mock OBS, that the stream cards and the OBS card appear before and after the streams start, that every settings group opens, and that turning mocks off sends the dock looking for the real OBS. Each test fails on a console error, an uncaught exception or any request to the network.
+
+Reference screenshots and ARIA snapshots live next to the specs in `e2e/specs/<spec>/__snapshots__/<width>/`. Fonts render differently on Windows and Linux, so the tests always run in the `mcr.microsoft.com/playwright` image of the same version as `@playwright/test` (`scripts/e2e/runInDocker.ts`), locally and in CI; you need Docker, and no Playwright browser on the host. The first run pulls the image, about 1 GB. After an intended change in the interface, run `npm run test:e2e:update`, look at the new pictures in the diff and commit them with the change. A failed run leaves the report with screenshots, diffs and a trace in `playwright-report/`: `npx playwright show-report` opens it. CI keeps the same report for a week.
+
+Nothing here touches a real OBS: the stand covers that.
 
 ## Releases and signed updates
 

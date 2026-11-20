@@ -59,6 +59,7 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
 
     return (
         <Card
+            data-testid="output-card"
             size="small"
             classNames={{
                 root: cn(style.card, {[style.dragging]: isDragging}),

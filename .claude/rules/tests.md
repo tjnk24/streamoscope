@@ -4,6 +4,8 @@ paths:
   - "**/*.test.ts"
   - "**/*.test.tsx"
   - "**/*.Tests.ps1"
+  - "e2e/**"
+  - "playwright.config.ts"
 ---
 
 # Тесты
@@ -21,6 +23,16 @@ paths:
   - Один слайс - `vi.mocked(useSelector).mockReturnValue({...})`; несколько - `mockImplementation((selector: (state: BaseStore) => unknown) => selector(state))` с состоянием из `tests/consts.ts` (`STATE`, варианты - константа `state` в тесте: `...STATE` и `update: {...STATE.update, request}` - каждое на своей строке).
   - Переводы - `vi.mock('react-i18next', ...)`: `useTranslation` отдаёт `t: (key: string) => key` и `i18n: {language: 'en'}`, объекты по строкам; тест сверяет ключи. Образец - `update-settings/hooks/tests/useUpdateSettingsView.test.ts`.
   - Время - `vi.setSystemTime`, версия панели - `vi.stubEnv('APP_VERSION', ...)` в `beforeAll`; в `afterAll` - `vi.useRealTimers` и `vi.unstubAllEnvs`.
+
+## E2e панели (Playwright, `npm run test:e2e`)
+
+- Как устроено и почему так - `docs/internals/testing.md`, «E2e панели». Запуск - только `npm run test:e2e` (сборка и Docker); `npx playwright test` на Windows даст другие шрифты. Задание CI - `e2e` в `ci.yml`.
+- **Раскладка**: `e2e/specs/<сценарий>/{<сценарий>.spec.ts, consts.ts, __snapshots__/<проект>/}`, страницы - `e2e/pages/<Имя>.ts` (класс: локаторы - `readonly` поля из конструктора, действия - стрелочные поля, без проверок), общее - `e2e/{fixtures,consts,types}.ts`, функции для страницы (`addInitScript`) - `e2e/utils/` по одной на файл. Импорт снаружи папки - алиас `__e2e/*` (`e2e/tsconfig.json`: Node и DOM вместе, лежит в папке, чтобы VS Code нашёл его сам; knip знает его из своих `paths`).
+- **Page object из фикстуры**, не синглтон: у каждого теста своя `page`. Новая страница - класс в `pages/` и поле в `DockFixturesDto` и `test.extend`.
+- **Тест - сценарий пользователя**, шаги - `test.step` с названием по смыслу, тесты друг от друга не зависят, повторов нет (`retries: 0`). Проверки - `expect` в спеке, с подписью у проверок в цикле (`expect(card, 'the live card "X"')`).
+- **Локаторы - по роли и подписи** (`getByRole`, `getByText` с `exact`), английский интерфейс. Классы CSS-модулей и antd не используем. Нет роли и подписи - `data-testid` в разметке панели (`output-card`, `general-card`), только там, где без него никак.
+- **Время - только `page.clock.runFor`**, `waitForTimeout` не пишем. Ожидание после действия с анимацией antd (тост, группа настроек) - `runFor` на время анимации.
+- **Снимки**: `toHaveScreenshot` с `fullPage` после `scrollToTop` (липкая шапка иначе ляжет посередине), ARIA - `toMatchAriaSnapshot` с именем. В снимок не попадает то, что меняется с коммитом: версия и метка сборки в «Обновлениях» (группу перед снимком сворачиваем). Поменял интерфейс нарочно - `npm run test:e2e:update` и новые эталоны в том же коммите, глазами по диффу.
 
 ## Установщик (Pester 5+, `npm run test:installer`)
 

@@ -28,6 +28,7 @@ const GeneralCard = () => {
 
     return (
         <Card
+            data-testid="general-card"
             size="small"
             title={(
                 <EnhancedText>

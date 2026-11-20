@@ -5,3 +5,5 @@ release/
 .test-stand/
 .dev-journal/
 .claude/settings.local.json
+test-results/
+playwright-report/

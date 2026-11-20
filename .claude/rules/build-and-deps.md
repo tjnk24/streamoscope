@@ -17,8 +17,8 @@ paths:
 - **`eslint.config.mjs` - только родные flat-конфиги** пакетов (`js.configs.recommended`, `react.configs.flat.recommended`, `tseslint.configs.recommendedTypeChecked`, `jsxA11y.flatConfigs.recommended`), без прослоек `FlatCompat` и `fixupPluginRules`. Правила импорта - `eslint-plugin-import-x` с префиксом `import-x/`, `@typescript-eslint/*` - из пакета `typescript-eslint`. Меняя конфиг, сверяем `npx eslint --print-config <файл>` до и после.
 - **`tsconfig.json`**: `moduleResolution: "bundler"` без `baseUrl`, `strict` без поблажек плюс `noImplicitReturns`, `noFallthroughCasesInSwitch`, `isolatedModules` (swc компилирует по файлу), `noEmit` (`tsc` только проверяет).
   - `.d.ts` - только в корневой `typings/`. TypeScript 6 не подключает `@types/*` сам, поэтому `process.env` от webpack описан в `typings/process.d.ts`.
-  - Код сборки (`webpack.config.ts`, `webpack/`, `scripts/`) проверяет `tsconfig.node.json` с типами Node, `lint:tsc` запускает оба, в `src` типов Node нет.
-- **Eslint проверяет весь репозиторий** (`lint:src` - `eslint .`) с типами из обоих tsconfig (`parserOptions.project`): новый `.ts` вне `src` должен попасть в `include` одного из них, иначе хук упадёт с «file was not found in any of the provided project(s)». В `scripts/` разрешён `console`.
+  - Код сборки (`webpack.config.ts`, `webpack/`, `scripts/`) проверяет `tsconfig.node.json` с типами Node, e2e (`e2e/`, `playwright.config.ts`) - `e2e/tsconfig.json` с Node и DOM вместе (функции для `addInitScript` выполняются в странице) и алиасом `__e2e/*`; `lint:tsc` запускает все три, в `src` типов Node нет.
+- **Eslint проверяет весь репозиторий** (`lint:src` - `eslint .`) с типами из всех трёх tsconfig (`parserOptions.project`): новый `.ts` вне `src` должен попасть в `include` одного из них, иначе хук упадёт с «file was not found in any of the provided project(s)». В `scripts/` разрешён `console`, в `e2e/` выключено `react-hooks/rules-of-hooks` (аргумент `use` фикстур Playwright - не хук React).
 
 ## Webpack
 
