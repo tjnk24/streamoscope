@@ -1,24 +1,11 @@
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import _import from 'eslint-plugin-import';
-import eslintComments from 'eslint-plugin-eslint-comments';
+import js from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
+import importX from 'eslint-plugin-import-x';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
-import {fixupPluginRules} from '@eslint/compat';
 import globals from 'globals';
-import tsParser from '@typescript-eslint/parser';
-import path from 'node:path';
-import {fileURLToPath} from 'node:url';
-import js from '@eslint/js';
-import {FlatCompat} from '@eslint/eslintrc';
-import stylistic from '@stylistic/eslint-plugin'
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
-});
+import tseslint from 'typescript-eslint';
 
 const importColumnRule = {
     meta: {type: 'layout', fixable: 'whitespace', schema: []},
@@ -46,14 +33,10 @@ const importColumnRule = {
 };
 
 export default [
-    ...compat.extends(
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "plugin:jsx-a11y/recommended",
-    ),
+    js.configs.recommended,
+    react.configs.flat.recommended,
+    ...tseslint.configs.recommendedTypeChecked,
+    jsxA11y.flatConfigs.recommended,
     {
         ignores: [
             'build',
@@ -66,11 +49,8 @@ export default [
     },
     {
         plugins: {
-            "@typescript-eslint": typescriptEslint,
-            import: fixupPluginRules(_import),
-            "eslint-comments": eslintComments,
-            react,
-            "react-hooks": fixupPluginRules(reactHooks),
+            "import-x": importX,
+            "react-hooks": reactHooks,
             '@stylistic': stylistic,
             streamoscope: {
                 rules: {'import-column': importColumnRule},
@@ -82,7 +62,7 @@ export default [
                 ...globals.node,
             },
 
-            parser: tsParser,
+            parser: tseslint.parser,
             ecmaVersion: 2018,
             sourceType: "module",
 
@@ -97,10 +77,6 @@ export default [
         },
 
         settings: {
-            "import/parsers": {
-                "@typescript-eslint/parser": [".ts", ".tsx"],
-            },
-
             react: {
                 version: "detect",
             },
@@ -122,9 +98,9 @@ export default [
 
             quotes: ["error", "single"],
             "jsx-quotes": ["error", "prefer-double"],
-            "import/no-extraneous-dependencies": 0,
+            "import-x/no-extraneous-dependencies": 0,
 
-            "import/newline-after-import": ["error", {
+            "import-x/newline-after-import": ["error", {
                 count: 1,
             }],
 
@@ -305,11 +281,11 @@ export default [
             }],
 
             "react/jsx-curly-brace-presence": "error",
-            "import/no-anonymous-default-export": 0,
+            "import-x/no-anonymous-default-export": 0,
             "react-hooks/rules-of-hooks": 2,
             "react-hooks/exhaustive-deps": 2,
 
-            "import/order": ["warn", {
+            "import-x/order": ["warn", {
                 groups: [["builtin", "external"], "internal", "parent", "sibling", "index"],
 
                 pathGroups: [{

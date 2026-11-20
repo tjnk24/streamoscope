@@ -6,13 +6,15 @@ paths:
   - "tsconfig*.json"
   - "webpack.config.ts"
   - "webpack/**"
+  - "eslint.config.mjs"
 ---
 
 # Сборка и зависимости
 
 ## TypeScript и eslint
 
-- **Версии, которые держим:** eslint и `@eslint/js` - 9, пока `eslint-plugin-import`, `eslint-plugin-react` и `eslint-plugin-jsx-a11y` не поддержат 10; TypeScript - 6.0, пока `typescript-eslint` не поддержит 7 (в TypeScript 7 нет классического API компилятора).
+- **Версии, которые держим:** eslint и `@eslint/js` - 9, пока `eslint-plugin-react` и `eslint-plugin-jsx-a11y` не поддержат 10; TypeScript - 6.0, пока `typescript-eslint` не поддержит 7 (в TypeScript 7 нет классического API компилятора).
+- **`eslint.config.mjs` - только родные flat-конфиги** пакетов (`js.configs.recommended`, `react.configs.flat.recommended`, `tseslint.configs.recommendedTypeChecked`, `jsxA11y.flatConfigs.recommended`), без прослоек `FlatCompat` и `fixupPluginRules`. Правила импорта - `eslint-plugin-import-x` с префиксом `import-x/`, `@typescript-eslint/*` - из пакета `typescript-eslint`. Меняя конфиг, сверяем `npx eslint --print-config <файл>` до и после.
 - **`tsconfig.json`**: `moduleResolution: "bundler"` без `baseUrl`, `strict` без поблажек плюс `noImplicitReturns`, `noFallthroughCasesInSwitch`, `isolatedModules` (swc компилирует по файлу), `noEmit` (`tsc` только проверяет).
   - `.d.ts` - только в корневой `typings/`. TypeScript 6 не подключает `@types/*` сам, поэтому `process.env` от webpack описан в `typings/process.d.ts`.
   - Код сборки (`webpack.config.ts`, `webpack/`, `scripts/`) проверяет `tsconfig.node.json` с типами Node, `lint:tsc` запускает оба, в `src` типов Node нет.
