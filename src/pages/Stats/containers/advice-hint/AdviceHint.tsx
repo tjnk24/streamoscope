@@ -1,5 +1,6 @@
 import {ExclamationCircleFilled} from '@ant-design/icons';
 import {Tooltip, Typography} from 'antd';
+import cn from 'classnames';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
@@ -13,10 +14,14 @@ import {Props} from './types';
 
 import style from './style.module.scss';
 
-const AdviceIcon = ({advice}: Props) => {
+const AdviceHint = ({advice, isShown, isHighlighted = true, children}: Props) => {
     const [isTooltipOpen, setIsTooltipOpen] = useState(false);
 
     const {t} = useTranslation();
+
+    if (!isShown) {
+        return children;
+    }
 
     const {textKey} = ADVICE_TEXTS[advice];
 
@@ -45,9 +50,13 @@ const AdviceIcon = ({advice}: Props) => {
             )}
             onOpenChange={setIsTooltipOpen}
         >
-            <ExclamationCircleFilled className={style.icon}/>
+            <span className={cn(style.trigger, {[style.highlighted]: isHighlighted})}>
+                <ExclamationCircleFilled className={style.icon}/>
+
+                {children}
+            </span>
         </Tooltip>
     );
 };
 
-export default AdviceIcon;
+export default AdviceHint;

@@ -11,7 +11,7 @@ import {StatItemDto} from '../../../components/stat-list';
 import {formatFixed} from '../../../utils/formatFixed';
 import {formatGigabytes} from '../../../utils/formatGigabytes';
 import {formatMemory} from '../../../utils/formatMemory';
-import AdviceIcon from '../../advice-icon';
+import AdviceHint from '../../advice-hint';
 import {KILOBITS_IN_MEGABIT, MIN_TOTAL_BITRATE_STREAMS} from '../consts';
 import {getFpsLevel} from '../utils/getFpsLevel';
 import {getTotalBitrate} from '../utils/getTotalBitrate';
@@ -67,11 +67,12 @@ export const useItems = (): StatItemDto<GeneralStatKeyEnum>[] => {
             hint: t('general.hints.encoding'),
             value: view
                 ? (
-                    <>
-                        {view.advices.includes(EncodingAdvice) && <AdviceIcon advice={EncodingAdvice}/>}
-
+                    <AdviceHint
+                        advice={EncodingAdvice}
+                        isShown={view.advices.includes(EncodingAdvice)}
+                    >
                         <LagValue lag={view.encoding}/>
-                    </>
+                    </AdviceHint>
                 )
                 : '—',
         },
@@ -81,11 +82,12 @@ export const useItems = (): StatItemDto<GeneralStatKeyEnum>[] => {
             hint: t('general.hints.rendering'),
             value: view
                 ? (
-                    <>
-                        {view.advices.includes(RenderingAdvice) && <AdviceIcon advice={RenderingAdvice}/>}
-
+                    <AdviceHint
+                        advice={RenderingAdvice}
+                        isShown={view.advices.includes(RenderingAdvice)}
+                    >
                         <LagValue lag={view.rendering}/>
-                    </>
+                    </AdviceHint>
                 )
                 : '—',
         },

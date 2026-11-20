@@ -10,6 +10,10 @@ Plugins often introduce their streams to OBS only when they start, so until some
 
 If a plugin target streams with the same key as the main OBS stream, its card says so. Either the platform gets two streams on one key and they trip over each other, or the main stream was copied into the plugin by mistake. Only the keys are compared, so a different server of the same platform doesn't hide the copy (Twitch on **Auto** in OBS, an address typed into the plugin). obs-multi-rtmp targets get the warning before they start, other plugins once they go live. Needs the bridge.
 
+## 🚨 Trouble you can't miss
+
+When a value gets its red advice icon (dropped frames, network congestion, an overloaded encoder, rendering lag), the value itself turns red and blinks for a few seconds, then stays red until the trouble passes. Glance away mid-stream and it is still red when you look back. Hover anywhere on the value, icon included, for what to do about it. With animations turned off in Windows, the value turns red without blinking.
+
 ## 🧲 Your streams, your order
 
 Drag a stream card by its header (the dotted handle shows up once there are two cards to sort) and the dock remembers where you put it. Until you do, the main OBS stream comes first. Changed your mind? Drag them back.

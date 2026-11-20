@@ -20,7 +20,7 @@ import {StatItemDto} from '../../../components/stat-list';
 import {formatNumber} from '../../../utils/formatNumber';
 import {formatPercent} from '../../../utils/formatPercent';
 import {formatTimecode} from '../../../utils/formatTimecode';
-import AdviceIcon from '../../advice-icon';
+import AdviceHint from '../../advice-hint';
 import {HEALTH_TAGS, PLATFORM_MARKS} from '../consts';
 import style from '../style.module.scss';
 import {OutputCardViewDto} from '../types';
@@ -116,11 +116,12 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
             level: isActive ? level : Off,
             value: isActive
                 ? (
-                    <>
-                        {advices.includes(DroppedFrames) && <AdviceIcon advice={DroppedFrames}/>}
-
+                    <AdviceHint
+                        advice={DroppedFrames}
+                        isShown={advices.includes(DroppedFrames)}
+                    >
                         {recentValue}
-                    </>
+                    </AdviceHint>
                 )
                 : '—',
         },
@@ -132,9 +133,12 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
             value: isActive
                 ? (
                     <span className={style.congestionValue}>
-                        {advices.includes(CongestionAdvice) && <AdviceIcon advice={CongestionAdvice}/>}
-
-                        <CongestionProgress value={congestion}/>
+                        <AdviceHint
+                            advice={CongestionAdvice}
+                            isShown={advices.includes(CongestionAdvice)}
+                        >
+                            <CongestionProgress value={congestion}/>
+                        </AdviceHint>
                     </span>
                 )
                 : '—',

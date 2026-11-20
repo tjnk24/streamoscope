@@ -1,0 +1,45 @@
+.trigger {
+    white-space: nowrap;
+    cursor: help;
+}
+
+.trigger.highlighted {
+    color: var(--ant-color-error-text);
+    animation: advice-blink 0.5s ease-in-out 12 alternate;
+}
+
+.trigger.highlighted * {
+    color: inherit;
+}
+
+.icon {
+    margin-inline-end: var(--ant-margin-xs);
+    color: var(--ant-color-error);
+}
+
+@keyframes advice-blink {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0.3;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .trigger.highlighted {
+        animation: none;
+    }
+}
+
+.tooltip .whatToDo {
+    color: var(--ant-yellow-7);
+    font-weight: var(--ant-font-weight-strong);
+    text-decoration: underline;
+    white-space: nowrap;
+}
+
+.tooltip .whatToDo:hover {
+    color: var(--ant-yellow);
+}

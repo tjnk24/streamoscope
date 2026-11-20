@@ -18,7 +18,7 @@ import BitrateGraph from '../../components/bitrate-graph';
 import CardHeading from '../../components/card-heading';
 import StatList from '../../components/stat-list';
 import {formatNumber} from '../../utils/formatNumber';
-import AdviceIcon from '../advice-icon';
+import AdviceHint from '../advice-hint';
 
 import {useOutputCardView} from './hooks/useOutputCardView';
 import {Props} from './types';
@@ -82,16 +82,20 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
             )}
             extra={(
                 <Flex align="center">
-                    {hasReconnectAdvice && <AdviceIcon advice={AdviceEnum.Reconnecting}/>}
-
-                    {isStatusShown && (
-                        <Tag
-                            color={healthTag.color}
-                            variant={healthTag.variant}
-                        >
-                            {t(statusKey)}
-                        </Tag>
-                    )}
+                    <AdviceHint
+                        advice={AdviceEnum.Reconnecting}
+                        isShown={hasReconnectAdvice}
+                        isHighlighted={false}
+                    >
+                        {isStatusShown && (
+                            <Tag
+                                color={healthTag.color}
+                                variant={healthTag.variant}
+                            >
+                                {t(statusKey)}
+                            </Tag>
+                        )}
+                    </AdviceHint>
                 </Flex>
             )}
         >
