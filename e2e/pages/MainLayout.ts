@@ -1,6 +1,11 @@
-import type {Locator, Page} from '@playwright/test';
+import {
+    expect,
+    type Locator,
+    type Page,
+} from '@playwright/test';
 
 import {
+    ANIMATION_CLOCK_STEP_MS,
     DOCK_URL,
     FIRST_POLL_WAIT_MS,
     TOAST_CLOSE_WAIT_MS,
@@ -50,6 +55,20 @@ export class MainLayout {
     closeUpdatedToast = async () => {
         await this.updatedToast.getByRole('button', {name: 'Close'}).click();
 
-        await this.page.clock.runFor(TOAST_CLOSE_WAIT_MS);
+        let clockAdvancedMs = 0;
+
+        await expect(async () => {
+            if (clockAdvancedMs < TOAST_CLOSE_WAIT_MS) {
+                await this.page.clock.runFor(ANIMATION_CLOCK_STEP_MS);
+
+                clockAdvancedMs += ANIMATION_CLOCK_STEP_MS;
+            }
+
+            await expect(this.updatedToast).toBeHidden({timeout: ANIMATION_CLOCK_STEP_MS});
+        }).toPass();
+
+        if (clockAdvancedMs < TOAST_CLOSE_WAIT_MS) {
+            await this.page.clock.runFor(TOAST_CLOSE_WAIT_MS - clockAdvancedMs);
+        }
     };
 }
