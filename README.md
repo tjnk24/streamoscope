@@ -168,6 +168,12 @@ Or compare the hash with `SHA256SUMS.txt` from the release:
 Get-FileHash .\streamoscope-setup-<version>.exe -Algorithm SHA256
 ```
 
+Releases after 0.15.1 also carry a GitHub build attestation: proof that the file came out of this repository's release workflow and not off someone's laptop. With the [GitHub CLI](https://cli.github.com/):
+
+```powershell
+gh attestation verify .\streamoscope-setup-<version>.exe --repo tjnk24/streamoscope
+```
+
 Put your version in place of `<version>`.
 
 ## 🔨 Build from source

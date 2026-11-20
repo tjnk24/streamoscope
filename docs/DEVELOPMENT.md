@@ -37,6 +37,8 @@ The development server uses `http://localhost:3062` by default. Set `PORT` in `.
 
 The development server keeps its files in memory and leaves `build/` alone. Builds are cached in `node_modules/.cache/webpack`, so a repeat build takes a few seconds; delete that folder if a build ever looks stale.
 
+Dependencies are updated by hand, in one batch about once a year. Dependabot only watches for vulnerabilities: a repository rule opens a pull request for a high or critical advisory in a package that ends up in the dock, and alerts for development tools are dismissed, since those never reach anyone's OBS. There is no `dependabot.yml`, on purpose. Workflows pin every action to a commit hash; `gh api repos/<owner>/<action>/commits/<tag> --jq .sha` gives the hash for a new version. CI installs with `npm ci --engine-strict`, so a package that does not run on the Node version from `.nvmrc` fails the build instead of sneaking in.
+
 The project uses React 19, antd 6, Redux Toolkit, React Router 8, i18next, CSS modules, webpack and swc. Development conventions are in [`CLAUDE.md`](../CLAUDE.md), `.claude/rules` and `docs/internals` (in Russian).
 
 ## Card display checks
@@ -63,7 +65,7 @@ flowchart TB
   end
   subgraph workflow["release.yml on GitHub Actions"]
     direction LR
-    build["build, Windows<br>version and notes check,<br>npm test, Pester,<br>package:installer"] --> approve{{"A human<br>approves publish"}} --> publish["publish, Linux<br>minisign signs and verifies,<br>SHA256SUMS.txt,<br>compatibility comment"]
+    build["build, Windows<br>version and notes check,<br>npm test, Pester,<br>package:installer"] --> approve{{"A human<br>approves publish"}} --> publish["publish, Linux<br>minisign signs and verifies,<br>SHA256SUMS.txt,<br>build attestation,<br>compatibility comment"]
   end
   local --> workflow
   workflow --> release["GitHub Release<br>StreamoScope vX.Y.Z"]
@@ -80,6 +82,8 @@ The `v*` tag triggers the GitHub Actions release workflow: build, test, sign and
 | `compatibility.json` | OBS, WebSocket, Chromium and bridge compatibility information |
 | `.minisig` files | Signatures for released assets |
 | `SHA256SUMS.txt` | Checksums for the installer and archive |
+
+The `publish` job also records a GitHub build attestation for the installer, the archive and `compatibility.json`. It lives in GitHub rather than among the assets, and `gh attestation verify <file> --repo tjnk24/streamoscope` checks it. Releases up to 0.15.1 predate it.
 
 The workflow appends a machine-readable `<!-- compatibility: {...} -->` comment to the published release notes; the dock reads it to decide whether an update is compatible. **Don't remove or rewrite it when editing the release on GitHub.**
 
@@ -199,4 +203,4 @@ Close OBS before installation or removal. Removal asks for confirmation first an
 
 Since 0.7.0 the uninstaller is thin. It runs `configure-obs.ps1` of the current version, so what removal takes out of OBS and which data it deletes arrive with background updates. Only the uninstaller itself, with its windows and a fallback list of files, comes from the last installer that ran. Installs set up by an older installer keep their old removal until a newer installer runs once.
 
-The Windows executable does **not** currently have an Authenticode signature. Release assets are protected separately with minisign signatures, and the README explains how to verify manual downloads.
+The Windows executable does **not** currently have an Authenticode signature. Release assets are protected separately with minisign signatures and GitHub build attestations, and the README explains how to verify manual downloads.

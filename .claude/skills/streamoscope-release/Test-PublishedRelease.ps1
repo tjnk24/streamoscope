@@ -92,6 +92,12 @@ foreach ($fileName in $signedFiles) {
     $verifyExitCode = $LASTEXITCODE
     $ErrorActionPreference = 'Stop'
     Write-CheckResult -IsOk ($verifyExitCode -eq 0) -Text "minisign signature of $fileName matches minisign.pub"
+
+    $ErrorActionPreference = 'Continue'
+    & gh attestation verify $filePath --repo $repositoryName --signer-workflow "$repositoryName/.github/workflows/release.yml" --source-ref "refs/tags/$tag" 2>$null | Out-Null
+    $attestationExitCode = $LASTEXITCODE
+    $ErrorActionPreference = 'Stop'
+    Write-CheckResult -IsOk ($attestationExitCode -eq 0) -Text "build attestation of $fileName comes from release.yml at $tag"
 }
 
 $checksumsPath = Join-Path $DownloadDirectory 'SHA256SUMS.txt'

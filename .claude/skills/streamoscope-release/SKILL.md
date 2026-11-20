@@ -1,6 +1,6 @@
 ---
 name: streamoscope-release
-description: Release a new StreamoScope version end to end - choose the version number, prepare screenshots and README, write docs/release-notes/<version>.md, run npm version, push the tag only after the user confirms, wait for the user to approve the publish job, then verify the published GitHub release (minisign signatures, SHA256SUMS.txt, compatibility comment, assets) and update project memory. Use when the user asks to release, publish, ship, tag or hotfix a version, or asks what is left before a release.
+description: Release a new StreamoScope version end to end - choose the version number, prepare screenshots and README, write docs/release-notes/<version>.md, run npm version, push the tag only after the user confirms, wait for the user to approve the publish job, then verify the published GitHub release (minisign signatures, build attestations, SHA256SUMS.txt, compatibility comment, assets) and update project memory. Use when the user asks to release, publish, ship, tag or hotfix a version, or asks what is left before a release.
 ---
 
 # StreamoScope release
@@ -56,7 +56,7 @@ Run the check into a fresh folder in the scratchpad:
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File "${CLAUDE_SKILL_DIR}\Test-PublishedRelease.ps1" -Version X.Y.Z -DownloadDirectory "<scratchpad>\release-X.Y.Z"
 ```
 
-It checks: published and not a prerelease, GitHub's latest release is this tag, exactly the seven assets (`streamoscope-setup-X.Y.Z.exe`, `streamoscope-X.Y.Z.zip`, `compatibility.json`, their `.minisig`, `SHA256SUMS.txt`), the notes start with `docs/release-notes/X.Y.Z.md` and end with the compatibility comment equal to `compatibility.json`, minisign signatures against `minisign.pub`, `SHA256SUMS.txt` for the installer and the zip, the zip has the top folder `streamoscope-X.Y.Z/` and every file of `RequiredPackageFiles`. Expected: `failures: 0`. It needs `gh` signed in and `minisign` (on PATH, or the copy that `npm run package:installer` caches, or the installed updater's).
+It checks: published and not a prerelease, GitHub's latest release is this tag, exactly the seven assets (`streamoscope-setup-X.Y.Z.exe`, `streamoscope-X.Y.Z.zip`, `compatibility.json`, their `.minisig`, `SHA256SUMS.txt`), the notes start with `docs/release-notes/X.Y.Z.md` and end with the compatibility comment equal to `compatibility.json`, minisign signatures against `minisign.pub`, GitHub build attestations of the same three files made by `release.yml` at this tag (`gh attestation verify`; releases up to 0.15.1 have none), `SHA256SUMS.txt` for the installer and the zip, the zip has the top folder `streamoscope-X.Y.Z/` and every file of `RequiredPackageFiles`. Expected: `failures: 0`. It needs `gh` signed in and `minisign` (on PATH, or the copy that `npm run package:installer` caches, or the installed updater's).
 
 A failure means people may get a broken update within 48 hours: tell the user at once, with the failed line.
 
