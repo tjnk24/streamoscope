@@ -1,9 +1,12 @@
+import fs from 'node:fs';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 
-import type {SettingsInitDto} from './types';
+import type {PackageJsonDto, SettingsInitDto} from './types';
 
 export const DOCK_URL = pathToFileURL(path.resolve('build/index.html')).href;
+
+export const DOCK_VERSION = (JSON.parse(fs.readFileSync(path.resolve('package.json'), 'utf8')) as PackageJsonDto).version;
 
 export const SETTINGS_INIT: SettingsInitDto = {
     storageKey: 'streamoscope.settings',
@@ -26,7 +29,9 @@ export const RANDOM_SEED = 20260105;
 
 export const FIRST_POLL_WAIT_MS = 2000;
 
-export const TOAST_CLOSE_WAIT_MS = 1000;
+export const STREAMS_START_WAIT_MS = 20_000;
+
+export const ANIMATION_WAIT_MS = 1000;
 
 export const ANIMATION_CLOCK_STEP_MS = 250;
 

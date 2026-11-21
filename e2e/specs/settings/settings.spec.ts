@@ -1,6 +1,6 @@
 import {expect, test} from '__e2e/fixtures';
 
-import {ANIMATION_WAIT_MS, SETTINGS_GROUPS} from './consts';
+import {SETTINGS_GROUPS} from './consts';
 
 test('a streamer opens the settings and goes through every group', async ({page, mainLayout, settingsPage}) => {
     await test.step('the settings open from the header', async () => {
@@ -17,8 +17,6 @@ test('a streamer opens the settings and goes through every group', async ({page,
         for (const group of SETTINGS_GROUPS) {
             await settingsPage.setGroupExpanded(group, true);
 
-            await page.clock.runFor(ANIMATION_WAIT_MS);
-
             await expect(settingsPage.groupHeader(group), `the group "${group}"`).toHaveAttribute('aria-expanded', 'true');
         }
 
@@ -27,8 +25,6 @@ test('a streamer opens the settings and goes through every group', async ({page,
 
     await test.step('the groups look as before, without Updates: its version line changes with every commit', async () => {
         await settingsPage.setGroupExpanded('Updates', false);
-
-        await page.clock.runFor(ANIMATION_WAIT_MS);
 
         await settingsPage.scrollToTop();
 

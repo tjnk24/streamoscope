@@ -15,6 +15,19 @@ export type SettingsInitDto = {
     settings: MockSettingsDto;
 };
 
+export type PackageJsonDto = {
+    version: string;
+};
+
+export type GithubReleaseStubDto = {
+    tag_name: string;
+    draft: boolean;
+    prerelease: boolean;
+    body: string;
+    html_url: string;
+    published_at: string;
+};
+
 export type DockOptionsDto = {
     expectedConsoleError: RegExp | null;
 };

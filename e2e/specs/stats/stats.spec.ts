@@ -1,10 +1,7 @@
+import {STREAMS_START_WAIT_MS} from '__e2e/consts';
 import {expect, test} from '__e2e/fixtures';
 
-import {
-    LIVE_CARD_TITLES,
-    STREAMS_START_WAIT_MS,
-    WAITING_CARD_TITLES,
-} from './consts';
+import {LIVE_CARD_TITLES, WAITING_CARD_TITLES} from './consts';
 
 test('a streamer opens the dock with mocks and goes live', async ({page, mainLayout, statsPage}) => {
     await test.step('the dock connects to the mock OBS and greets with the update toast', async () => {
