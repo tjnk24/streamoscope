@@ -23,6 +23,10 @@ export class SettingsPage {
 
     readonly autoUpdateSwitch: Locator;
 
+    readonly whatsNewButton: Locator;
+
+    readonly releaseNotes: Locator;
+
     readonly copyDiagnosticsButton: Locator;
 
     readonly journalSwitch: Locator;
@@ -53,6 +57,10 @@ export class SettingsPage {
         this.checkUpdatesButton = page.getByRole('button', {name: /Check for updates$/});
 
         this.autoUpdateSwitch = page.getByRole('switch', {name: /^Update automatically/});
+
+        this.whatsNewButton = page.getByRole('button', {name: 'What\'s new', exact: true});
+
+        this.releaseNotes = page.getByRole('dialog').filter({hasText: 'What\'s new in'});
 
         this.copyDiagnosticsButton = page.getByRole('button', {name: /(Copy diagnostics|Copied)$/});
 

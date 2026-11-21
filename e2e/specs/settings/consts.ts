@@ -38,6 +38,26 @@ export const NEWER_RELEASE: GithubReleaseStubDto = {
     html_url: `https://github.com/tjnk24/streamoscope/releases/tag/v${NEWER_VERSION}`,
 };
 
+export const RELEASES_URL_PATTERN = /^https:\/\/api\.github\.com\/repos\/tjnk24\/streamoscope\/releases\?/;
+
+export const RELEASE_WITH_NOTES: GithubReleaseStubDto = {
+    ...CURRENT_RELEASE,
+    body: [
+        '## Fixes',
+        '',
+        '- The cards keep their order',
+        '- See the [release page](https://github.com/tjnk24/streamoscope/releases)',
+        '',
+        '> Run the installer once.',
+        '',
+        '---',
+        '',
+        '## Исправления',
+        '',
+        '- Карточки помнят порядок',
+    ].join('\n'),
+};
+
 export const CORS_HEADERS = {'access-control-allow-origin': '*'};
 
 export const SERVER_ADDRESS_PATTERN = /(rtmps?|srt|rist):\/\/|mycdn\.me|vkvideo\.ru|goodgame\.ru|youtube\.com|live-video\.net/;

@@ -35,4 +35,8 @@ export const ANIMATION_WAIT_MS = 1000;
 
 export const ANIMATION_CLOCK_STEP_MS = 250;
 
+export const CARD_DRAG_START_SHIFT = 20;
+
+export const CARD_DRAG_STEPS = 10;
+
 export const NETWORK_REQUEST_PATTERN = /^https?:\/\//;
