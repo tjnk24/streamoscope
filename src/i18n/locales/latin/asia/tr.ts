@@ -200,7 +200,7 @@ export const tr: TranslationDto = {
         retry: 'Yeniden dene',
         installerNeeded: 'Bazı düzeltmeler yalnızca kurulum programıyla gelir. İndirip çalıştırın: yeni sürümü eskisinin üzerine kurar; ayarlarınız, günlük ve OBS olduğu gibi kalır.',
         downloadInstaller: 'Kurulum programını indir',
-        noUpdater: 'Otomatik güncellemeler yalnızca StreamoScope kurulum programıyla kurulduysa ve bu sahne koleksiyonunda {{script}} betiği yüklüyse çalışır. Şimdilik yeni sürümü elle kurabilirsiniz.',
+        noUpdater: 'Otomatik güncellemeler yalnızca StreamoScope kurulum programıyla ya da taşınabilir arşivden kurulduysa ve bu sahne koleksiyonunda {{script}} betiği yüklüyse çalışır. Sürüm sayfasından ikisinden birini indirin, sonraki sürümler kendiliğinden kurulur.',
         stages: {
             preparing: 'Hazırlanıyor…',
             downloading: 'İndiriliyor… %{{percent}}',

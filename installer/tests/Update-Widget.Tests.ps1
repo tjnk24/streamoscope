@@ -337,6 +337,18 @@ Describe 'Set-UninstallDisplayVersion' {
 
         $script:UninstallRegistryKey | Should -BeLike "*\{$appId}_is1"
     }
+
+    It 'leaves the registry alone for a portable install without an uninstall entry' {
+        $installerKey = $script:UninstallRegistryKey
+        $script:UninstallRegistryKey = 'HKCU:\Software\StreamoScopeTestsMissing\Uninstall'
+
+        try {
+            { Set-UninstallDisplayVersion -Version '0.2.0' } | Should -Not -Throw
+            Test-Path -LiteralPath 'HKCU:\Software\StreamoScopeTestsMissing' | Should -BeFalse
+        } finally {
+            $script:UninstallRegistryKey = $installerKey
+        }
+    }
 }
 
 Describe 'Update-Widget.ps1' {

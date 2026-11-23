@@ -13,6 +13,7 @@ Something off with the dock or with a stream? Start here. Settings and privacy a
 | Installer didn't configure OBS | See `%LOCALAPPDATA%\streamoscope\configure-obs.log`; rerun with OBS closed. Never opened OBS on this PC? Open it once, close it, then rerun the installer; you might need to turn on its WebSocket server yourself |
 | Installer takes long at **Setting up OBS...** | It normally takes seconds, even with dozens of scene collections. After three minutes it asks whether to keep waiting; if you stop it, rerun it with OBS closed or set OBS up as in [Manual installation](../README.md#-manual--portable-installation) |
 | Dock asks to run the installer | Close OBS and run the latest `streamoscope-setup-<version>.exe` over your install; settings and the journal stay |
+| Dock says automatic updates need the installer or the portable archive | Either the bridge isn't loaded in this scene collection, or StreamoScope runs from the plain `streamoscope-<version>.zip`, which has no updater. Add the script, or switch to the portable archive as in [Manual installation](../README.md#-manual--portable-installation) |
 | An update says the new version didn't start and went back | If OBS opens the dock slowly, versions up to 0.10.0 can mistake that for a broken start. Close OBS and run the latest `streamoscope-setup-<version>.exe` once: it installs without that check, and from there on updates wait for a slow dock |
 
 ## 🩺 Stream problems

@@ -200,7 +200,7 @@ export const ko: TranslationDto = {
         retry: '다시 시도',
         installerNeeded: '일부 수정은 설치 프로그램으로만 적용됩니다. 내려받아 실행하세요. 기존 버전 위에 새 버전을 설치하며, 설정과 로그, OBS는 그대로 유지됩니다.',
         downloadInstaller: '설치 프로그램 다운로드',
-        noUpdater: '자동 업데이트는 StreamoScope를 설치 프로그램으로 설치하고 이 장면 모음에 {{script}} 스크립트를 불러왔을 때만 작동합니다. 지금은 새 버전을 직접 설치할 수 있습니다.',
+        noUpdater: '자동 업데이트는 StreamoScope를 설치 프로그램이나 포터블 압축 파일로 설치하고 이 장면 모음에 {{script}} 스크립트를 불러왔을 때만 작동합니다. 릴리스 페이지에서 둘 중 하나를 내려받으면 다음 버전부터는 알아서 설치됩니다.',
         stages: {
             preparing: '준비 중…',
             downloading: '다운로드 중… {{percent}}%',

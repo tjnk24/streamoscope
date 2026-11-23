@@ -12,16 +12,17 @@ $repositoryName = 'tjnk24/streamoscope'
 $tag = "v$Version"
 $publicKey = Join-Path $repositoryRoot 'minisign.pub'
 $notesPath = Join-Path $repositoryRoot "docs\release-notes\$Version.md"
-$signedFiles = @("streamoscope-setup-$Version.exe", "streamoscope-$Version.zip", 'compatibility.json')
+$signedFiles = @("streamoscope-setup-$Version.exe", "streamoscope-$Version.zip", "streamoscope-portable-$Version.zip", 'compatibility.json')
 $expectedAssets = @($signedFiles) + @($signedFiles | ForEach-Object { "$_.minisig" }) + @('SHA256SUMS.txt')
 $failures = 0
 
 . (Join-Path $repositoryRoot 'installer\updater\UpdateWidget\consts.ps1')
 . (Join-Path $skillDirectory 'Write-CheckResult.ps1')
 
+$officialMinisign = Join-Path $repositoryRoot 'node_modules\.cache\minisign\0.12\minisign-win64\x86_64\minisign.exe'
 $minisignCandidates = @(
     (Get-Command 'minisign' -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty Source),
-    (Join-Path $repositoryRoot 'node_modules\.cache\minisign\0.12\minisign-win64\x86_64\minisign.exe'),
+    $officialMinisign,
     (Join-Path $env:LOCALAPPDATA 'Programs\streamoscope\updater\minisign.exe')
 ) | Where-Object { $_ -and (Test-Path -LiteralPath $_) }
 $minisign = $minisignCandidates | Select-Object -First 1
@@ -141,6 +142,63 @@ if (Test-Path -LiteralPath $archivePath) {
     foreach ($requiredFile in $script:RequiredPackageFiles) {
         $entryName = $topFolder + ($requiredFile -replace '\\', '/')
         Write-CheckResult -IsOk ($entryNames -contains $entryName) -Text "archive holds $requiredFile"
+    }
+}
+
+$portablePath = Join-Path $DownloadDirectory "streamoscope-portable-$Version.zip"
+
+if (Test-Path -LiteralPath $portablePath) {
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $portable = [System.IO.Compression.ZipFile]::OpenRead($portablePath)
+    $portableTop = "streamoscope-portable-$Version/"
+
+    try {
+        $portableEntries = @{}
+        $portable.Entries | ForEach-Object { $portableEntries[($_.FullName -replace '\\', '/')] = $_ }
+
+        $outsidePortableTop = @($portableEntries.Keys | Where-Object { -not $_.StartsWith($portableTop) })
+        Write-CheckResult -IsOk ($outsidePortableTop.Count -eq 0) -Text "every portable archive entry is under $portableTop"
+
+        foreach ($layoutFile in @('streamoscope-bridge.lua', 'dock/index.html', 'current-version.js', 'updater/minisign.exe', 'updater/minisign-LICENSE.txt', 'README.txt', 'LICENSE')) {
+            Write-CheckResult -IsOk $portableEntries.ContainsKey($portableTop + $layoutFile) -Text "portable archive holds $layoutFile"
+        }
+
+        foreach ($requiredFile in $script:RequiredPackageFiles) {
+            $requiredPath = "versions/$Version/" + ($requiredFile -replace '\\', '/')
+            Write-CheckResult -IsOk $portableEntries.ContainsKey($portableTop + $requiredPath) -Text "portable archive holds $requiredPath"
+        }
+
+        $versionEntry = $portableEntries[$portableTop + 'current-version.js']
+
+        if ($versionEntry) {
+            $versionReader = [System.IO.StreamReader]::new($versionEntry.Open())
+
+            try {
+                $versionText = $versionReader.ReadToEnd()
+            } finally {
+                $versionReader.Dispose()
+            }
+
+            Write-CheckResult -IsOk ($versionText -match "^window\.STREAMOSCOPE_VERSION = '$([regex]::Escape($Version))';") -Text 'portable current-version.js names this version'
+        }
+
+        $minisignEntry = $portableEntries[$portableTop + 'updater/minisign.exe']
+
+        if ($minisignEntry -and (Test-Path -LiteralPath $officialMinisign)) {
+            $minisignStream = $minisignEntry.Open()
+
+            try {
+                $portableMinisignHash = (Get-FileHash -InputStream $minisignStream -Algorithm SHA256).Hash
+            } finally {
+                $minisignStream.Dispose()
+            }
+
+            Write-CheckResult -IsOk ($portableMinisignHash -eq (Get-FileHash -LiteralPath $officialMinisign -Algorithm SHA256).Hash) -Text 'portable minisign.exe is the official build'
+        } elseif ($minisignEntry) {
+            Write-Output 'skipped: portable minisign.exe against the official build (run npm run test:installer once to cache it)'
+        }
+    } finally {
+        $portable.Dispose()
     }
 }
 

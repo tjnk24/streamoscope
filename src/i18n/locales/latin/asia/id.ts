@@ -200,7 +200,7 @@ export const id: TranslationDto = {
         retry: 'Coba lagi',
         installerNeeded: 'Beberapa perbaikan hanya datang lewat installer. Unduh dan jalankan: installer memasang versi baru di atas versi lama, dan pengaturan, log, serta OBS tetap seperti semula.',
         downloadInstaller: 'Unduh installer',
-        noUpdater: 'Pembaruan otomatis hanya berfungsi jika StreamoScope dipasang dengan installer dan skrip {{script}} dimuat di koleksi adegan ini. Untuk sekarang Anda bisa memasang versi baru secara manual.',
+        noUpdater: 'Pembaruan otomatis hanya berfungsi jika StreamoScope dipasang dengan installer atau dari arsip portable dan skrip {{script}} dimuat di koleksi adegan ini. Unduh salah satunya dari halaman rilis, dan versi berikutnya akan terpasang sendiri.',
         stages: {
             preparing: 'Menyiapkan…',
             downloading: 'Mengunduh… {{percent}}%',

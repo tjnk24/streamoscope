@@ -25,6 +25,7 @@ The development server uses `http://localhost:3062` by default. Set `PORT` in `.
 | `npm run build:prod` | Create a production dock in `build/` |
 | `npm run package:release` | Package release files and `compatibility.json` |
 | `npm run package:installer` | Build the Windows installer; needs Inno Setup 6 (`ISCC_PATH` may point to `ISCC.exe`) |
+| `npm run package:portable` | Lay out the portable install in `release/streamoscope-portable-<version>` from the packaged release; run it after `package:release` or `package:installer` |
 | `npm run serve:test-release -- <folder>` | Host a local test release at `127.0.0.1:3063`; supports `--broken-signature` |
 | `npm run test:installer` | Run Windows installer/updater checks with Pester 5 |
 | `npm run test:bridge` | Run the Lua bridge and its rollback on the real LuaJIT from an OBS archive, with Pester 5 |
@@ -75,7 +76,7 @@ flowchart TB
   end
   subgraph workflow["release.yml on GitHub Actions"]
     direction LR
-    build["build, Windows<br>version and notes check,<br>npm test, Pester,<br>package:installer"] --> approve{{"A human<br>approves publish"}} --> publish["publish, Linux<br>minisign signs and verifies,<br>SHA256SUMS.txt,<br>build attestation,<br>compatibility comment"]
+    build["build, Windows<br>version and notes check,<br>npm test, Pester,<br>package:installer,<br>package:portable"] --> approve{{"A human<br>approves publish"}} --> publish["publish, Linux<br>minisign signs and verifies,<br>SHA256SUMS.txt,<br>build attestation,<br>compatibility comment"]
   end
   local --> workflow
   workflow --> release["GitHub Release<br>StreamoScope vX.Y.Z"]
@@ -88,10 +89,11 @@ The `v*` tag triggers the GitHub Actions release workflow: build, test, sign and
 | Asset | Purpose |
 | --- | --- |
 | `streamoscope-setup-<version>.exe` | Windows installer |
-| `streamoscope-<version>.zip` | Dock, Lua bridge, updater and OBS setup scripts. Manual installs unpack it; the installed dock updates itself from it |
+| `streamoscope-portable-<version>.zip` | The portable install: the installed folder layout with `minisign.exe`, without the Windows Apps entry and the OBS setup. Manual installs unpack it and update themselves |
+| `streamoscope-<version>.zip` | Dock, Lua bridge, updater and OBS setup scripts: the package the installed and portable docks update themselves from. Its layout is a promise to every installed version, so it never changes |
 | `compatibility.json` | OBS, WebSocket, Chromium and bridge compatibility information |
 | `.minisig` files | Signatures for released assets |
-| `SHA256SUMS.txt` | Checksums for the installer and archive |
+| `SHA256SUMS.txt` | Checksums for the installer and both archives |
 
 The `publish` job also records a GitHub build attestation for the installer, the archive and `compatibility.json`. It lives in GitHub rather than among the assets, and `gh attestation verify <file> --repo tjnk24/streamoscope` checks it. Releases up to 0.15.1 predate it.
 
@@ -99,7 +101,7 @@ The workflow appends a machine-readable `<!-- compatibility: {...} -->` comment 
 
 Version numbers follow [Semantic Versioning](https://semver.org/). During the `0.x` series, minor versions may also change settings or installation steps; document those changes in the release notes.
 
-Background updates replace only `versions\<version>`. If a release changes anything outside it (the bridge stub, the dock loader, the uninstaller code in `installer/streamoscope.iss`, the fallback `configure-obs.ps1`), start its release notes with a prominent "run the installer once" block in both languages. Otherwise the change reaches only people who install from scratch, which is a small and patient audience.
+Background updates replace only `versions\<version>`. If a release changes anything outside it (the bridge stub, the dock loader, the uninstaller code in `installer/streamoscope.iss`, the fallback `configure-obs.ps1`), start its release notes with a prominent "run the installer once" block in both languages, which also tells portable installs to extract the new portable archive over the old one. Otherwise the change reaches only people who install from scratch, which is a small and patient audience.
 
 Only the release workflow builds a release, from a `v*` tag. Every other build, from `npm run start:dev` to `npm run package:installer` on your machine or CI on `main`, keeps the version from `package.json` and gets a build label from `git describe`, such as `v0.6.0-5-g4420f14-dirty`: five commits after `v0.6.0`, with uncommitted changes; outside a git checkout the label is `unknown`. The version itself stays a plain `X.Y.Z`, because the updater, the bridge and the loaders of old installs compare it. The label shows under the version in the dock settings, in **Copy diagnostics** and in the journal line about the dock start, and the installer becomes `streamoscope-setup-<version>-local.exe` with `StreamoScope (local build <label>)` in its wizard and in Windows Apps. The Apps entry keeps that name after a background update to a real release, and fairly so: the uninstaller and the loaders still come from the local installer until an official one runs.
 

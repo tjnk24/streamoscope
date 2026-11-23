@@ -108,18 +108,22 @@ More on each: [Features in detail](docs/FEATURES.md).
 
 ### 📦 Manual / portable installation
 
-1. Download `streamoscope-<version>.zip` from [Releases](https://github.com/tjnk24/streamoscope/releases) and unpack it somewhere permanent.
+1. Download `streamoscope-portable-<version>.zip` from [Releases](https://github.com/tjnk24/streamoscope/releases) and unpack it into a folder you can write to, for example `%LOCALAPPDATA%\streamoscope-portable`. Updates go there too.
 2. In OBS, turn on **Tools → WebSocket Server Settings → Enable WebSocket server**.
 3. In **Docks → Custom Browser Docks**, add a dock with this address, using your own folder:
 
    ```text
-   file:///C:/path/to/streamoscope/dock/index.html
+   file:///C:/path/to/streamoscope-portable/dock/index.html
    ```
 
-4. In **Tools → Scripts**, add `streamoscope-bridge.lua`. Keep its `streamoscope-bridge` folder next to it. OBS keeps scripts per scene collection, so add it to every collection you stream from.
+4. In **Tools → Scripts**, add `streamoscope-bridge.lua` from that folder. OBS keeps scripts per scene collection, so add it to every collection you stream from.
 5. Connect the dock with your WebSocket port and password.
 
-Manual installs don't update themselves. To update, replace the files and press **Ctrl+R** in the dock.
+🔄 **Updates install themselves** here too, with the same rollback. Once in a while a release asks you to unpack the new portable archive over the old one; its notes say so.
+
+Still on the plain `streamoscope-<version>.zip`? It runs, but doesn't update itself. Delete its files, unpack the portable archive into the same folder and restart OBS: the paths stay the same and the dock keeps its settings.
+
+🧹 **Uninstall:** remove the dock and the script in OBS, then delete the folder and `%LOCALAPPDATA%\streamoscope`.
 
 ## 🔍 How it finds streams
 
@@ -131,6 +135,7 @@ Stream keys stay in OBS. The bridge passes on only server hosts and short finger
 
 - **OBS has to see the stream.** If a plugin hides its output from OBS, StreamoScope can't make up the numbers.
 - **The rest needs the Lua bridge.** Without it you still get bitrate, dropped frames and OBS stats, but no platform names for plugin streams, no separate cards for outputs with the same name, no same-key warning, no hardware stats, no OBS theme colours and no automatic updates. The installer sets the bridge up for you.
+- **Updates need the installer or the portable archive.** The plain `streamoscope-<version>.zip` runs, but doesn't update itself.
 
 ## ⚙️ Settings and privacy
 

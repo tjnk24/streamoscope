@@ -67,6 +67,8 @@ jobs:
 
       - run: npm run package:installer
 
+      - run: npm run package:portable
+
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: release
@@ -93,9 +95,11 @@ jobs:
           name: release
           path: release
 
-      - name: Create the archive
+      - name: Create the archives
         working-directory: release
-        run: zip -r -q "streamoscope-$VERSION.zip" "streamoscope-$VERSION"
+        run: |
+          zip -r -q "streamoscope-$VERSION.zip" "streamoscope-$VERSION"
+          zip -r -q "streamoscope-portable-$VERSION.zip" "streamoscope-portable-$VERSION"
 
       - name: Sign the release files
         working-directory: release
@@ -110,18 +114,19 @@ jobs:
           sudo apt-get install -y -q minisign
           KEY_FILE="$RUNNER_TEMP/minisign.key"
           printf '%s\n' "$MINISIGN_SECRET_KEY" > "$KEY_FILE"
-          for FILE in "streamoscope-setup-$VERSION.exe" "streamoscope-$VERSION.zip" compatibility.json; do
+          for FILE in "streamoscope-setup-$VERSION.exe" "streamoscope-$VERSION.zip" "streamoscope-portable-$VERSION.zip" compatibility.json; do
             minisign -S -s "$KEY_FILE" -m "$FILE" -t "StreamoScope $VERSION"
             minisign -V -p ../minisign.pub -m "$FILE"
           done
           rm -f "$KEY_FILE"
-          sha256sum "streamoscope-setup-$VERSION.exe" "streamoscope-$VERSION.zip" > SHA256SUMS.txt
+          sha256sum "streamoscope-setup-$VERSION.exe" "streamoscope-$VERSION.zip" "streamoscope-portable-$VERSION.zip" > SHA256SUMS.txt
 
       - uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6
         with:
           subject-path: |
             release/streamoscope-setup-${{ env.VERSION }}.exe
             release/streamoscope-${{ env.VERSION }}.zip
+            release/streamoscope-portable-${{ env.VERSION }}.zip
             release/compatibility.json
 
       - name: Write the release notes with the compatibility data
@@ -142,6 +147,8 @@ jobs:
             "release/streamoscope-setup-$VERSION.exe.minisig" \
             "release/streamoscope-$VERSION.zip" \
             "release/streamoscope-$VERSION.zip.minisig" \
+            "release/streamoscope-portable-$VERSION.zip" \
+            "release/streamoscope-portable-$VERSION.zip.minisig" \
             release/compatibility.json \
             release/compatibility.json.minisig \
             release/SHA256SUMS.txt

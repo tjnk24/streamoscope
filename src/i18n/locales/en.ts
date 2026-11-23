@@ -198,7 +198,7 @@ export const en = {
         retry: 'Try again',
         installerNeeded: 'Some fixes come only with the installer. Download it and run it: it installs the new version over the old one, and your settings, the journal and OBS stay as they are.',
         downloadInstaller: 'Download the installer',
-        noUpdater: 'Automatic updates work only when StreamoScope was set up with the installer and the {{script}} script is loaded in this scene collection. For now you can install the new version manually.',
+        noUpdater: 'Automatic updates work only when StreamoScope was set up with the installer or from the portable archive and the {{script}} script is loaded in this scene collection. Download one of them from the release page, and the next versions will install themselves.',
         stages: {
             preparing: 'Preparing…',
             downloading: 'Downloading… {{percent}}%',

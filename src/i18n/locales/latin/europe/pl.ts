@@ -200,7 +200,7 @@ export const pl: TranslationDto = {
         retry: 'Spróbuj ponownie',
         installerNeeded: 'Część poprawek przychodzi tylko z instalatorem. Pobierz go i uruchom: zainstaluje nową wersję na starej, a ustawienia, dziennik i OBS zostaną bez zmian.',
         downloadInstaller: 'Pobierz instalator',
-        noUpdater: 'Automatyczne aktualizacje działają tylko wtedy, gdy StreamoScope zainstalowano instalatorem, a w tej kolekcji scen wczytany jest skrypt {{script}}. Na razie nową wersję możesz zainstalować ręcznie.',
+        noUpdater: 'Automatyczne aktualizacje działają tylko wtedy, gdy StreamoScope zainstalowano instalatorem lub z archiwum przenośnego, a w tej kolekcji scen wczytany jest skrypt {{script}}. Pobierz jedno z nich ze strony wydania, a kolejne wersje będą instalować się same.',
         stages: {
             preparing: 'Przygotowanie…',
             downloading: 'Pobieranie… {{percent}}%',

@@ -342,8 +342,6 @@ export const BROKEN_PART_FLAGS: Record<string, BrokenPartType | undefined> = {
     '--broken-loader': 'loader',
 };
 
-export const CURRENT_VERSION_TEMPLATE = 'window.STREAMOSCOPE_VERSION = \'{version}\';\r\n';
-
 export const FIND_STAND_PROCESSES_SCRIPT = `
 $stand = $env:STAND_DIRECTORY + '\\*'
 Get-CimInstance Win32_Process |

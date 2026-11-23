@@ -36,13 +36,15 @@ flowchart LR
   launch -- "fails to start" --> back["The previous version<br>comes back by itself"]
 ```
 
+The portable archive `streamoscope-portable-<version>.zip` is the same install without the installer: the folder layout is identical, minus the entry in Windows Apps and the automatic OBS setup, so updates and the rollback work the same way. The signature checker, `minisign.exe`, is the official minisign build: the installer puts it next to the updater, and the portable archive already has it in place. The updater only uses that copy and never takes a program from a download. The plain `streamoscope-<version>.zip` is the update package itself: unpacked by hand it runs, but has no updater around it.
+
 ## 📂 What the installer puts where
 
 The installer places files in `%LOCALAPPDATA%\Programs\streamoscope`, configures the dock and the Lua bridge, keeps backups of the OBS files it changes in `%LOCALAPPDATA%\streamoscope\backups` and writes a setup log to `%LOCALAPPDATA%\streamoscope\configure-obs.log`. The log hides your Windows user folder, so you can attach it to an issue as it is; it still names your scene collections and profiles.
 
 ## 🧰 The installer still has a job
 
-Two tiny files that OBS points at, the dock and bridge loaders, and the uninstaller live outside the updates and only change when you run the installer. Running the latest installer over your install is safe at any time: it keeps your settings and the journal. Since 0.7.0 the uninstaller takes its instructions from the version you have, so it rarely needs that. If a release does need the installer, its release notes say so first thing, and installs from before 0.7.0 get one polite request in the dock settings.
+Two tiny files that OBS points at, the dock and bridge loaders, and the uninstaller live outside the updates and only change when you run the installer (or, for a portable install, extract a fresh portable archive over it). Running the latest installer over your install is safe at any time: it keeps your settings and the journal. Since 0.7.0 the uninstaller takes its instructions from the version you have, so it rarely needs that. If a release does need the installer, its release notes say so first thing, and installs from before 0.7.0 get one polite request in the dock settings.
 
 ## 📓 The journal
 

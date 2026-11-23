@@ -200,7 +200,7 @@ export const nl: TranslationDto = {
         retry: 'Opnieuw proberen',
         installerNeeded: 'Sommige verbeteringen komen alleen met het installatieprogramma. Download het en voer het uit: het installeert de nieuwe versie over de oude heen, en je instellingen, het logboek en OBS blijven zoals ze zijn.',
         downloadInstaller: 'Installatieprogramma downloaden',
-        noUpdater: 'Automatische updates werken alleen als StreamoScope met het installatieprogramma is geïnstalleerd en het script {{script}} in deze scèneverzameling geladen is. Voorlopig kun je de nieuwe versie handmatig installeren.',
+        noUpdater: 'Automatische updates werken alleen als StreamoScope met het installatieprogramma of uit het draagbare archief is geïnstalleerd en het script {{script}} in deze scèneverzameling geladen is. Download een van de twee op de releasepagina, dan installeren de volgende versies zichzelf.',
         stages: {
             preparing: 'Voorbereiden…',
             downloading: 'Downloaden… {{percent}}%',

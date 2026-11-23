@@ -3,10 +3,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import {ensureMinisign} from '../../buildInstaller/ensureMinisign.ts';
-import {INSTALLER_DIRECTORY, VERSION} from '../../packageRelease/consts.ts';
+import type {InstallLayoutDto} from '../../packagePortable/InstallLayoutDto.ts';
+import {writeInstallLayout} from '../../packagePortable/writeInstallLayout.ts';
+import {VERSION} from '../../packageRelease/consts.ts';
 import {
-    CURRENT_VERSION_PATH,
-    CURRENT_VERSION_TEMPLATE,
     DATA_DIRECTORY,
     INSTALL_DIRECTORY,
     LOCAL_APP_DATA_DIRECTORY,
@@ -22,28 +22,22 @@ import {removeProjectCopy} from './removeProjectCopy.ts';
 export const installCurrentVersion = async () => {
     copyProject(VERSION);
 
-    const packageDirectory = packageTestRelease(PROJECT_COPY_DIRECTORY, VERSION);
-    const versionDirectory = path.join(INSTALL_DIRECTORY, 'versions', VERSION);
+    const standLayout: InstallLayoutDto = {
+        packageDirectory: packageTestRelease(PROJECT_COPY_DIRECTORY, VERSION),
+        installDirectory: INSTALL_DIRECTORY,
+        version: VERSION,
+        minisignPath: await ensureMinisign(),
+    };
 
     fs.rmSync(LOCAL_APP_DATA_DIRECTORY, {recursive: true, force: true});
-    fs.mkdirSync(path.join(INSTALL_DIRECTORY, 'dock'), {recursive: true});
-    fs.mkdirSync(path.join(INSTALL_DIRECTORY, 'updater'), {recursive: true});
     fs.mkdirSync(DATA_DIRECTORY, {recursive: true});
-
-    fs.cpSync(packageDirectory, versionDirectory, {recursive: true});
-    fs.rmSync(path.join(versionDirectory, 'README.txt'));
+    writeInstallLayout(standLayout);
     removeProjectCopy();
-    fs.copyFileSync(path.join(INSTALLER_DIRECTORY, 'loader', 'streamoscope-bridge.lua'), path.join(INSTALL_DIRECTORY, 'streamoscope-bridge.lua'));
-    fs.copyFileSync(path.join(INSTALLER_DIRECTORY, 'loader', 'index.html'), path.join(INSTALL_DIRECTORY, 'dock', 'index.html'));
-    fs.copyFileSync(path.join(INSTALLER_DIRECTORY, 'configure-obs.ps1'), path.join(INSTALL_DIRECTORY, 'configure-obs.ps1'));
-    fs.cpSync(path.join(INSTALLER_DIRECTORY, 'ConfigureObs'), path.join(INSTALL_DIRECTORY, 'ConfigureObs'), {recursive: true});
-    fs.copyFileSync(await ensureMinisign(), path.join(INSTALL_DIRECTORY, 'updater', 'minisign.exe'));
-    fs.writeFileSync(CURRENT_VERSION_PATH, CURRENT_VERSION_TEMPLATE.replace('{version}', VERSION));
 
     const configuration = spawnSync('powershell.exe', [
         ...POWERSHELL_ARGUMENTS,
         '-File',
-        path.join(versionDirectory, 'configure-obs.ps1'),
+        path.join(INSTALL_DIRECTORY, 'versions', VERSION, 'configure-obs.ps1'),
         '-Mode',
         'Install',
         '-InstallDirectory',

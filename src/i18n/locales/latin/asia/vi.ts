@@ -200,7 +200,7 @@ export const vi: TranslationDto = {
         retry: 'Thử lại',
         installerNeeded: 'Một số bản sửa chỉ có trong trình cài đặt. Hãy tải về và chạy: nó cài phiên bản mới đè lên bản cũ, còn thiết đặt, nhật ký và OBS vẫn giữ nguyên.',
         downloadInstaller: 'Tải trình cài đặt',
-        noUpdater: 'Tự động cập nhật chỉ hoạt động khi StreamoScope được cài bằng trình cài đặt và script {{script}} được nạp trong bộ sưu tập cảnh này. Hiện tại bạn có thể cài phiên bản mới thủ công.',
+        noUpdater: 'Tự động cập nhật chỉ hoạt động khi StreamoScope được cài bằng trình cài đặt hoặc từ gói portable và script {{script}} được nạp trong bộ sưu tập cảnh này. Hãy tải một trong hai từ trang phát hành, các phiên bản sau sẽ tự cài.',
         stages: {
             preparing: 'Đang chuẩn bị…',
             downloading: 'Đang tải… {{percent}}%',

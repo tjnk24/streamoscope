@@ -200,7 +200,7 @@ export const zhTw: TranslationDto = {
         retry: '重試',
         installerNeeded: '部分修正只有透過安裝程式才能取得。請下載並執行：它會在舊版上安裝新版，設定、紀錄和 OBS 都維持不變。',
         downloadInstaller: '下載安裝程式',
-        noUpdater: '只有用安裝程式安裝 StreamoScope，並在這個場景群組載入 {{script}} 腳本時，自動更新才能運作。目前可以手動安裝新版本。',
+        noUpdater: '只有用安裝程式或可攜版壓縮檔安裝 StreamoScope，並在這個場景群組載入 {{script}} 腳本時，自動更新才能運作。請在發布頁面下載其中之一，之後的版本會自動安裝。',
         stages: {
             preparing: '準備中…',
             downloading: '下載中… {{percent}}%',
