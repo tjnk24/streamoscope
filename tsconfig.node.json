@@ -16,5 +16,5 @@
         "esModuleInterop": true,
         "resolveJsonModule": true
     },
-    "include": ["webpack.config.ts", "knip.config.ts", "vitest.config.ts", "webpack", "scripts"]
+    "include": ["rspack.config.ts", "knip.config.ts", "vitest.config.ts", "rspack", "scripts"]
 }

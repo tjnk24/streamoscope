@@ -1,6 +1,6 @@
 # Правила работы в этом репозитории
 
-OBS Custom Browser Dock: React 19, antd 6, Redux Toolkit, react-router 8, CSS-модули, webpack + swc.
+OBS Custom Browser Dock: React 19, antd 6, Redux Toolkit, react-router 8, CSS-модули, Rspack (встроенный swc).
 Панель открывается с диска (`file:///.../build/index.html`), ходит в obs-websocket на `127.0.0.1` и, при проверке обновлений, в API GitHub за последним выпуском.
 
 ## Где что лежит

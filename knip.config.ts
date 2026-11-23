@@ -3,7 +3,7 @@ import type {KnipConfig} from 'knip';
 const config: KnipConfig = {
     project: [
         'src/**/*.{ts,tsx}',
-        'webpack/**/*.ts',
+        'rspack/**/*.ts',
         'scripts/**/*.ts',
         'e2e/**/*.ts',
     ],

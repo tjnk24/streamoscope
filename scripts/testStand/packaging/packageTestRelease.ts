@@ -20,7 +20,7 @@ export const packageTestRelease = (projectDirectory: string, version: string) =>
             ...process.env,
             TEST_UPDATE_SERVER: server,
             TEST_UPDATE_PUBLIC_KEY: publicKey,
-            WEBPACK_CACHE_DIRECTORY: TEST_BUILDS_CACHE_DIRECTORY,
+            RSPACK_CACHE_DIRECTORY: TEST_BUILDS_CACHE_DIRECTORY,
         },
         shell: true,
         stdio: ['ignore', 'ignore', 'inherit'],

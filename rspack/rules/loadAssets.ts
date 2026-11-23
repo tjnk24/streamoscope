@@ -1,8 +1,8 @@
-import type {Configuration, RuleSetRule} from 'webpack';
+import type {Configuration, RuleSetRule} from '@rspack/core';
 
 import {CONTENT_HASH} from '../consts.ts';
 
-export const loadAssets = () => (webpackConfig: Configuration): Configuration => {
+export const loadAssets = () => (rspackConfig: Configuration): Configuration => {
     const imageRule: RuleSetRule = {
         test: /\.(jpe?g|png|gif|svg)$/i,
         type: 'asset/resource',
@@ -19,7 +19,7 @@ export const loadAssets = () => (webpackConfig: Configuration): Configuration =>
         },
     };
 
-    webpackConfig.module?.rules?.push(imageRule, fontRule);
+    rspackConfig.module?.rules?.push(imageRule, fontRule);
 
-    return webpackConfig;
+    return rspackConfig;
 };

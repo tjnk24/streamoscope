@@ -4,7 +4,7 @@ This document covers the build system, tests, installer and updater. If you just
 
 ## Requirements and local development
 
-- **Node.js 24+**; the current dev server does not support Node 25.
+- **Node.js 24+**; the current test runner does not support Node 25.
 - Windows and Inno Setup 6 for building the Windows installer.
 - OBS Studio 28+ for integration testing.
 
@@ -38,11 +38,11 @@ The development server uses `http://localhost:3062` by default. Set `PORT` in `.
 | `npm run test:e2e:update` | The same, but retake the reference screenshots and ARIA snapshots |
 | `npm test` | Lint and unit tests |
 
-The development server keeps its files in memory and leaves `build/` alone. Builds are cached in `node_modules/.cache/webpack`, so a repeat build takes a few seconds; delete that folder if a build ever looks stale.
+The development server keeps its files in memory and leaves `build/` alone. Builds are cached in `node_modules/.cache/rspack`, so a repeat build takes a second or two; delete that folder if a build ever looks stale.
 
 Dependencies are updated by hand, in one batch about once a year. Dependabot only watches for vulnerabilities: a repository rule opens a pull request for a high or critical advisory in a package that ends up in the dock, and alerts for development tools are dismissed, since those never reach anyone's OBS. There is no `dependabot.yml`, on purpose. Workflows pin every action to a commit hash; `gh api repos/<owner>/<action>/commits/<tag> --jq .sha` gives the hash for a new version. CI installs with `npm ci --engine-strict`, so a package that does not run on the Node version from `.nvmrc` fails the build instead of sneaking in.
 
-The project uses React 19, antd 6, Redux Toolkit, React Router 8, i18next, CSS modules, webpack and swc. Development conventions are in [`CLAUDE.md`](../CLAUDE.md), `.claude/rules` and `docs/internals` (in Russian).
+The project uses React 19, antd 6, Redux Toolkit, React Router 8, i18next, CSS modules and Rspack with its built-in swc. Development conventions are in [`CLAUDE.md`](../CLAUDE.md), `.claude/rules` and `docs/internals` (in Russian).
 
 ## Card display checks
 
@@ -133,7 +133,7 @@ The obs-multi-rtmp targets come from the real plugin: the stand downloads one pi
 
 It reads the dock through the Chromium debugging port, so `npm run stand -- status`, `evaluate` and `screenshot` need neither the mouse nor the screen. The stand takes releases from a local test server: it doesn't replace a look at the real GitHub release or at the real installer.
 
-The stand builds its test releases outside the project, in the neighbouring `streamoscope-test-builds` folder, with their own webpack cache, so they never touch `npm run start:dev` or `npm run build:prod`. You can delete that folder whenever the stand is not running.
+The stand builds its test releases outside the project, in the neighbouring `streamoscope-test-builds` folder, with their own Rspack cache, so they never touch `npm run start:dev` or `npm run build:prod`. You can delete that folder whenever the stand is not running.
 
 ## Testing the installer and the updater without publishing a release
 

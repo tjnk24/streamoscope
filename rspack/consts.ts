@@ -3,15 +3,17 @@ import path from 'node:path';
 
 export const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
 
-export const IS_DEV_SERVER = Boolean(process.env.WEBPACK_SERVE);
+export const IS_DEV_SERVER = Boolean(process.env.RSPACK_SERVE);
 
 export const TEST_UPDATE_SERVER = process.env.TEST_UPDATE_SERVER || '';
 
-export const CACHE_DIRECTORY = process.env.WEBPACK_CACHE_DIRECTORY || '';
+export const CACHE_DIRECTORY = process.env.RSPACK_CACHE_DIRECTORY || '';
 
 export const CACHE_NAME = `${IS_DEVELOPMENT ? 'development' : 'production'}-${IS_DEV_SERVER ? 'server' : 'build'}`;
 
 export const CONTENT_HASH = IS_DEVELOPMENT ? '' : '.[contenthash:8]';
+
+export const LICENSE_COMMENT_PATTERN = /^!|@license|@preserve/;
 
 export const RESOLVE_EXTENSIONS = ['.js', '.ts', '.tsx', '.json'];
 

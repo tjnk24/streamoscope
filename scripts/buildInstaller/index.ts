@@ -2,7 +2,7 @@ import {spawnSync} from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import {getBuildLabel} from '../../webpack/init/getBuildLabel.ts';
+import {getBuildLabel} from '../../rspack/init/getBuildLabel.ts';
 import {
     PACKAGE_DIRECTORY,
     RELEASE_DIRECTORY,

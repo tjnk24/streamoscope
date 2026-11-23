@@ -310,7 +310,7 @@ export const SERVED_DIRECTORY = path.join(STAND_DIRECTORY, 'served');
 
 const TEST_BUILDS_DIRECTORY = path.join(path.dirname(ROOT_DIRECTORY), 'streamoscope-test-builds');
 
-export const TEST_BUILDS_CACHE_DIRECTORY = path.join(TEST_BUILDS_DIRECTORY, 'webpack-cache');
+export const TEST_BUILDS_CACHE_DIRECTORY = path.join(TEST_BUILDS_DIRECTORY, 'rspack-cache');
 
 export const PROJECT_COPY_DIRECTORY = path.join(TEST_BUILDS_DIRECTORY, 'project-copy');
 

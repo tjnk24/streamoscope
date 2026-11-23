@@ -7,9 +7,9 @@ import {
     loadAssets,
     loadScripts,
     loadStyles,
-} from './webpack/index.ts';
+} from './rspack/index.ts';
 
-const webpackConfig = flow([
+const rspackConfig = flow([
     initBaseConfig({context: import.meta.dirname}),
     initClientConfig({
         entry: {
@@ -22,4 +22,4 @@ const webpackConfig = flow([
     loadAssets(),
 ])({});
 
-export default webpackConfig;
+export default rspackConfig;

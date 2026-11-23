@@ -1,10 +1,13 @@
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import type {Configuration, RuleSetRule} from 'webpack';
+import {
+    type Configuration,
+    CssExtractRspackPlugin,
+    type RuleSetRule,
+} from '@rspack/core';
 
 import {CONTENT_HASH, IS_DEVELOPMENT} from '../consts.ts';
 
-export const loadStyles = () => (webpackConfig: Configuration): Configuration => {
-    const extractPlugin = new MiniCssExtractPlugin({
+export const loadStyles = () => (rspackConfig: Configuration): Configuration => {
+    const extractPlugin = new CssExtractRspackPlugin({
         chunkFilename: `[name]${CONTENT_HASH}.css`,
         filename: `[name]${CONTENT_HASH}.css`,
         ignoreOrder: true,
@@ -14,7 +17,7 @@ export const loadStyles = () => (webpackConfig: Configuration): Configuration =>
         test: /\.(s*)css$/,
         use: [
             {
-                loader: IS_DEVELOPMENT ? 'style-loader' : MiniCssExtractPlugin.loader,
+                loader: IS_DEVELOPMENT ? 'style-loader' : CssExtractRspackPlugin.loader,
             },
             {
                 loader: 'css-loader',
@@ -36,8 +39,8 @@ export const loadStyles = () => (webpackConfig: Configuration): Configuration =>
         ],
     };
 
-    webpackConfig.plugins?.push(extractPlugin);
-    webpackConfig.module?.rules?.push(styleRule);
+    rspackConfig.plugins?.push(extractPlugin);
+    rspackConfig.module?.rules?.push(styleRule);
 
-    return webpackConfig;
+    return rspackConfig;
 };

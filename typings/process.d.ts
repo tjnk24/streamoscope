@@ -1,4 +1,4 @@
-type WebpackProcessEnv = {
+type BuildProcessEnv = {
     NODE_ENV: string;
     IS_DEV_SERVER: boolean;
     APP_VERSION: string;
@@ -6,8 +6,8 @@ type WebpackProcessEnv = {
     TEST_UPDATE_SERVER: string;
 };
 
-type WebpackProcess = {
-    env: WebpackProcessEnv;
+type BuildProcess = {
+    env: BuildProcessEnv;
 };
 
-declare const process: WebpackProcess;
+declare const process: BuildProcess;

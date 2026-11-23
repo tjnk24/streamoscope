@@ -1,14 +1,14 @@
-import type {Configuration, RuleSetRule} from 'webpack';
+import type {Configuration, RuleSetRule} from '@rspack/core';
 
 import {IS_DEV_SERVER, IS_DEVELOPMENT} from '../consts.ts';
 
-export const loadScripts = () => (webpackConfig: Configuration): Configuration => {
+export const loadScripts = () => (rspackConfig: Configuration): Configuration => {
     const scriptRule: RuleSetRule = {
         test: /\.ts(x?)$/,
         exclude: /node_modules/,
         use: [
             {
-                loader: 'swc-loader',
+                loader: 'builtin:swc-loader',
                 options: {
                     jsc: {
                         parser: {
@@ -29,7 +29,7 @@ export const loadScripts = () => (webpackConfig: Configuration): Configuration =
         ],
     };
 
-    webpackConfig.module?.rules?.push(scriptRule);
+    rspackConfig.module?.rules?.push(scriptRule);
 
-    return webpackConfig;
+    return rspackConfig;
 };

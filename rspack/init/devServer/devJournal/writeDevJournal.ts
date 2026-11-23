@@ -1,12 +1,13 @@
 import fs from 'node:fs';
-import type {Request, Response} from 'webpack-dev-server';
+import type {IncomingMessage, ServerResponse} from 'node:http';
 
-import {DEV_JOURNAL_MAX_REQUEST_BYTES, DEV_JOURNAL_PATH} from '../../consts.ts';
+import {DEV_JOURNAL_MAX_REQUEST_BYTES, DEV_JOURNAL_PATH} from '../../../consts.ts';
+import {endWithStatus} from '../endWithStatus.ts';
 import {isSameOriginRequest} from '../isSameOriginRequest.ts';
 
-export const writeDevJournal = (request: Request, response: Response) => {
+export const writeDevJournal = (request: IncomingMessage, response: ServerResponse) => {
     if (!isSameOriginRequest(request)) {
-        response.status(403).end();
+        endWithStatus(response, 403);
 
         return;
     }
@@ -24,7 +25,7 @@ export const writeDevJournal = (request: Request, response: Response) => {
 
     request.on('end', () => {
         if (receivedBytes > DEV_JOURNAL_MAX_REQUEST_BYTES) {
-            response.status(413).end();
+            endWithStatus(response, 413);
 
             return;
         }
@@ -32,11 +33,11 @@ export const writeDevJournal = (request: Request, response: Response) => {
         try {
             fs.appendFileSync(DEV_JOURNAL_PATH, `${Buffer.concat(chunks).toString('utf8')}\n`);
         } catch {
-            response.status(500).end();
+            endWithStatus(response, 500);
 
             return;
         }
 
-        response.status(204).end();
+        endWithStatus(response, 204);
     });
 };
