@@ -7,7 +7,8 @@ import {
     vi,
 } from 'vitest';
 
-import {AdviceEnum} from '__types/stats/views';
+import {AdviceEnum, HealthLevelEnum} from '__types/stats/views';
+import {OFF_OUTPUT_VIEW} from '__utils/consts';
 
 import {StatsTracker} from '../StatsTracker';
 
@@ -15,12 +16,17 @@ import {
     BRIDGE_NOW_MS,
     FAILED_STATUS_PAIR,
     FIRST_BRIDGE_PAIR,
+    FIRST_LIVE_PAIR,
+    FIRST_STATS_PAIR,
     LIVE_PAIR,
     MAIN_TARGET,
     MEASURED_TARGET,
     OFFLINE_PAIR,
     RECONNECTING_PAIR,
+    RESTARTED_LIVE_PAIR,
     SECOND_BRIDGE_PAIR,
+    SECOND_LIVE_PAIR,
+    SECOND_STATS_PAIR,
     STATS,
     STATS_REQUEST,
     STATS_RESULT,
@@ -284,5 +290,69 @@ describe('StatsTracker', () => {
         const withoutBridge = tracker.ingest([MEASURED_TARGET], [], 2000).outputs[MEASURED_TARGET.key];
 
         expect(withoutBridge).toBe(nextSample);
+    });
+    it('turns the bytes, frames and congestion of a live output into the card numbers', () => {
+        const tracker = new StatsTracker();
+
+        const firstView = tracker.ingest([MAIN_TARGET], [FIRST_LIVE_PAIR], 1000).outputs[MAIN_TARGET.key];
+
+        expect(firstView).toMatchObject({isActive: true, kbps: null, dropped: 0, total: 600});
+
+        const secondView = tracker.ingest([MAIN_TARGET], [SECOND_LIVE_PAIR], 2000).outputs[MAIN_TARGET.key];
+
+        expect(secondView).toMatchObject({
+            isActive: true,
+            isReconnecting: false,
+            level: HealthLevelEnum.Bad,
+            kbps: 4000,
+            timecode: '00:00:11.000',
+            dropped: 3,
+            total: 660,
+            recentDropped: 3,
+            recentTotal: 60,
+            congestion: 0.2,
+        });
+
+        expect(secondView.graph).toEqual([{time: 2000, kbps: 4000}]);
+    });
+
+    it('shows a stopped output as off', () => {
+        const tracker = new StatsTracker();
+
+        tracker.ingest([MAIN_TARGET], [FIRST_LIVE_PAIR], 1000);
+
+        const stoppedView = tracker.ingest([MAIN_TARGET], [OFFLINE_PAIR], 2000).outputs[MAIN_TARGET.key];
+
+        expect(stoppedView).toEqual(OFF_OUTPUT_VIEW);
+    });
+
+    it('starts the bitrate and the graph again when OBS restarts its counters', () => {
+        const tracker = new StatsTracker();
+
+        tracker.ingest([MAIN_TARGET], [FIRST_LIVE_PAIR], 1000);
+
+        tracker.ingest([MAIN_TARGET], [SECOND_LIVE_PAIR], 2000);
+
+        const restartedView = tracker.ingest([MAIN_TARGET], [RESTARTED_LIVE_PAIR], 3000).outputs[MAIN_TARGET.key];
+
+        expect(restartedView).toMatchObject({kbps: null, dropped: 0, total: 60, recentDropped: 0, recentTotal: 0});
+
+        expect(restartedView.graph).toEqual([]);
+    });
+
+    it('passes the frame rate, frame time, memory and skipped frames of OBS to the OBS card', () => {
+        const tracker = new StatsTracker();
+
+        tracker.ingest([MAIN_TARGET], [FIRST_STATS_PAIR, VIDEO_SETTINGS_PAIR], 1000);
+
+        const general = tracker.ingest([MAIN_TARGET], [SECOND_STATS_PAIR], 2000).general;
+
+        expect(general).toMatchObject({
+            fps: 59.94,
+            frameTime: STATS.averageFrameRenderTime,
+            memoryInMb: STATS.memoryUsage,
+            encoding: {skipped: 3, total: 60, recentSkipped: 3, recentTotal: 60},
+            rendering: {skipped: 1, total: 60, recentSkipped: 1, recentTotal: 60},
+        });
     });
 });

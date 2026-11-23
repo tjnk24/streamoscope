@@ -2,7 +2,7 @@
 
 | Что менял | Чем проверять |
 | --- | --- |
-| Логику панели | `npm run test:unit`, входит в `npm test` |
+| Логику панели и расчёт каждого показателя статистики (`StatsTracker`, статус, «в минуту», числа на экране, строки карточек) | `npm run test:unit`, входит в `npm test` |
 | Разметку и поведение панели, обновление React, antd и сборщика | `npm run test:e2e` (Playwright в Docker), входит в CI |
 | Панель глазами | `npm run start:dev` или `preview_start` с именем `dock-dev` |
 | Журнал без OBS | `npm run start:dev` с включёнными моками, файл `.dev-journal/streamoscope.log` |

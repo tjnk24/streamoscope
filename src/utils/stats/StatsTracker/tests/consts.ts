@@ -198,3 +198,86 @@ export const SECOND_BRIDGE_PAIR: RequestResultPairDto = {
         responseData: {parameterValue: JSON.stringify(SECOND_BRIDGE_DATA)},
     },
 };
+
+const FIRST_LIVE_STATUS: ObsOutputStatusDto = {
+    ...STREAM_STATUS,
+    outputTimecode: '00:00:10.000',
+    outputCongestion: 0.1,
+    outputBytes: 1_000_000,
+    outputSkippedFrames: 0,
+    outputTotalFrames: 600,
+};
+
+const SECOND_LIVE_STATUS: ObsOutputStatusDto = {
+    ...STREAM_STATUS,
+    outputTimecode: '00:00:11.000',
+    outputCongestion: 0.2,
+    outputBytes: 1_500_000,
+    outputSkippedFrames: 3,
+    outputTotalFrames: 660,
+};
+
+const RESTARTED_LIVE_STATUS: ObsOutputStatusDto = {
+    ...STREAM_STATUS,
+    outputTimecode: '00:00:01.000',
+    outputBytes: 2000,
+    outputSkippedFrames: 0,
+    outputTotalFrames: 60,
+};
+
+export const FIRST_LIVE_PAIR: RequestResultPairDto = {
+    request: STREAM_STATUS_REQUEST,
+    result: {
+        requestType: 'GetStreamStatus',
+        requestStatus: SUCCESS_STATUS,
+        responseData: FIRST_LIVE_STATUS,
+    },
+};
+
+export const SECOND_LIVE_PAIR: RequestResultPairDto = {
+    request: STREAM_STATUS_REQUEST,
+    result: {
+        requestType: 'GetStreamStatus',
+        requestStatus: SUCCESS_STATUS,
+        responseData: SECOND_LIVE_STATUS,
+    },
+};
+
+export const RESTARTED_LIVE_PAIR: RequestResultPairDto = {
+    request: STREAM_STATUS_REQUEST,
+    result: {
+        requestType: 'GetStreamStatus',
+        requestStatus: SUCCESS_STATUS,
+        responseData: RESTARTED_LIVE_STATUS,
+    },
+};
+
+export const FIRST_STATS_PAIR: RequestResultPairDto = {
+    request: STATS_REQUEST,
+    result: {
+        ...STATS_RESULT,
+        responseData: {
+            ...STATS,
+            activeFps: 59.94,
+            outputSkippedFrames: 10,
+            outputTotalFrames: 1000,
+            renderSkippedFrames: 0,
+            renderTotalFrames: 1000,
+        },
+    },
+};
+
+export const SECOND_STATS_PAIR: RequestResultPairDto = {
+    request: STATS_REQUEST,
+    result: {
+        ...STATS_RESULT,
+        responseData: {
+            ...STATS,
+            activeFps: 59.94,
+            outputSkippedFrames: 13,
+            outputTotalFrames: 1060,
+            renderSkippedFrames: 1,
+            renderTotalFrames: 1060,
+        },
+    },
+};
