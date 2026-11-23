@@ -16,7 +16,7 @@ paths:
 
 - Входит в `npm test`, а значит и в CI. Тесты - в `tests/` рядом с кодом: `utils/settings/migrateSettings.ts` -> `utils/settings/tests/migrateSettings.test.ts`, импорт из `../`.
 - Именованные тестовые данные (`COMPATIBILITY`, `GITHUB_RELEASE`, `MIGRATIONS`) - в `tests/consts.ts` той же папки, общие для её тестов. Помощников-функций в тестах нет: вариант данных - `{...GITHUB_RELEASE, body}` прямо в тесте. Таблицы `it.each` - в тесте.
-- Импорты из `vitest` явные (`describe`, `it`, `expect`). Алиасы vitest берёт из `paths` в `tsconfig.json` (`vitest.config.ts`).
+- Импорты из `vitest` явные (`describe`, `it`, `expect`). Алиасы vitest берёт из `paths` в `tsconfig.app.json` (`vitest.config.ts`).
 - Покрываем чистую логику, от которой зависит что-то необратимое или чужое: миграции настроек, сравнение версий, разбор ответа GitHub, совместимость. Новая такая утилита - сразу с тестом.
 - **Слой API.** API-класс: `fetch` - `vi.stubGlobal` (ky читает его при каждом запросе), журнал - `vi.mock`, ошибка - статусом без повторов (403, 404), иначе ky повторит запрос. Сервис: API и экшены страницы - `vi.mock`.
 - **Хук `use<Что>View` - без рендера**: `vi.mock('react-redux', () => ({useSelector: vi.fn()}))`.

@@ -74,7 +74,7 @@ export default [
                 },
 
                 warnOnUnsupportedTypeScriptVersion: false,
-                project: ["./tsconfig.json", "./tsconfig.node.json", "./e2e/tsconfig.json"],
+                project: ["./tsconfig.app.json", "./tsconfig.node.json", "./e2e/tsconfig.json"],
             },
         },
 

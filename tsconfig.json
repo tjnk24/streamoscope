@@ -1,35 +1,8 @@
 {
-    "compilerOptions": {
-        "target": "es2022",
-        "lib": ["dom", "es2022"],
-        "module": "esnext",
-        "moduleResolution": "bundler",
-        "jsx": "react-jsx",
-        "strict": true,
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
-        "isolatedModules": true,
-        "noEmit": true,
-        "skipLibCheck": true,
-        "esModuleInterop": true,
-        "resolveJsonModule": true,
-        "paths": {
-            "__actions": ["./src/actions.ts"],
-            "__api/*": ["./src/api/*"],
-            "__components/*": ["./src/components/*"],
-            "__i18n": ["./src/i18n"],
-            "__loaders/*": ["./src/loaders/*"],
-            "__pages/*": ["./src/pages/*"],
-            "__reducers": ["./src/reducers"],
-            "__reducers/*": ["./src/reducers/*"],
-            "__routes/*": ["./src/routes/*"],
-            "__selectors/*": ["./src/selectors/*"],
-            "__services/*": ["./src/services/*"],
-            "__store": ["./src/store.ts"],
-            "__types/*": ["./src/types/*"],
-            "__utils/*": ["./src/utils/*"],
-            "infrastructure/*": ["./typings/infrastructure/*"]
-        }
-    },
-    "include": ["src", "typings"]
+    "files": [],
+    "references": [
+        {"path": "./tsconfig.app.json"},
+        {"path": "./tsconfig.node.json"},
+        {"path": "./e2e/tsconfig.json"}
+    ]
 }

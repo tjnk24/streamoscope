@@ -28,7 +28,7 @@ export const initBaseConfig = ({context}: InitBaseConfigOptions) => (rspackConfi
     resolve: {
         modules: ['node_modules', path.resolve(context, 'src')],
         extensions: RESOLVE_EXTENSIONS,
-        tsConfig: path.resolve(context, 'tsconfig.json'),
+        tsConfig: path.resolve(context, 'tsconfig.app.json'),
     },
     performance: {
         hints: false,
