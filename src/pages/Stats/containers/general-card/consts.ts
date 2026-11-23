@@ -1,9 +1,15 @@
-import {DescriptionsProps} from 'antd';
+import {GeneralStatKeyEnum} from '__types/stats/statKeys';
 
-export const STAT_COLUMNS: DescriptionsProps['column'] = {
-    xs: 1,
-    sm: 2,
-};
+const {
+    Cpu,
+    Gpu,
+    GpuEncoder,
+    GpuMemory,
+    Memory,
+    SystemMemory,
+} = GeneralStatKeyEnum;
+
+export const COMPUTER_STAT_KEYS = [Cpu, Gpu, GpuEncoder, GpuMemory, Memory, SystemMemory];
 
 export const FPS_WARN_SHARE = 0.95;
 

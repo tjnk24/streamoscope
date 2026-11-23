@@ -8,11 +8,7 @@ import {OutputStatKeyEnum} from '__types/stats/statKeys';
 import {AdviceEnum, HealthLevelEnum} from '__types/stats/views';
 import {OutputOriginEnum, StreamTargetDto} from '__types/targets';
 import {ensureContrast} from '__utils/appearance/colors/ensureContrast';
-import {
-    GRAPHIC_MIN_CONTRAST,
-    OFF_OUTPUT_VIEW,
-    RECENT_WINDOW_SEC,
-} from '__utils/consts';
+import {GRAPHIC_MIN_CONTRAST, OFF_OUTPUT_VIEW} from '__utils/consts';
 import {resolveTargetPlatform} from '__utils/targets/resolveTargetPlatform';
 
 import CongestionProgress from '../../../components/congestion-progress';
@@ -112,7 +108,7 @@ export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto =>
         {
             key: Recent,
             label: t('stats.recent'),
-            hint: t('stats.hints.recent', {seconds: RECENT_WINDOW_SEC}),
+            hint: t('stats.hints.recent'),
             level: isActive ? level : Off,
             value: isActive
                 ? (

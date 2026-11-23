@@ -20,7 +20,7 @@ Drag a stream card by its header (the dotted handle shows up once there are two 
 
 ## 👓 Only what you read
 
-**Settings → Display** has a switch for the stream cards and one for the OBS card, and under each switch a checkbox for every row of those cards (the big bitrate number and its graph count as one row, and so does the status label in the header). Not into OBS health today? Switch the OBS card off. Untick what you never look at and the cards shrink to match, down to a bare header; to hide the cards themselves, use their switch. Rows added in future versions show up ticked.
+**Settings → Display** has a switch for the stream cards and one for the OBS and PC card, and under each switch a checkbox for every row of those cards (the big bitrate number and its graph count as one row, and so does the status label in the header). Not into OBS health today? Switch the OBS and PC card off. Untick what you never look at and the cards shrink to match, down to a bare header; to hide the cards themselves, use their switch. Rows added in future versions show up ticked.
 
 ## 📺 Platforms
 

@@ -1,4 +1,3 @@
-import {DescriptionsProps} from 'antd';
 import {ReactNode} from 'react';
 
 import {HealthLevelEnum} from '__types/stats/views';
@@ -13,7 +12,7 @@ export type StatItemDto<StatKey extends string = string> = {
 
 interface OwnProps {
     items: StatItemDto[];
-    column?: DescriptionsProps['column'];
+    secondColumnStart?: number;
 }
 
 export type Props = OwnProps;

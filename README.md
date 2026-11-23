@@ -39,7 +39,7 @@ Running multiple streams from one OBS instance? You shouldn't have to open a sep
 **No plugin loyalty.** 🤷
 
 <p align="center">
-  <img src="docs/images/stats-wide.png" width="700" alt="StreamoScope wide dock: four simultaneous streams, obs-multi-rtmp streams signed with their names, live bitrate, dropped-frame statistics, the OBS card with the total upload and red hints on the rows in trouble">
+  <img src="docs/images/stats-wide.png" width="700" alt="StreamoScope wide dock: four simultaneous streams, obs-multi-rtmp streams signed with their names, live bitrate, dropped-frame statistics, the OBS and PC card with the total upload and red hints on the rows in trouble">
 </p>
 <p align="center"><sub>Four streams, four sets of stats, one less reason to panic. 😌</sub></p>
 
@@ -69,8 +69,8 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 - Total upload of all streams, to compare with your internet speed (from two streams up)
 - FPS (highlighted when it drops) and frame time
 - Encoding and rendering lag
-- CPU and OBS memory
-- GPU, encoder load, video memory and RAM (Windows only, through the StreamoScope Lua bridge)
+- OBS memory
+- CPU, GPU, encoder load, video memory and RAM of the whole PC, as in Task Manager (Windows only, through the StreamoScope Lua bridge)
 
 **✨ And also**
 

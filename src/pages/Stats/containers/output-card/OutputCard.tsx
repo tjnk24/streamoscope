@@ -13,9 +13,11 @@ import {useTranslation} from 'react-i18next';
 
 import {commonActions} from '__actions';
 import {AdviceEnum} from '__types/stats/views';
+import {GRAPH_SPAN_SEC} from '__utils/consts';
 
 import BitrateGraph from '../../components/bitrate-graph';
 import CardHeading from '../../components/card-heading';
+import QuestionTooltipLabel from '../../components/question-tooltip-label';
 import StatList from '../../components/stat-list';
 import {formatNumber} from '../../utils/formatNumber';
 import AdviceHint from '../advice-hint';
@@ -52,6 +54,13 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
     } = useOutputCardView(target);
 
     const {key: cardKey, keyId} = target;
+
+    const bitrateUnit = (
+        <QuestionTooltipLabel
+            label={t('stats.bitrateUnit')}
+            hint={t('stats.hints.bitrate', {minutes: GRAPH_SPAN_SEC / 60})}
+        />
+    );
 
     const handlePlatformChange = useCallback((platform: string) => {
         commonActions.settings.setCardPlatform({cardKey, platform, keyId});
@@ -118,7 +127,7 @@ const OutputCard = ({target, isDragging, listeners, setActivatorNodeRef}: Props)
                         value={bitrate}
                         loading={isBitrateLoading}
                         formatter={value => (isNumber(value) ? formatNumber(value) : value)}
-                        suffix={t('stats.bitrateUnit')}
+                        suffix={bitrateUnit}
                         classNames={{
                             root: style.bitrate,
                             content: cn(style.bitrateValue, {[style.inactiveBitrate]: !isActive}),

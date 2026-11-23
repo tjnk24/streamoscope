@@ -40,7 +40,7 @@ export class SettingsPage {
 
         this.outputCardsSwitch = page.getByRole('switch', {name: 'Show stream cards'});
 
-        this.generalCardSwitch = page.getByRole('switch', {name: 'Show the OBS card'});
+        this.generalCardSwitch = page.getByRole('switch', {name: 'Show the “OBS and PC” card'});
 
         this.languageSelect = page.getByRole('combobox', {name: /Interface language$/});
 

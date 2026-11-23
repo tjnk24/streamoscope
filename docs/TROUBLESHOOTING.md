@@ -9,7 +9,7 @@ Something off with the dock or with a stream? Start here. Settings and privacy a
 | Dock is missing | **Docks → StreamoScope** |
 | Can't connect | Enable OBS WebSocket; check port and password |
 | Some platform names are generic | Check the Lua bridge is loaded in the active scene collection |
-| GPU stats are missing | Check the Lua bridge on Windows |
+| CPU or GPU stats are missing | Check the Lua bridge on Windows |
 | Installer didn't configure OBS | See `%LOCALAPPDATA%\streamoscope\configure-obs.log`; rerun with OBS closed. Never opened OBS on this PC? Open it once, close it, then rerun the installer; you might need to turn on its WebSocket server yourself |
 | Installer takes long at **Setting up OBS...** | It normally takes seconds, even with dozens of scene collections. After three minutes it asks whether to keep waiting; if you stop it, rerun it with OBS closed or set OBS up as in [Manual installation](../README.md#-manual--portable-installation) |
 | Dock asks to run the installer | Close OBS and run the latest `streamoscope-setup-<version>.exe` over your install; settings and the journal stay |

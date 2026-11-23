@@ -3,6 +3,7 @@ local ffi = require('ffi')
 local consts = require('streamoscope-bridge.consts')
 local gpu_names = require('streamoscope-bridge.hardware.gpu_names')
 local json = require('streamoscope-bridge.utils.json')
+local percent = require('streamoscope-bridge.utils.percent')
 local wide_string = require('streamoscope-bridge.utils.wide_string')
 
 local Gpu = {}
@@ -110,9 +111,9 @@ local function read_adapter_loads(self)
     for _key, load in pairs(engine_loads) do
         local adapter = adapters[load.adapter] or {usage = 0, encoder = 0, dedicated = 0, shared = 0}
 
-        if load.engine_type == consts.GPU_RENDER_ENGINE_TYPE then
-            adapter.usage = math.max(adapter.usage, load.value)
-        elseif string.find(load.engine_type, consts.GPU_ENCODE_ENGINE_TYPE) or string.find(load.engine_type, consts.GPU_CODEC_ENGINE_TYPE) then
+        adapter.usage = math.max(adapter.usage, load.value)
+
+        if string.find(load.engine_type, consts.GPU_ENCODE_ENGINE_TYPE) or string.find(load.engine_type, consts.GPU_CODEC_ENGINE_TYPE) then
             adapter.encoder = math.max(adapter.encoder, load.value)
         end
 
@@ -148,10 +149,6 @@ local function find_busiest_adapter(self, adapters)
     return busiest
 end
 
-local function round_percent(value)
-    return math.floor(math.min(value, consts.MAX_PERCENT) * 10 + 0.5) / 10
-end
-
 local function read_sample(self)
     if self.query == nil or self.pdh.PdhCollectQueryData(self.query[0]) ~= 0 then
         return nil
@@ -172,8 +169,8 @@ local function read_sample(self)
 
     return {
         name = busiest.name or json.null,
-        usage = round_percent(busiest.usage),
-        encoder = round_percent(busiest.encoder),
+        usage = percent.round(busiest.usage),
+        encoder = percent.round(busiest.encoder),
         memoryInBytes = math.floor(is_shared_memory and busiest.shared or busiest.dedicated),
         isSharedMemory = is_shared_memory,
     }

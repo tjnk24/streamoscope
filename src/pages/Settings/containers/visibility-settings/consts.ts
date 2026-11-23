@@ -43,9 +43,9 @@ export const GENERAL_STAT_OPTIONS: StatOptionDto<GeneralStatKeyEnum>[] = [
     {value: Encoding, labelKey: 'general.encoding'},
     {value: Rendering, labelKey: 'general.rendering'},
     {value: Cpu, labelKey: 'general.cpu'},
-    {value: Memory, labelKey: 'general.memory'},
     {value: Gpu, labelKey: 'general.gpu'},
     {value: GpuEncoder, labelKey: 'general.gpuEncoder'},
     {value: GpuMemory, labelKey: 'general.gpuMemory'},
+    {value: Memory, labelKey: 'general.memory'},
     {value: SystemMemory, labelKey: 'general.systemMemory'},
 ];

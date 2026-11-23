@@ -268,6 +268,7 @@ export class MockObsSimulator {
         outputs: this.buildBridgeOutputs(now, streamSeconds),
         configuredTargets: MOCK_CONFIGURED_TARGETS,
         mainKeyId: MOCK_MAIN_KEY_ID,
+        cpu: {usage: randomBetween(30, 50)},
         gpu: {
             ...MOCK_GPU,
             usage: randomBetween(40, 60),

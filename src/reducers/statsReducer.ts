@@ -20,6 +20,7 @@ const initialState: StatsReducer = {
         now: 0,
     },
     hardware: {
+        cpu: null,
         gpu: null,
         systemMemory: null,
     },

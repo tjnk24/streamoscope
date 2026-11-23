@@ -33,7 +33,7 @@ const {
 const {Rendering: RenderingAdvice, Encoding: EncodingAdvice} = AdviceEnum;
 
 export const useItems = (): StatItemDto<GeneralStatKeyEnum>[] => {
-    const {view: {general: view, outputs}, hardware: {gpu, systemMemory}, targets} = useSelector(statsSelector);
+    const {view: {general: view, outputs}, hardware: {cpu, gpu, systemMemory}, targets} = useSelector(statsSelector);
     const hiddenGeneralStats = useSelector(settingsHiddenGeneralStatsSelector);
 
     const {t} = useTranslation();
@@ -52,7 +52,6 @@ export const useItems = (): StatItemDto<GeneralStatKeyEnum>[] => {
         {
             key: Fps,
             label: t('general.fps'),
-            hint: t('general.hints.fps'),
             level: view ? getFpsLevel(view.fps, view.targetFps) : undefined,
             value: view ? formatFixed(view.fps, 2) : '—',
         },
@@ -91,23 +90,18 @@ export const useItems = (): StatItemDto<GeneralStatKeyEnum>[] => {
                 )
                 : '—',
         },
-        {
-            key: Cpu,
-            label: t('general.cpu'),
-            value: view ? `${formatFixed(view.cpu, 1)}%` : '—',
-        },
-        {
-            key: Memory,
-            label: t('general.memory'),
-            hint: t('general.hints.memory'),
-            value: view ? formatMemory(view.memoryInMb) : '—',
-        },
+        ...(cpu
+            ? [{
+                key: Cpu,
+                label: t('general.cpu'),
+                value: `${formatFixed(cpu.usage, 1)}%`,
+            }]
+            : []),
         ...(gpu
             ? [
                 {
                     key: Gpu,
                     label: gpu.name ? t('general.gpuWithName', {name: gpu.name}) : t('general.gpu'),
-                    hint: t('general.hints.gpu'),
                     value: `${formatFixed(gpu.usage, 1)}%`,
                 },
                 {
@@ -124,6 +118,11 @@ export const useItems = (): StatItemDto<GeneralStatKeyEnum>[] => {
                 },
             ]
             : []),
+        {
+            key: Memory,
+            label: t('general.memory'),
+            value: view ? formatMemory(view.memoryInMb) : '—',
+        },
         ...(systemMemory
             ? [{
                 key: SystemMemory,

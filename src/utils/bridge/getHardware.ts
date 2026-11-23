@@ -14,6 +14,7 @@ export const getHardware = (pairs: RequestResultPairDto[], sceneCollection: Null
     const bridgeData = parseBridgeData(parameter, sceneCollection);
 
     return {
+        cpu: bridgeData?.cpu ?? null,
         gpu: bridgeData?.gpu ?? null,
         systemMemory: bridgeData?.systemMemory ?? null,
     };

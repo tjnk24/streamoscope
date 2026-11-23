@@ -11,7 +11,7 @@ flowchart LR
   subgraph pc["Your PC"]
     outputs["Stream outputs:<br>OBS and plugins"] -- "by name" --> websocket["obs-websocket"]
     outputs -- "every output" --> bridge["Lua bridge"]
-    hardware["GPU and<br>memory"] --> bridge
+    hardware["CPU, GPU<br>and memory"] --> bridge
     bridge -- "stats, hosts,<br>fingerprints" --> websocket
     websocket <--> dock["Dock"]
     bridge --> updater["Updater"]
@@ -20,7 +20,7 @@ flowchart LR
   github -. "what's new" .-> dock
 ```
 
-The bridge tells the dock where plugin outputs are streaming and how each of them is doing, reads Windows hardware metrics and starts the background updates. It hands its data to the dock through a profile parameter (`[StreamoScope]`), which the dock reads over WebSocket. The per-output numbers matter when a plugin gives all its outputs one name: obs-multi-rtmp calls every target `multi-output`, and WebSocket can only ask about an output by name, so it would answer for one of them. The bridge walks through all outputs instead, and every target gets its own card. The installer sets it up for you; the dock shows a notice whenever the bridge isn't loaded in the current scene collection. Missing metadata doesn't necessarily mean a stream isn't being monitored: some outputs may simply be labeled **Plugin**. Change a target's stream key or server and its card counts as new, so drag it back into place once.
+The bridge tells the dock where plugin outputs are streaming and how each of them is doing, reads Windows hardware metrics (CPU and GPU load counted the way Task Manager counts them, video memory and RAM) and starts the background updates. It hands its data to the dock through a profile parameter (`[StreamoScope]`), which the dock reads over WebSocket. The per-output numbers matter when a plugin gives all its outputs one name: obs-multi-rtmp calls every target `multi-output`, and WebSocket can only ask about an output by name, so it would answer for one of them. The bridge walks through all outputs instead, and every target gets its own card. The installer sets it up for you; the dock shows a notice whenever the bridge isn't loaded in the current scene collection. Missing metadata doesn't necessarily mean a stream isn't being monitored: some outputs may simply be labeled **Plugin**. Change a target's stream key or server and its card counts as new, so drag it back into place once.
 
 🔒 For platform detection, the bridge passes only the protocol and host of each server, never stream keys or URL paths. To tell outputs of the same name apart and keep their cards in place, it works out a short fingerprint from the server address and the stream key right inside OBS and passes only that. For obs-multi-rtmp targets that haven't started yet, it does the same with the server and key from the plugin's own settings in your profile. To spot a target that reuses the key of the main stream, it adds a second fingerprint made the same way from the key alone. Nothing is sent anywhere: the key stays in OBS, and the fingerprints can't be turned back into it. For the curious: HMAC-SHA256 cut to 8 characters, keyed with the ID Windows already keeps for this computer, so the same key gives a different fingerprint on any other machine.
 

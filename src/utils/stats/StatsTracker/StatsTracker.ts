@@ -197,7 +197,6 @@ export class StatsTracker {
             fps: stats.activeFps,
             targetFps: this.targetFps,
             frameTime: stats.averageFrameRenderTime,
-            cpu: stats.cpuUsage,
             memoryInMb: stats.memoryUsage,
             encoding,
             rendering,

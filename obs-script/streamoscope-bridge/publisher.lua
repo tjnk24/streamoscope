@@ -35,6 +35,7 @@ local function build_payload(sources)
         outputs = json.array(outputs_read and outputs or {}),
         configuredTargets = json.array(configured_read and configured_targets or {}),
         mainKeyId = stream_outputs ~= nil and sample_safely(stream_outputs.read_main_key_id, stream_outputs) or nil,
+        cpu = sources.cpu ~= nil and sample_safely(sources.cpu.sample, sources.cpu) or nil,
         gpu = sources.gpu ~= nil and sample_safely(sources.gpu.sample, sources.gpu) or nil,
         systemMemory = sample_safely(system_memory.sample),
         update = sources.updater ~= nil and sample_safely(describe_update, sources.updater) or nil,

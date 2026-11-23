@@ -10,7 +10,7 @@ import {JournalLevelEnum} from '__types/journal';
 
 import StatList from '../../components/stat-list';
 
-import {STAT_COLUMNS} from './consts';
+import {COMPUTER_STAT_KEYS} from './consts';
 import {useItems} from './hooks/useItems';
 
 import style from './style.module.scss';
@@ -19,6 +19,10 @@ const GeneralCard = () => {
     const {t} = useTranslation();
 
     const items = useItems();
+
+    const computerRowIndex = items.findIndex(({key}) => COMPUTER_STAT_KEYS.includes(key));
+
+    const secondColumnStart = computerRowIndex >= 0 ? computerRowIndex : undefined;
 
     const onReset = () => {
         journalService.log(JournalLevelEnum.Info, 'user', 'reset the stats');
@@ -39,7 +43,7 @@ const GeneralCard = () => {
             {items.length > 0 && (
                 <StatList
                     items={items}
-                    column={STAT_COLUMNS}
+                    secondColumnStart={secondColumnStart}
                 />
             )}
 

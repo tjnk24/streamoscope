@@ -31,7 +31,6 @@ export type GeneralViewDto = {
     fps: number;
     targetFps: Nullable<number>;
     frameTime: number;
-    cpu: number;
     memoryInMb: number;
     encoding: LagViewDto;
     rendering: LagViewDto;

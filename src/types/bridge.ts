@@ -37,6 +37,10 @@ export type BridgeConfiguredTargetDto = {
     title?: string;
 };
 
+type CpuStatsDto = {
+    usage: number;
+};
+
 type GpuStatsDto = {
     name?: Nullable<string>;
     usage: number;
@@ -51,6 +55,7 @@ type SystemMemoryDto = {
 };
 
 export type HardwareDto = {
+    cpu: Nullable<CpuStatsDto>;
     gpu: Nullable<GpuStatsDto>;
     systemMemory: Nullable<SystemMemoryDto>;
 };
@@ -70,6 +75,7 @@ export type BridgeDataDto = {
     outputs: BridgeOutputDto[];
     configuredTargets?: BridgeConfiguredTargetDto[];
     mainKeyId?: string;
+    cpu?: CpuStatsDto;
     gpu?: GpuStatsDto;
     systemMemory?: SystemMemoryDto;
     update?: BridgeUpdateDto;

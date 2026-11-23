@@ -2,7 +2,6 @@ import {LineChartOutlined} from '@ant-design/icons';
 import {
     Flex,
     theme,
-    Tooltip,
     Typography,
 } from 'antd';
 import {
@@ -13,7 +12,6 @@ import {
 import {useTranslation} from 'react-i18next';
 
 import EnhancedText from '__components/EnhancedText';
-import {GRAPH_SPAN_SEC} from '__utils/consts';
 
 import {Props} from './types';
 import {drawGraph} from './utils/drawGraph';
@@ -69,12 +67,10 @@ const BitrateGraph = ({points, now, color, isActive}: Props) => {
             ref={containerRef}
             className={style.graph}
         >
-            <Tooltip title={hasLine ? t('stats.graphTooltip', {minutes: GRAPH_SPAN_SEC / 60}) : null}>
-                <canvas
-                    ref={canvasRef}
-                    className={style.canvas}
-                />
-            </Tooltip>
+            <canvas
+                ref={canvasRef}
+                className={style.canvas}
+            />
 
             {!hasLine && (
                 <Flex

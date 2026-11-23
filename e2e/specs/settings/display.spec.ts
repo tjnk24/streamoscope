@@ -15,7 +15,7 @@ test.beforeEach(async ({mainLayout}) => {
     await mainLayout.settingsButton.click();
 });
 
-test('the card switches hide and bring back the stream cards and the OBS card', async ({mainLayout, statsPage, settingsPage}) => {
+test('the card switches hide and bring back the stream cards and the OBS and PC card', async ({mainLayout, statsPage, settingsPage}) => {
     await test.step('both switches off: the stats have no cards', async () => {
         await settingsPage.outputCardsSwitch.click();
 

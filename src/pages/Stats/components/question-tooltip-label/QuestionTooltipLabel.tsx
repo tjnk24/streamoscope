@@ -8,7 +8,7 @@ import {Props} from './types';
 
 import style from './style.module.scss';
 
-const StatLabel = ({label, hint}: Props) => (
+const QuestionTooltipLabel = ({label, hint}: Props) => (
     <Flex
         className={style.label}
         align="center"
@@ -26,4 +26,4 @@ const StatLabel = ({label, hint}: Props) => (
     </Flex>
 );
 
-export default memo(StatLabel);
+export default memo(QuestionTooltipLabel);
