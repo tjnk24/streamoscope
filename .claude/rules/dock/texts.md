@@ -13,4 +13,4 @@ paths:
   - Пока язык не выбран (`settings.language` - `null`), берётся язык OBS из `navigator.language` (`languageService.resolveLanguage`), не наш - английский. Пункта «Как в OBS» нет, в списке сразу текущий язык.
   - «Жабий» - поправки к русскому (`DeepPartial<TranslationDto>`), остальное i18next берёт из `ru`; настройки и поле порта в нём не задаются.
 - **Язык выбирается в карточке «Отображение»** и меняется сразу: значение - `settings.language`, сохраняет его и вызывает `i18n.changeLanguage` `languageService.setLanguage`, компонент только передаёт выбор. Локаль antd - в `CorePage` (`ANTD_LOCALES`), там же `autoInsertSpace: false` у кнопок: иначе antd вставляет пробел между двумя иероглифами («接 続»), это правило китайского. Корейский переносится по пробелам (`word-break: keep-all` для `html:lang(ko)` в `global.module.scss`), иначе Chromium рвёт слова посреди слога.
-- **`strictNullChecks` включён** - без него типы i18next превращают ключи в `never`.
+- **`strictNullChecks` нужен и словарям**: без него типы i18next превращают ключи в `never`.

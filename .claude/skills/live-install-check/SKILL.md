@@ -5,7 +5,7 @@ description: Live check of the StreamoScope installer and uninstaller on the use
 
 # Live install check
 
-Why the user, not Claude, starts the installer: `.claude/rules/windows/installer.md` (Claude Desktop is an MSIX package, a setup started from it lands in the package container). What the installer and the uninstaller do: `docs/internals/installer.md`. The scripts here only read the real files and write into the snapshot folder, so Claude runs them itself.
+Why the user, not Claude, starts the installer: `.claude/rules/common/windows/installer.md` (Claude Desktop is an MSIX package, a setup started from it lands in the package container). What the installer and the uninstaller do: `docs/internals/installer.md`. The scripts here only read the real files and write into the snapshot folder, so Claude runs them itself.
 
 Update this skill in the same change whenever the conversation shows it is outdated or a better way turned up.
 
