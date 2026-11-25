@@ -10,7 +10,7 @@ paths:
 
 # Выпуски, своё
 
-Общее - `.claude/rules/common/build/releases.md`.
+Общее - `.claude/rules/common/tooling/releases.md`.
 
 ## Версии
 

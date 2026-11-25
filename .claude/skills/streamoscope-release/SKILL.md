@@ -5,7 +5,7 @@ description: Release a new StreamoScope version end to end - choose the version 
 
 # StreamoScope release
 
-The rules live in `.claude/rules/common/build/releases.md` (version choice, shared release order), `.claude/rules/releases.md` (promises to old versions, hotfix branches, what only the installer updates) and `docs/DEVELOPMENT.md` -> "Releases and signed updates". Read both before step 1; this skill only orders the steps and adds the checks. If this file and the rules disagree, the rules win and this file gets fixed in the same change.
+The rules live in `.claude/rules/common/tooling/releases.md` (version choice, shared release order), `.claude/rules/releases.md` (promises to old versions, hotfix branches, what only the installer updates) and `docs/DEVELOPMENT.md` -> "Releases and signed updates". Read both before step 1; this skill only orders the steps and adds the checks. If this file and the rules disagree, the rules win and this file gets fixed in the same change.
 
 Update this skill in the same change whenever the conversation shows it is outdated or a better way turned up.
 

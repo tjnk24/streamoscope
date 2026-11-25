@@ -11,7 +11,7 @@ paths:
 
 # Сборка и зависимости, своё
 
-Общее - `.claude/rules/common/build/{tools,rspack,node}.md`.
+Общее - `.claude/rules/common/tooling/{tools,rspack,node}.md`.
 
 - **Tsconfig трёх частей**: клиент - `tsconfig.app.json` (`src` и `typings`), сборка и скрипты - `tsconfig.node.json`, e2e и `playwright.config.ts` - `e2e/tsconfig.json`.
 - **Кэш Rspack**: у стенда своя папка (`RSPACK_CACHE_DIRECTORY`), сборка с `TEST_UPDATE_SERVER` в обычную не попадает.
